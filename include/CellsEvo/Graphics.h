@@ -1,0 +1,6 @@
+#ifndef CELLS_EVOLUTION_GRAPHICS_H
+#define CELLS_EVOLUTION_GRAPHICS_H
+
+#include "Graphics/Drawer.h"
+
+#endif //CELLS_EVOLUTION_GRAPHICS_H
