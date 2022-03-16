@@ -324,7 +324,7 @@ public:
     /// This function provides read-only access to characters.
     /// Note: the behavior is undefined if \a index is out of range.
     ///
-    /// \param index Index of the character to get
+    /// \param index Index of the character to Get
     ///
     /// \return Character at position \a index
     ///
@@ -337,7 +337,7 @@ public:
     /// This function provides read and write access to characters.
     /// Note: the behavior is undefined if \a index is out of range.
     ///
-    /// \param index Index of the character to get
+    /// \param index Index of the character to Get
     ///
     /// \return Reference to the character at position \a index
     ///

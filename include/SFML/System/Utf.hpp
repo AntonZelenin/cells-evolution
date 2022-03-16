@@ -730,7 +730,7 @@ public:
 
 #include <SFML/System/Utf.inl>
 
-// Make typedefs to get rid of the template syntax
+// Make typedefs to Get rid of the template syntax
 typedef Utf<8>  Utf8;
 typedef Utf<16> Utf16;
 typedef Utf<32> Utf32;

@@ -143,7 +143,7 @@ public:
 /// // enable the gravity sensor
 /// sf::Sensor::setEnabled(sf::Sensor::Gravity, true);
 ///
-/// // get the current value of gravity
+/// // Get the current value of gravity
 /// sf::Vector3f gravity = sf::Sensor::getValue(sf::Sensor::Gravity);
 /// \endcode
 ///

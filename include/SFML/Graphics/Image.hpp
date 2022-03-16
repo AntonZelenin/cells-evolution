@@ -221,8 +221,8 @@ public:
     /// coordinates, using out-of-range values will result in
     /// an undefined behavior.
     ///
-    /// \param x X coordinate of pixel to get
-    /// \param y Y coordinate of pixel to get
+    /// \param x X coordinate of pixel to Get
+    /// \param y Y coordinate of pixel to Get
     ///
     /// \return Color of the pixel at coordinates (x, y)
     ///

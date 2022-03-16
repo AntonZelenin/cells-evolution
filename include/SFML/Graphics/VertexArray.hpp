@@ -78,7 +78,7 @@ public:
     /// [0, getVertexCount() - 1]. The behavior is undefined
     /// otherwise.
     ///
-    /// \param index Index of the vertex to get
+    /// \param index Index of the vertex to Get
     ///
     /// \return Reference to the index-th vertex
     ///
@@ -94,7 +94,7 @@ public:
     /// [0, getVertexCount() - 1]. The behavior is undefined
     /// otherwise.
     ///
-    /// \param index Index of the vertex to get
+    /// \param index Index of the vertex to Get
     ///
     /// \return Const reference to the index-th vertex
     ///

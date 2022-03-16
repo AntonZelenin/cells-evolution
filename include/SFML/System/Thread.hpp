@@ -66,7 +66,7 @@ public:
     ///     void operator()();
     /// };
     /// \endcode
-    /// Note: this does *not* run the thread, use launch().
+    /// Note: this does *not* Run the thread, use launch().
     ///
     /// \param function Functor or free function to use as the entry point of the thread
     ///
@@ -93,7 +93,7 @@ public:
     ///     void operator()(std::string arg);
     /// };
     /// \endcode
-    /// Note: this does *not* run the thread, use launch().
+    /// Note: this does *not* Run the thread, use launch().
     ///
     /// \param function Functor or free function to use as the entry point of the thread
     /// \param argument argument to forward to the function
@@ -116,7 +116,7 @@ public:
     ///     void function();
     /// };
     /// \endcode
-    /// Note: this does *not* run the thread, use launch().
+    /// Note: this does *not* Run the thread, use launch().
     ///
     /// \param function Entry point of the thread
     /// \param object Pointer to the object to use
@@ -187,7 +187,7 @@ private:
     // Member data
     ////////////////////////////////////////////////////////////
     priv::ThreadImpl* m_impl;       ///< OS-specific implementation of the thread
-    priv::ThreadFunc* m_entryPoint; ///< Abstraction of the function to run
+    priv::ThreadFunc* m_entryPoint; ///< Abstraction of the function to Run
 };
 
 #include <SFML/System/Thread.inl>
@@ -201,9 +201,9 @@ private:
 /// \class sf::Thread
 /// \ingroup system
 ///
-/// Threads provide a way to run multiple parts of the code
+/// Threads provide a way to Run multiple parts of the code
 /// in parallel. When you launch a new thread, the execution
-/// is split and both the new thread and the caller run
+/// is split and both the new thread and the caller Run
 /// in parallel.
 ///
 /// To use a sf::Thread, you construct it directly with the
@@ -245,15 +245,15 @@ private:
 /// class Task
 /// {
 /// public:
-///     void run()
+///     void Run()
 ///     {
 ///         ...
 ///     }
 /// };
 ///
 /// Task task;
-/// sf::Thread thread(&Task::run, &task);
-/// thread.launch(); // start the thread (internally calls task.run())
+/// sf::Thread thread(&Task::Run, &task);
+/// thread.launch(); // start the thread (internally calls task.Run())
 /// \endcode
 ///
 /// \code

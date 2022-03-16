@@ -43,7 +43,7 @@ struct ContextSettings
     enum Attribute
     {
         Default = 0,      ///< Non-debug, compatibility context (this and the core attribute are mutually exclusive)
-        Core    = 1 << 0, ///< Core attribute
+        Core    = 1 << 0, ///< core attribute
         Debug   = 1 << 2  ///< Debug attribute
     };
 

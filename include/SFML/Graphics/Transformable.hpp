@@ -162,7 +162,7 @@ public:
     void setOrigin(const Vector2f& origin);
 
     ////////////////////////////////////////////////////////////
-    /// \brief get the position of the object
+    /// \brief Get the position of the object
     ///
     /// \return Current position
     ///
@@ -172,7 +172,7 @@ public:
     const Vector2f& getPosition() const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief get the orientation of the object
+    /// \brief Get the orientation of the object
     ///
     /// The rotation is always in the range [0, 360].
     ///
@@ -184,7 +184,7 @@ public:
     float getRotation() const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief get the current scale of the object
+    /// \brief Get the current scale of the object
     ///
     /// \return Current scale factors
     ///
@@ -194,7 +194,7 @@ public:
     const Vector2f& getScale() const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief get the local origin of the object
+    /// \brief Get the local origin of the object
     ///
     /// \return Current origin
     ///
@@ -292,7 +292,7 @@ public:
     void scale(const Vector2f& factor);
 
     ////////////////////////////////////////////////////////////
-    /// \brief get the combined transform of the object
+    /// \brief Get the combined transform of the object
     ///
     /// \return Transform combining the position/rotation/scale/origin of the object
     ///
@@ -302,7 +302,7 @@ public:
     const Transform& getTransform() const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief get the inverse of the combined transform of the object
+    /// \brief Get the inverse of the combined transform of the object
     ///
     /// \return Inverse of the combined transformations applied to the object
     ///
@@ -352,7 +352,7 @@ private:
 ///
 /// That's exactly what sf::Transformable was written for: it hides
 /// these variables and the composed transform behind an easy to use
-/// interface. You can set or get any of the individual components
+/// interface. You can set or Get any of the individual components
 /// without worrying about the others. It also provides the composed
 /// transform (as a sf::Transform), and keeps it up-to-date.
 ///

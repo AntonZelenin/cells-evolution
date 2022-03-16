@@ -148,7 +148,7 @@ public:
 /// state of the cursor and the buttons at any time
 /// (you don't need to store and update a boolean on your side
 /// in order to know if a button is pressed or released), and you
-/// always get the real state of the mouse, even if it is
+/// always Get the real state of the mouse, even if it is
 /// moved, pressed or released when your window is out of focus
 /// and no event is triggered.
 ///
@@ -165,7 +165,7 @@ public:
 ///     // left click...
 /// }
 ///
-/// // get global mouse position
+/// // Get global mouse position
 /// sf::Vector2i position = sf::Mouse::getPosition();
 ///
 /// // set mouse position relative to a window

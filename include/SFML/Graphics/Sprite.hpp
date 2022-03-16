@@ -237,7 +237,7 @@ private:
 /// position, rotation, scale, origin. It also adds sprite-specific
 /// properties such as the texture to use, the part of it to display,
 /// and some convenience functions to change the overall color of the
-/// sprite, or to get its bounding rectangle.
+/// sprite, or to Get its bounding rectangle.
 ///
 /// sf::Sprite works in combination with the sf::Texture class, which
 /// loads and provides the pixel data of a given texture.

@@ -335,7 +335,7 @@ public:
     ////////////////////////////////////////////////////////////
     /// \brief Restore the previously saved OpenGL render states and matrices
     ///
-    /// See the description of pushGLStates to get a detailed
+    /// See the description of pushGLStates to Get a detailed
     /// description of these functions.
     ///
     /// \see pushGLStates

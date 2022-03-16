@@ -187,7 +187,7 @@ public:
 /// state of axes and buttons of joysticks at any time
 /// (you don't need to store and update a boolean on your side
 /// in order to know if a button is pressed or released), and you
-/// always get the real state of joysticks, even if they are
+/// always Get the real state of joysticks, even if they are
 /// moved, pressed or released when your window is out of focus
 /// and no event is triggered.
 ///

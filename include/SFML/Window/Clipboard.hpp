@@ -92,7 +92,7 @@ public:
 ///
 /// Usage example:
 /// \code
-/// // get the clipboard content as a string
+/// // Get the clipboard content as a string
 /// sf::String string = sf::Clipboard::getString();
 ///
 /// // or use it in the event loop

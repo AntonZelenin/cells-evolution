@@ -169,7 +169,7 @@ public:
     /// Be aware that using a negative value for the outline
     /// thickness will cause distorted rendering.
     ///
-    /// \param codePoint        Unicode code point of the character to get
+    /// \param codePoint        Unicode code point of the character to Get
     /// \param characterSize    Reference character size
     /// \param bold             Retrieve the bold version or the regular one?
     /// \param outlineThickness Thickness of outline (when != 0 the glyph will not be filled)

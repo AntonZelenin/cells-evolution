@@ -102,7 +102,7 @@ public:
 /// and TouchEnded events, sf::Touch can retrieve the
 /// state of the touches at any time (you don't need to store and
 /// update a boolean on your side in order to know if a touch is down),
-/// and you always get the real state of the touches, even if they
+/// and you always Get the real state of the touches, even if they
 /// happen when your window is out of focus and no event is triggered.
 ///
 /// The getPosition function can be used to retrieve the current
@@ -125,10 +125,10 @@ public:
 ///     // touch 0 is down
 /// }
 ///
-/// // get global position of touch 1
+/// // Get global position of touch 1
 /// sf::Vector2i globalPos = sf::Touch::getPosition(1);
 ///
-/// // get position of touch 1 relative to a window
+/// // Get position of touch 1 relative to a window
 /// sf::Vector2i relativePos = sf::Touch::getPosition(1, window);
 /// \endcode
 ///

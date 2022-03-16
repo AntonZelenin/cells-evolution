@@ -72,7 +72,7 @@ public:
 /// to handle the glyph:
 /// \li its coordinates in the font's texture
 /// \li its bounding rectangle
-/// \li the offset to apply to get the starting position of the next glyph
+/// \li the offset to apply to Get the starting position of the next glyph
 ///
 /// \see sf::Font
 ///

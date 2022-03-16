@@ -386,7 +386,7 @@ public:
     ///
     /// If key repeat is enabled, you will receive repeated
     /// KeyPressed events while keeping a key pressed. If it is disabled,
-    /// you will only get a single event when the key is pressed.
+    /// you will only Get a single event when the key is pressed.
     ///
     /// Key repeat is enabled by default.
     ///
@@ -404,7 +404,7 @@ public:
     /// SFML will try to match the given limit as much as it can,
     /// but since it internally uses sf::sleep, whose precision
     /// depends on the underlying OS, the results may be a little
-    /// unprecise as well (for example, you can get 65 FPS when
+    /// unprecise as well (for example, you can Get 65 FPS when
     /// requesting 60).
     ///
     /// \param limit Framerate limit, in frames per seconds (use 0 to disable limit)
@@ -582,9 +582,9 @@ private:
 /// window.
 ///
 /// On dual-graphics systems consisting of a low-power integrated GPU
-/// and a powerful discrete GPU, the driver picks which GPU will run an
+/// and a powerful discrete GPU, the driver picks which GPU will Run an
 /// SFML application. In order to inform the driver that an SFML application
-/// can benefit from being run on the more powerful discrete GPU,
+/// can benefit from being Run on the more powerful discrete GPU,
 /// #SFML_DEFINE_DISCRETE_GPU_PREFERENCE can be placed in a source file
 /// that is compiled and linked into the final application. The macro
 /// should be placed outside of any scopes in the global namespace.

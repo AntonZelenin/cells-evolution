@@ -1,6 +1,6 @@
-#include "CellsEvo/Core.h"
+#include "CellsEvo/core.h"
 
 int main() {
-    App().run();
+    cells_evo::App().Run();
     return 0;
 }

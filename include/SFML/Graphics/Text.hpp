@@ -274,7 +274,7 @@ public:
     ///
     /// If the text has no font attached, a NULL pointer is returned.
     /// The returned pointer is const, which means that you
-    /// cannot modify the font when you get it from this function.
+    /// cannot modify the font when you Get it from this function.
     ///
     /// \return Pointer to the text's font
     ///
@@ -471,7 +471,7 @@ private:
 /// text color, the outline thickness, the outline color, the character
 /// spacing, the line spacing and the text to display of course.
 /// It also provides convenience functions to calculate the
-/// graphical size of the text, or to get the global position
+/// graphical size of the text, or to Get the global position
 /// of a given character.
 ///
 /// sf::Text works in combination with the sf::Font class, which

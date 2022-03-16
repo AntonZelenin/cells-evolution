@@ -207,7 +207,7 @@ public:
 /// sf::Keyboard can retrieve the state of a key at any time
 /// (you don't need to store and update a boolean on your side
 /// in order to know if a key is pressed or released), and you
-/// always get the real state of the keyboard, even if keys are
+/// always Get the real state of the keyboard, even if keys are
 /// pressed or released when your window is out of focus and no
 /// event is triggered.
 ///

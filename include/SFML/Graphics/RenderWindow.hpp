@@ -189,7 +189,7 @@ protected:
 /// \class sf::RenderWindow
 /// \ingroup graphics
 ///
-/// sf::RenderWindow is the main class of the Graphics module.
+/// sf::RenderWindow is the main class of the graphics module.
 /// It defines an OS window that can be painted using the other
 /// classes of the graphics module.
 ///

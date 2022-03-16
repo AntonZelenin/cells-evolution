@@ -708,7 +708,7 @@ private:
 ///     ...
 ///
 ///     // update the texture
-///     sf::Uint8* pixels = ...; // get a fresh chunk of pixels (the next frame of a movie, for example)
+///     sf::Uint8* pixels = ...; // Get a fresh chunk of pixels (the next frame of a movie, for example)
 ///     texture.update(pixels);
 ///
 ///     // draw it

@@ -204,7 +204,7 @@ SFML_WINDOW_API bool operator >=(const VideoMode& left, const VideoMode& right);
 /// fullscreen compatibility with its isValid() function.
 ///
 /// Additionally, sf::VideoMode provides a static function
-/// to get the mode currently used by the desktop: getDesktopMode().
+/// to Get the mode currently used by the desktop: getDesktopMode().
 /// This allows to build windows with the same size or pixel
 /// depth as the current resolution.
 ///

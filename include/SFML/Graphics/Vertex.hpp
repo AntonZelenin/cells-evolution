@@ -122,7 +122,7 @@ public:
 /// If you use the graphical entities of SFML (sprite, text, shape)
 /// you won't have to deal with vertices directly. But if you want
 /// to define your own 2D entities, such as tiled maps or particle
-/// systems, using vertices will allow you to get maximum performances.
+/// systems, using vertices will allow you to Get maximum performances.
 ///
 /// Example:
 /// \code

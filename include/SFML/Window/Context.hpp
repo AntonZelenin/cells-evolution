@@ -102,7 +102,7 @@ public:
     ////////////////////////////////////////////////////////////
     /// \brief Get the address of an OpenGL function
     ///
-    /// \param name Name of the function to get the address of
+    /// \param name Name of the function to Get the address of
     ///
     /// \return Address of the OpenGL function, 0 on failure
     ///
@@ -164,7 +164,7 @@ private:
 ///
 /// If you need to make OpenGL calls without having an
 /// active window (like in a thread), you can use an
-/// instance of this class to get a valid context.
+/// instance of this class to Get a valid context.
 ///
 /// Having a valid context is necessary for *every* OpenGL call.
 ///
