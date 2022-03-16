@@ -4,7 +4,7 @@
 #include <vector>
 #include "geometry.h"
 
-namespace cell {
+namespace cells_evo::cell {
     enum Type {
         kHunter, kNonhunter
     };
@@ -27,7 +27,7 @@ namespace cell {
 
         static Type GetCellType();
     public:
-        std::vector<Cell> GetFirstGeneration(int field_width, int field_height, int size);
+        [[nodiscard]] std::vector<Cell> GetFirstGeneration(int field_width, int field_height, int size) const;
     };
 }
 

@@ -2,22 +2,18 @@
 #include <random>
 
 
-namespace food {
-// todo this is duplicate, refactor it
+namespace cells_evo::food {
     std::vector<Food> Manager::GetFirstGeneration(
             int field_width,
             int field_height,
             int size = Manager::kFirstGenerationSize
-    ) {
+    ) const {
         std::vector<Food> food;
         food.reserve(size);
-        std::vector<Position> positions;
-        positions.reserve(size);
-        for (int i = 0; i < size; i++) {
-            auto position = cells_evo::GeneratePosition(
-                    field_width, field_height, positions, this->kMinDistanceBetweenItems
-            );
-            positions.push_back(position);
+        auto positions = cells_evo::GenerateRandomPositions(
+                field_width, field_height, size, this->kMinDistanceBetweenItems
+        );
+        for (auto position: positions) {
             food.emplace_back(position);
         }
         return food;

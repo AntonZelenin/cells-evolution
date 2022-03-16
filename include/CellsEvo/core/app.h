@@ -26,6 +26,13 @@ namespace cells_evo {
             const std::vector<Position> &occupied_positions,
             int min_distance_between_cells
     );
+
+    std::vector<Position> GenerateRandomPositions(
+            int field_width,
+            int field_height,
+            int size,
+            int min_distance_between_cells
+    );
 }
 
 #endif //CELLS_EVOLUTION_APP_H

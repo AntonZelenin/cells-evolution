@@ -1,6 +1,6 @@
 #include "CellsEvo/core.h"
 
-namespace cell {
+namespace cells_evo::cell {
     Cell::Cell(float size, float speed, Type type, Position position) {
         this->size = size;
         this->speed = speed;
@@ -12,16 +12,13 @@ namespace cell {
             int field_width,
             int field_height,
             int size = Manager::kFirstGenerationSize
-    ) {
+    ) const {
         std::vector<Cell> cells;
         cells.reserve(size);
-        std::vector<Position> positions;
-        positions.reserve(size);
-        for (int i = 0; i < size; i++) {
-            auto position = cells_evo::GeneratePosition(
-                    field_width, field_height, positions, this->kMinDistanceBetweenCells
-            );
-            positions.push_back(position);
+        auto positions = cells_evo::GenerateRandomPositions(
+                field_width, field_height, size, this->kMinDistanceBetweenCells
+        );
+        for (auto position: positions) {
             cells.emplace_back(
                     this->kDefaultCellSize,
                     this->kDefaultCellSpeed,

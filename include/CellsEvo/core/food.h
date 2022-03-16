@@ -4,7 +4,7 @@
 
 #include "cell.h"
 
-namespace food {
+namespace cells_evo::food {
     class Food {
     public:
         Position position;
@@ -17,7 +17,7 @@ namespace food {
         const int kMinDistanceBetweenItems = 1;
 
     public:
-        std::vector<Food> GetFirstGeneration(int field_width, int field_height, int size);
+        [[nodiscard]] std::vector<Food> GetFirstGeneration(int field_width, int field_height, int size) const;
     };
 }
 

@@ -68,4 +68,21 @@ namespace cells_evo {
         }
         return {x, y};
     }
+
+    std::vector<Position> GenerateRandomPositions(
+            int field_width,
+            int field_height,
+            int size,
+            int min_distance_between_cells
+    ) {
+        std::vector<Position> positions;
+        positions.reserve(size);
+        for (int i = 0; i < size; i++) {
+            auto position = cells_evo::GeneratePosition(
+                    field_width, field_height, positions, min_distance_between_cells
+            );
+            positions.push_back(position);
+        }
+        return positions;
+    }
 }
