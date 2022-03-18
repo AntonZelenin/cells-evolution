@@ -21,13 +21,13 @@ class CellDrawer {
 
     [[nodiscard]] float GetThickness(float size) const;
 public:
-    sf::CircleShape Get(const cells_evo::core::Cell* cell);
+    sf::CircleShape Get(cells_evo::core::Cell *cell);
 };
 
 // todo make interface for drawers
 class FoodDrawer {
 public:
-    static sf::RectangleShape Get(const cells_evo::core::Food *food);
+    static sf::RectangleShape Get(cells_evo::core::Food *food);
 };
 
 #endif //CELLS_EVOLUTION_DRAWER_H

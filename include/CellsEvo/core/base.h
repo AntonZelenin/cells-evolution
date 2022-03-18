@@ -4,9 +4,10 @@
 #include "geometry.h"
 
 namespace cells_evo::core {
-    class HasPosition {
+    class Entity {
     public:
         virtual Position& GetPosition() = 0;
+        virtual unsigned int GetId() = 0;
     };
 }
 

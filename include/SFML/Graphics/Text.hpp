@@ -379,7 +379,7 @@ public:
     ///
     /// \param index Index of the character
     ///
-    /// \return HasPosition of the character
+    /// \return Entity of the character
     ///
     ////////////////////////////////////////////////////////////
     Vector2f findCharacterPos(std::size_t index) const;

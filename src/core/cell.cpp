@@ -4,6 +4,7 @@
 
 namespace cells_evo::core {
     Cell::Cell(float size, float speed, Type type, Position position) {
+        this->id = 0;
         this->size = size;
         this->speed = speed;
         this->type = type;
@@ -12,6 +13,16 @@ namespace cells_evo::core {
 
     Position& Cell::GetPosition() {
         return this->position;
+    }
+
+    unsigned int Cell::GetId() {
+        // todo duplicate
+        return this->id;
+    }
+
+    void Cell::SetId(unsigned int id) {
+        // todo duplicate
+        this->id = id;
     }
 
     std::vector<Cell> CellGenerator::GetFirstGeneration(

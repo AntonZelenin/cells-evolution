@@ -22,10 +22,19 @@ namespace cells_evo::core {
     }
 
     Food::Food(Position position) {
+        this->id = 0;
         this->position = position;
     }
 
     Position& Food::GetPosition() {
         return this->position;
+    }
+
+    unsigned int Food::GetId() {
+        return this->id;
+    }
+
+    void Food::SetId(unsigned int id) {
+        this->id = id;
     }
 }

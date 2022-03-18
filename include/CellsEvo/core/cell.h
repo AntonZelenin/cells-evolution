@@ -10,14 +10,17 @@ namespace cells_evo::core {
         kHunter, kNonhunter
     };
 
-    struct Cell: core::HasPosition {
+    class Cell: core::Entity {
+        unsigned int id;
+        Position position;
+    public:
         float size;
         float speed;
         Type type;
-        Position position;
-
         Cell(float size, float speed, Type type, Position position);
         Position& GetPosition() override;
+        unsigned int GetId() override;
+        void SetId(unsigned int id);
     };
 
     class CellGenerator {

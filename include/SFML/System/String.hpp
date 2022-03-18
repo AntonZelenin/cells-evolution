@@ -380,7 +380,7 @@ public:
     /// This function removes a sequence of \a count characters
     /// starting from \a position.
     ///
-    /// \param position HasPosition of the first character to erase
+    /// \param position Entity of the first character to erase
     /// \param count    Number of characters to erase
     ///
     ////////////////////////////////////////////////////////////
@@ -392,7 +392,7 @@ public:
     /// This function inserts the characters of \a str
     /// into the string, starting from \a position.
     ///
-    /// \param position HasPosition of insertion
+    /// \param position Entity of insertion
     /// \param str      Characters to insert
     ///
     ////////////////////////////////////////////////////////////
@@ -407,7 +407,7 @@ public:
     /// \param str   Characters to find
     /// \param start Where to begin searching
     ///
-    /// \return HasPosition of \a str in the string, or String::InvalidPos if not found
+    /// \return Entity of \a str in the string, or String::InvalidPos if not found
     ///
     ////////////////////////////////////////////////////////////
     std::size_t find(const String& str, std::size_t start = 0) const;

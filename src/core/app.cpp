@@ -14,10 +14,10 @@ namespace cells_evo {
             }
             this->window->clear(sf::Color::Black);
             for (auto cell: world.cells) {
-                this->window->draw(CellDrawer().Get(&cell));
+                this->window->draw(CellDrawer().Get(&cell.second));
             }
-            for (auto f: world.food) {
-                this->window->draw(FoodDrawer::Get(&f));
+            for (auto food: world.food) {
+                this->window->draw(FoodDrawer::Get(&food.second));
             }
             this->window->display();
         }

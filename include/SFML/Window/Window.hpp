@@ -241,7 +241,7 @@ public:
     ////////////////////////////////////////////////////////////
     /// \brief Get the position of the window
     ///
-    /// \return HasPosition of the window, in pixels
+    /// \return Entity of the window, in pixels
     ///
     /// \see setPosition
     ///
