@@ -211,7 +211,7 @@ public:
     /// Thus, it is equivalent to the following code:
     /// \code
     /// sf::Vector2f pos = object.getPosition();
-    /// object.setPosition(pos.x + offsetX, pos.y + offsetY);
+    /// object.setPosition(pos.X + offsetX, pos.Y + offsetY);
     /// \endcode
     ///
     /// \param offsetX X offset
@@ -262,7 +262,7 @@ public:
     /// Thus, it is equivalent to the following code:
     /// \code
     /// sf::Vector2f scale = object.getScale();
-    /// object.setScale(scale.x * factorX, scale.y * factorY);
+    /// object.setScale(scale.X * factorX, scale.Y * factorY);
     /// \endcode
     ///
     /// \param factorX Horizontal scale factor
@@ -281,7 +281,7 @@ public:
     /// Thus, it is equivalent to the following code:
     /// \code
     /// sf::Vector2f scale = object.getScale();
-    /// object.setScale(scale.x * factor.x, scale.y * factor.y);
+    /// object.setScale(scale.x * factor.X, scale.y * factor.Y);
     /// \endcode
     ///
     /// \param factor Scale factors
@@ -399,7 +399,7 @@ private:
 /// public:
 ///     void SetPosition(const MyVector& v)
 ///     {
-///         myTransform.setPosition(v.x(), v.y());
+///         myTransform.setPosition(v.X(), v.Y());
 ///     }
 ///
 ///     void Draw(sf::RenderTarget& target) const

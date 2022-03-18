@@ -166,7 +166,7 @@ namespace Glsl
     ///     1, 0, 0, 0,
     ///     0, 1, 0, 0,
     ///     0, 0, 1, 0,
-    ///     x, y, z, 1
+    ///     X, Y, z, 1
     /// };
     ///
     /// sf::Glsl::Mat4 matrix(array);
@@ -214,7 +214,7 @@ namespace Glsl
 /// initializes every component to zero, in addition to a
 /// constructor with one parameter for each component.
 /// The components are stored in member variables called
-/// x, y, z, and w.
+/// X, Y, z, and w.
 ///
 /// All matrix types support a constructor with a float*
 /// parameter that points to a float array of the appropriate

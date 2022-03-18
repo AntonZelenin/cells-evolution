@@ -9,6 +9,7 @@ namespace cells_evo::core {
 
         explicit Food(Position position);
         Position& GetPosition() override;
+        void SetPosition(Position) override;
         unsigned int GetId() override;
         void SetId(unsigned int id);
     };

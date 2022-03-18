@@ -2,18 +2,27 @@
 #define CELLS_EVOLUTION_GEOMETRY_H
 
 namespace cells_evo::core {
-    struct Position {
-        int x{};
-        int y{};
+    template<typename T>
+    struct Vector2 {
+        T x;
+        T y;
 
-        Position() = default;
+        Vector2() = default;
+
+        Vector2(T x, T y);
+    };
+
+    struct Position {
+        Vector2<float> coordinates{};
 
         // todo another construct implementation?
-        Position(int x, int y) {
-            this->x = x;
-            this->y = y;
-        }
+        Position(float x, float y);
+
+        [[nodiscard]] float X() const;
+        [[nodiscard]] float Y() const;
     };
+
+    Vector2<float> GetDirectionVector(Position& origin, Position& destination);
 }
 
 #endif //CELLS_EVOLUTION_GEOMETRY_H

@@ -216,7 +216,7 @@ SFML_WINDOW_API bool operator >=(const VideoMode& left, const VideoMode& right);
 /// {
 ///     sf::VideoMode mode = modes[i];
 ///     std::cout << "Mode #" << i << ": "
-///               << mode.width << "x" << mode.height << " - "
+///               << mode.width << "X" << mode.height << " - "
 ///               << mode.bitsPerPixel << " bpp" << std::endl;
 /// }
 ///

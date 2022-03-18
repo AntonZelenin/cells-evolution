@@ -266,7 +266,7 @@ typedef Vector3<float> Vector3f;
 /// \ingroup system
 ///
 /// sf::Vector3 is a simple class that defines a mathematical
-/// vector with three coordinates (x, y and z). It can be used to
+/// vector with three coordinates (X, Y and z). It can be used to
 /// represent anything that has three dimensions: a size, a point,
 /// a velocity, etc.
 ///
@@ -279,15 +279,15 @@ typedef Vector3<float> Vector3f;
 /// \li sf::Vector3<float> is sf::Vector3f
 /// \li sf::Vector3<int> is sf::Vector3i
 ///
-/// The sf::Vector3 class has a small and simple interface, its x and y members
+/// The sf::Vector3 class has a small and simple interface, its X and Y members
 /// can be accessed directly (there are no accessors like setX(), getX()) and it
 /// contains no mathematical function like dot product, cross product, length, etc.
 ///
 /// Usage example:
 /// \code
 /// sf::Vector3f v1(16.5f, 24.f, -8.2f);
-/// v1.x = 18.2f;
-/// float y = v1.y;
+/// v1.X = 18.2f;
+/// float y = v1.Y;
 /// float z = v1.z;
 ///
 /// sf::Vector3f v2 = v1 * 5.f;

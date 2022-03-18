@@ -298,7 +298,7 @@ public:
     ////////////////////////////////////////////////////////////
     /// \brief Change the window's icon
     ///
-    /// \a pixels must be an array of \a width x \a height pixels
+    /// \a pixels must be an array of \a width X \a height pixels
     /// in 32-bits RGBA format.
     ///
     /// The OS default icon is used by default.

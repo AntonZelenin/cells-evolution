@@ -16,9 +16,9 @@ namespace cells_evo {
         void Run();
     };
 
-    namespace cells_evo::core {
+    namespace core {
         // todo find it a better place?
-        std::vector<::cells_evo::core::Position> GenerateRandomPositions(
+        std::vector<Position> GenerateRandomPositions(
                 int field_width,
                 int field_height,
                 int size,

@@ -22,6 +22,7 @@ namespace cells_evo::core {
         void AddFood(Food food);
         void AddFood(const std::vector<Food>& foods);
         void AddCells(const std::vector<Cell>& new_cells);
+        void Tick();
     };
 
     core::Entity* FindNearest(Position position, std::vector<core::Entity>);

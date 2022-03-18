@@ -139,7 +139,7 @@ public:
     /// \code
     /// sf::Vector2u windowSize = window.getSize();
     /// sf::Texture texture;
-    /// texture.create(windowSize.x, windowSize.y);
+    /// texture.create(windowSize.X, windowSize.Y);
     /// texture.update(window);
     /// sf::Image screenshot = texture.copyToImage();
     /// \endcode

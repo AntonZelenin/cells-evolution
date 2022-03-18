@@ -3,12 +3,11 @@
 
 
 namespace cells_evo::core {
-    Cell::Cell(float size, float speed, Type type, Position position) {
+    Cell::Cell(float size, float speed, Type type, Position position): position(position) {
         this->id = 0;
         this->size = size;
         this->speed = speed;
         this->type = type;
-        this->position = position;
     }
 
     Position& Cell::GetPosition() {
@@ -23,6 +22,11 @@ namespace cells_evo::core {
     void Cell::SetId(unsigned int id) {
         // todo duplicate
         this->id = id;
+    }
+
+    // todo maybe update? do I need it?
+    void Cell::SetPosition(Position pos) {
+        this->position = pos;
     }
 
     std::vector<Cell> CellGenerator::GetFirstGeneration(

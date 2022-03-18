@@ -22,14 +22,16 @@ namespace cells_evo::core {
     }
 
     void World::AddFood(Food new_food) {
-        this->field[new_food.GetPosition().x][new_food.GetPosition().y] = true;
+        // todo this will not work
+        this->field[new_food.GetPosition().X()][new_food.GetPosition().Y()] = true;
         unsigned int id = this->index_driver.GetNextId();
         new_food.SetId(id);
         this->food.insert({id, new_food});
     }
 
     void World::AddCell(Cell cell) {
-        this->field[cell.GetPosition().x][cell.GetPosition().y] = true;
+        // todo this will not work
+        this->field[cell.GetPosition().X()][cell.GetPosition().Y()] = true;
         unsigned int id = this->index_driver.GetNextId();
         cell.SetId(id);
         this->cells.insert({id, cell});
@@ -46,5 +48,9 @@ namespace cells_evo::core {
         for (auto c: new_cells) {
             this->AddCell(c);
         }
+    }
+
+    void World::Tick() {
+
     }
 }

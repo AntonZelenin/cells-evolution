@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "geometry.h"
+#include "genes.h"
 #include "base.h"
 
 namespace cells_evo::core {
@@ -10,15 +11,18 @@ namespace cells_evo::core {
         kHunter, kNonhunter
     };
 
-    class Cell: core::Entity {
+    class Cell: public core::Entity {
         unsigned int id;
         Position position;
     public:
         float size;
         float speed;
         Type type;
+        std::vector<Gene> genes{};
+
         Cell(float size, float speed, Type type, Position position);
         Position& GetPosition() override;
+        void SetPosition(Position pos) override;
         unsigned int GetId() override;
         void SetId(unsigned int id);
     };

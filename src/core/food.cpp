@@ -21,9 +21,8 @@ namespace cells_evo::core {
         return food;
     }
 
-    Food::Food(Position position) {
+    Food::Food(Position position) : position(position) {
         this->id = 0;
-        this->position = position;
     }
 
     Position& Food::GetPosition() {
@@ -36,5 +35,9 @@ namespace cells_evo::core {
 
     void Food::SetId(unsigned int id) {
         this->id = id;
+    }
+
+    void Food::SetPosition(Position pos) {
+        this->position = pos;
     }
 }

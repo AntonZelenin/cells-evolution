@@ -282,7 +282,7 @@ public:
     ///
     /// Although the source texture can be smaller than this texture,
     /// this function is usually used for updating the whole texture.
-    /// The other overload, which has (x, y) additional arguments,
+    /// The other overload, which has (X, Y) additional arguments,
     /// is more convenient for updating a sub-area of this texture.
     ///
     /// No additional check is performed on the size of the passed
@@ -319,7 +319,7 @@ public:
     ///
     /// Although the source image can be smaller than the texture,
     /// this function is usually used for updating the whole texture.
-    /// The other overload, which has (x, y) additional arguments,
+    /// The other overload, which has (X, Y) additional arguments,
     /// is more convenient for updating a sub-area of the texture.
     ///
     /// No additional check is performed on the size of the image,
@@ -356,7 +356,7 @@ public:
     ///
     /// Although the source window can be smaller than the texture,
     /// this function is usually used for updating the whole texture.
-    /// The other overload, which has (x, y) additional arguments,
+    /// The other overload, which has (X, Y) additional arguments,
     /// is more convenient for updating a sub-area of the texture.
     ///
     /// No additional check is performed on the size of the window,

@@ -5,29 +5,32 @@
 #include <SFML/Graphics.hpp>
 #include "CellsEvo/core.h"
 
-class CellColorProvider {
-    std::map<cells_evo::core::Type, sf::Color> mapping{
-            {cells_evo::core::Type::kHunter,    sf::Color::Red},
-            {cells_evo::core::Type::kNonhunter, sf::Color::Green},
+namespace cells_evo::graphics {
+    class CellColorProvider {
+        std::map<core::Type, sf::Color> mapping{
+                {core::Type::kHunter,    sf::Color::Red},
+                {core::Type::kNonhunter, sf::Color::Green},
+        };
+    public:
+        sf::Color Get(const core::Type *type);
     };
-public:
-    sf::Color Get(const cells_evo::core::Type* type);
-};
 
-class CellDrawer {
-    const float k_thickness_coefficient = 5.f;
+    class CellDrawer {
+        const float k_thickness_coefficient = 5.f;
 
-    CellColorProvider color_provider = CellColorProvider();
+        CellColorProvider color_provider = CellColorProvider();
 
-    [[nodiscard]] float GetThickness(float size) const;
-public:
-    sf::CircleShape Get(cells_evo::core::Cell *cell);
-};
+        [[nodiscard]] float GetThickness(float size) const;
+
+    public:
+        sf::CircleShape Get(core::Cell *cell);
+    };
 
 // todo make interface for drawers
-class FoodDrawer {
-public:
-    static sf::RectangleShape Get(cells_evo::core::Food *food);
-};
+    class FoodDrawer {
+    public:
+        static sf::RectangleShape Get(core::Food *food);
+    };
+}
 
 #endif //CELLS_EVOLUTION_DRAWER_H
