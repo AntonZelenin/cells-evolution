@@ -233,7 +233,7 @@ public:
     /// that it takes into account the transformations (translation,
     /// rotation, scale, ...) that are applied to the entity.
     /// In other words, this function returns the bounds of the
-    /// shape in the global 2D world's coordinate system.
+    /// shape in the global 2D World's coordinate system.
     ///
     /// This function does not necessarily return the \a minimal
     /// bounding rectangle. It merely ensures that the returned

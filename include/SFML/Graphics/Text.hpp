@@ -379,7 +379,7 @@ public:
     ///
     /// \param index Index of the character
     ///
-    /// \return Position of the character
+    /// \return HasPosition of the character
     ///
     ////////////////////////////////////////////////////////////
     Vector2f findCharacterPos(std::size_t index) const;
@@ -405,7 +405,7 @@ public:
     /// that it takes into account the transformations (translation,
     /// rotation, scale, ...) that are applied to the entity.
     /// In other words, this function returns the bounds of the
-    /// text in the global 2D world's coordinate system.
+    /// text in the global 2D World's coordinate system.
     ///
     /// \return Global bounding rectangle of the entity
     ///

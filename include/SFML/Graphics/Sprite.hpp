@@ -182,7 +182,7 @@ public:
     /// that it takes into account the transformations (translation,
     /// rotation, scale, ...) that are applied to the entity.
     /// In other words, this function returns the bounds of the
-    /// sprite in the global 2D world's coordinate system.
+    /// sprite in the global 2D World's coordinate system.
     ///
     /// \return Global bounding rectangle of the entity
     ///

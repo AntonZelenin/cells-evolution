@@ -1,17 +1,19 @@
 #ifndef CELLS_EVOLUTION_GEOMETRY_H
 #define CELLS_EVOLUTION_GEOMETRY_H
 
-struct Position {
-    int x{};
-    int y{};
+namespace cells_evo::core {
+    struct Position {
+        int x{};
+        int y{};
 
-    Position() = default;
+        Position() = default;
 
-    // todo another construct implementation?
-    Position(int x, int y) {
-        this->x = x;
-        this->y = y;
-    }
-};
+        // todo another construct implementation?
+        Position(int x, int y) {
+            this->x = x;
+            this->y = y;
+        }
+    };
+}
 
 #endif //CELLS_EVOLUTION_GEOMETRY_H

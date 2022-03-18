@@ -241,7 +241,7 @@ public:
     ////////////////////////////////////////////////////////////
     /// \brief Get the position of the window
     ///
-    /// \return Position of the window, in pixels
+    /// \return HasPosition of the window, in pixels
     ///
     /// \see setPosition
     ///

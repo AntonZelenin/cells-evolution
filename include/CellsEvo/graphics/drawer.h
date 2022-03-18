@@ -6,12 +6,12 @@
 #include "CellsEvo/core.h"
 
 class CellColorProvider {
-    std::map<cells_evo::cell::Type, sf::Color> mapping{
-            {cells_evo::cell::Type::kHunter,    sf::Color::Red},
-            {cells_evo::cell::Type::kNonhunter, sf::Color::Green},
+    std::map<cells_evo::core::Type, sf::Color> mapping{
+            {cells_evo::core::Type::kHunter,    sf::Color::Red},
+            {cells_evo::core::Type::kNonhunter, sf::Color::Green},
     };
 public:
-    sf::Color Get(const cells_evo::cell::Type* type);
+    sf::Color Get(const cells_evo::core::Type* type);
 };
 
 class CellDrawer {
@@ -21,13 +21,13 @@ class CellDrawer {
 
     [[nodiscard]] float GetThickness(float size) const;
 public:
-    sf::CircleShape Get(const cells_evo::cell::Cell* cell);
+    sf::CircleShape Get(const cells_evo::core::Cell* cell);
 };
 
 // todo make interface for drawers
 class FoodDrawer {
 public:
-    static sf::RectangleShape Get(const cells_evo::food::Food *food);
+    static sf::RectangleShape Get(const cells_evo::core::Food *food);
 };
 
 #endif //CELLS_EVOLUTION_DRAWER_H

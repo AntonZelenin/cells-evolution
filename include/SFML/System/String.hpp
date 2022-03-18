@@ -380,7 +380,7 @@ public:
     /// This function removes a sequence of \a count characters
     /// starting from \a position.
     ///
-    /// \param position Position of the first character to erase
+    /// \param position HasPosition of the first character to erase
     /// \param count    Number of characters to erase
     ///
     ////////////////////////////////////////////////////////////
@@ -392,7 +392,7 @@ public:
     /// This function inserts the characters of \a str
     /// into the string, starting from \a position.
     ///
-    /// \param position Position of insertion
+    /// \param position HasPosition of insertion
     /// \param str      Characters to insert
     ///
     ////////////////////////////////////////////////////////////
@@ -407,7 +407,7 @@ public:
     /// \param str   Characters to find
     /// \param start Where to begin searching
     ///
-    /// \return Position of \a str in the string, or String::InvalidPos if not found
+    /// \return HasPosition of \a str in the string, or String::InvalidPos if not found
     ///
     ////////////////////////////////////////////////////////////
     std::size_t find(const String& str, std::size_t start = 0) const;
@@ -625,7 +625,7 @@ SFML_SYSTEM_API String operator +(const String& left, const String& right);
 ///
 /// sf::String is a utility string class defined mainly for
 /// convenience. It is a Unicode string (implemented using
-/// UTF-32), thus it can store any character in the world
+/// UTF-32), thus it can store any character in the World
 /// (European, Chinese, Arabic, Hebrew, etc.).
 ///
 /// It automatically handles conversions from/to ANSI and

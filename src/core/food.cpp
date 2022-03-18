@@ -1,16 +1,18 @@
 #include "CellsEvo/core.h"
+#include "CellsEvo/core/food.h"
+
 #include <random>
 
 
-namespace cells_evo::food {
-    std::vector<Food> Manager::GetFirstGeneration(
+namespace cells_evo::core {
+    std::vector<Food> FoodGenerator::GetFirstGeneration(
             int field_width,
             int field_height,
-            int size = Manager::kFirstGenerationSize
+            int size = FoodGenerator::kFirstGenerationSize
     ) const {
         std::vector<Food> food;
         food.reserve(size);
-        auto positions = cells_evo::GenerateRandomPositions(
+        auto positions = cells_evo::core::GenerateRandomPositions(
                 field_width, field_height, size, this->kMinDistanceBetweenItems
         );
         for (auto position: positions) {
@@ -21,5 +23,9 @@ namespace cells_evo::food {
 
     Food::Food(Position position) {
         this->position = position;
+    }
+
+    Position& Food::GetPosition() {
+        return this->position;
     }
 }

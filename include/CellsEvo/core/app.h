@@ -9,30 +9,22 @@
 namespace cells_evo {
     class App {
         sf::RenderWindow *window;
-        cell::Manager cell_manager{};
-        food::Manager food_manager{};
     public:
         App();
-
         ~App();
 
         void Run();
     };
 
-    // todo find it a better place
-    [[nodiscard]] Position GeneratePosition(
-            int width,
-            int height,
-            const std::vector<Position> &occupied_positions,
-            int min_distance_between_cells
-    );
-
-    std::vector<Position> GenerateRandomPositions(
-            int field_width,
-            int field_height,
-            int size,
-            int min_distance_between_cells
-    );
+    namespace cells_evo::core {
+        // todo find it a better place?
+        std::vector<::cells_evo::core::Position> GenerateRandomPositions(
+                int field_width,
+                int field_height,
+                int size,
+                int min_distance_between_cells
+        );
+    }
 }
 
 #endif //CELLS_EVOLUTION_APP_H

@@ -1,6 +1,8 @@
 #include "CellsEvo/core.h"
+#include "CellsEvo/core/cell.h"
 
-namespace cells_evo::cell {
+
+namespace cells_evo::core {
     Cell::Cell(float size, float speed, Type type, Position position) {
         this->size = size;
         this->speed = speed;
@@ -8,28 +10,32 @@ namespace cells_evo::cell {
         this->position = position;
     }
 
-    std::vector<Cell> Manager::GetFirstGeneration(
+    Position& Cell::GetPosition() {
+        return this->position;
+    }
+
+    std::vector<Cell> CellGenerator::GetFirstGeneration(
             int field_width,
             int field_height,
-            int size = Manager::kFirstGenerationSize
+            int size = CellGenerator::kFirstGenerationSize
     ) const {
         std::vector<Cell> cells;
         cells.reserve(size);
-        auto positions = cells_evo::GenerateRandomPositions(
+        auto positions = cells_evo::core::GenerateRandomPositions(
                 field_width, field_height, size, this->kMinDistanceBetweenCells
         );
         for (auto position: positions) {
             cells.emplace_back(
                     this->kDefaultCellSize,
                     this->kDefaultCellSpeed,
-                    Manager::GetCellType(),
+                    CellGenerator::GetCellType(),
                     position
             );
         }
         return cells;
     }
 
-    Type Manager::GetCellType() {
+    Type CellGenerator::GetCellType() {
         return Type::kHunter;
     }
 }

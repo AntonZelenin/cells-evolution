@@ -317,7 +317,7 @@ private:
     // Member data
     ////////////////////////////////////////////////////////////
     Vector2f          m_origin;                     ///< Origin of translation/rotation/scaling of the object
-    Vector2f          m_position;                   ///< Position of the object in the 2D world
+    Vector2f          m_position;                   ///< HasPosition of the object in the 2D World
     float             m_rotation;                   ///< Orientation of the object, in degrees
     Vector2f          m_scale;                      ///< Scale of the object
     mutable Transform m_transform;                  ///< Combined transformation of the object

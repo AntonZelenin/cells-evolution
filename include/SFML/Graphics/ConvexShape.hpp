@@ -100,7 +100,7 @@ public:
     ///
     /// \param index Index of the point to Get, in range [0 .. getPointCount() - 1]
     ///
-    /// \return Position of the index-th point of the polygon
+    /// \return HasPosition of the index-th point of the polygon
     ///
     /// \see setPoint
     ///

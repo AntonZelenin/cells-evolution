@@ -3,23 +3,24 @@
 
 #include <vector>
 #include "geometry.h"
+#include "base.h"
 
-namespace cells_evo::cell {
+namespace cells_evo::core {
     enum Type {
         kHunter, kNonhunter
     };
 
-    struct Cell {
+    struct Cell: core::HasPosition {
         float size;
         float speed;
         Type type;
-
         Position position;
 
         Cell(float size, float speed, Type type, Position position);
+        Position& GetPosition() override;
     };
 
-    class Manager {
+    class CellGenerator {
         static const int kFirstGenerationSize = 20;
         const float kDefaultCellSize = 20.0;
         const float kDefaultCellSpeed = 1.0;

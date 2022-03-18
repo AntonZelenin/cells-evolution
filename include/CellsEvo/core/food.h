@@ -1,18 +1,16 @@
 #ifndef CELLS_EVOLUTION_FOOD_H
 #define CELLS_EVOLUTION_FOOD_H
 
-
-#include "cell.h"
-
-namespace cells_evo::food {
-    class Food {
+namespace cells_evo::core {
+    class Food: core::HasPosition {
     public:
         Position position;
 
         explicit Food(Position position);
+        Position& GetPosition() override;
     };
 
-    class Manager {
+    class FoodGenerator {
         static const int kFirstGenerationSize = 20;
         const int kMinDistanceBetweenItems = 1;
 
