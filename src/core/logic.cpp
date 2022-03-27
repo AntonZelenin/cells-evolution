@@ -6,30 +6,37 @@ namespace cells_evo::logic {
     }
 
     void Logic::WorldTick() {
-        for (auto [_, cell]: this->world.cells) {
+        for (auto&[_, cell]: this->world.cells) {
             this->CellAct(cell);
         }
     }
 
-    // todo take account of time
-    void Move(core::Entity& entity, core::Vector2<float> direction, float speed) {
+    void Move(core::Entity &entity, core::Vector2<float> &direction, float speed) {
         auto position = entity.GetPosition();
-        auto new_pos = core::Position(position.X() + (direction.x * speed), position.X() + (direction.x * speed));
+        auto new_pos = core::Position(position.X() + (direction.x * speed), position.Y() + (direction.y * speed));
         entity.SetPosition(new_pos);
     }
 
     void Logic::CellAct(core::Cell &cell) {
-        auto target_position = this->GetClosestFood().GetPosition();
+        auto target_position = this->GetClosestFood(cell).GetPosition();
         auto direction = core::GetDirectionVector(cell.GetPosition(), target_position);
         Move(cell, direction, cell.speed);
     }
 
-    core::Food& Logic::GetClosestFood() {
-        auto res = this->world.food.find(0);
-        if (res != this->world.food.end()) {
-            return res->second;
+    core::Food &Logic::GetClosestFood(core::Cell &cell) {
+        if (this->world.food.empty())
+            // todo return optional
+            throw std::runtime_error("No food exists!");
+        int closest_idx;
+        float min_distance = std::numeric_limits<float>::max();
+        for (auto&[idx, food]: this->world.food) {
+            // todo seems position makes life harder
+            auto dist = (food.GetPosition() - cell.GetPosition()).coordinates.Magnitude();
+            if (dist < min_distance) {
+                min_distance = dist;
+                closest_idx = idx;
+            }
         }
-        // todo
-        throw "No food exists!";
+        return this->world.food.find(closest_idx)->second;
     }
 }

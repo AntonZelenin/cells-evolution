@@ -15,7 +15,7 @@ namespace cells_evo::core {
         auto positions = cells_evo::core::GenerateRandomPositions(
                 field_width, field_height, size, this->kMinDistanceBetweenItems
         );
-        for (auto position: positions) {
+        for (auto& position: positions) {
             food.emplace_back(position);
         }
         return food;

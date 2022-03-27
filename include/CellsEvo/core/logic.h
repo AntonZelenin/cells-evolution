@@ -10,7 +10,7 @@ namespace cells_evo::logic {
 
         void CellAct(core::Cell &cell);
 
-        core::Food &GetClosestFood();
+        core::Food &GetClosestFood(core::Cell &cell);
 
     public:
         explicit Logic(core::World &world);

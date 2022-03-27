@@ -1,27 +1,39 @@
+#include <chrono>
+#include <thread>
 #include <random>
+
 #include "CellsEvo/core.h"
 #include "CellsEvo/graphics.h"
 #include "SFML/Graphics.hpp"
 
 namespace cells_evo {
     void App::Run() {
-        auto world = core::World();
-        auto logic = logic::Logic(world);
+        std::chrono::time_point<std::chrono::steady_clock> start;
+        auto frame_micro_sec = 16666;
+        long long time_diff;
+
         while (this->window->isOpen()) {
+            start = std::chrono::steady_clock::now();
+
             sf::Event event{};
             while (this->window->pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
                     this->window->close();
             }
-//            logic.WorldTick();
+            this->logic->WorldTick();
             this->window->clear(sf::Color::Black);
-            for (auto [_, cell]: world.cells) {
+            for (auto& [_, cell]: this->world->cells) {
                 this->window->draw(graphics::CellDrawer().Get(&cell));
             }
-            for (auto [_, food]: world.food) {
+            for (auto& [_, food]: this->world->food) {
                 this->window->draw(graphics::FoodDrawer::Get(&food));
             }
             this->window->display();
+
+            time_diff = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start).count();
+            if (time_diff < frame_micro_sec) {
+                std::this_thread::sleep_for(std::chrono::nanoseconds(frame_micro_sec - time_diff));
+            }
         }
     }
 
@@ -29,10 +41,15 @@ namespace cells_evo {
         // todo provide configuration?
         this->window = new sf::RenderWindow(sf::VideoMode(2000, 1500), "Cells");
         window->setVerticalSyncEnabled(true);
+
+        this->world = new core::World();
+        this->logic = new logic::Logic(*this->world);
     }
 
     App::~App() {
         delete this->window;
+        delete this->logic;
+        delete this->world;
     }
 
     namespace core {
@@ -52,7 +69,7 @@ namespace cells_evo {
                 std::uniform_int_distribution<int> y_distribution(0, height);
                 x = static_cast<float>(x_distribution(generator));
                 y = static_cast<float>(y_distribution(generator));
-                for (auto p: occupied_positions) {
+                for (auto& p: occupied_positions) {
                     if (abs(p.X() - x) <= min_dist_between_cells && abs(p.Y() - y) <= min_dist_between_cells) {
                         is_ok = false;
                         break;

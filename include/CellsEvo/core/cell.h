@@ -35,7 +35,7 @@ namespace cells_evo::core {
 
         static Type GetCellType();
     public:
-        [[nodiscard]] std::vector<Cell> GetFirstGeneration(int field_width, int field_height, int size) const;
+        [[nodiscard]] std::vector<Cell> GetFirstGeneration(int field_width, int field_height, int generation_size) const;
     };
 }
 

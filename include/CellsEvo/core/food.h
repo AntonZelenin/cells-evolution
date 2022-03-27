@@ -2,15 +2,19 @@
 #define CELLS_EVOLUTION_FOOD_H
 
 namespace cells_evo::core {
-    class Food: Entity {
+    class Food : Entity {
         int id;
         Position position;
     public:
 
         explicit Food(Position position);
-        Position& GetPosition() override;
+
+        Position &GetPosition() override;
+
         void SetPosition(Position) override;
+
         unsigned int GetId() override;
+
         void SetId(unsigned int id);
     };
 

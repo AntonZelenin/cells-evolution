@@ -32,14 +32,14 @@ namespace cells_evo::core {
     std::vector<Cell> CellGenerator::GetFirstGeneration(
             int field_width,
             int field_height,
-            int size = CellGenerator::kFirstGenerationSize
+            int generation_size = CellGenerator::kFirstGenerationSize
     ) const {
         std::vector<Cell> cells;
-        cells.reserve(size);
+        cells.reserve(generation_size);
         auto positions = cells_evo::core::GenerateRandomPositions(
-                field_width, field_height, size, this->kMinDistanceBetweenCells
+                field_width, field_height, generation_size, this->kMinDistanceBetweenCells
         );
-        for (auto position: positions) {
+        for (auto& position: positions) {
             cells.emplace_back(
                     this->kDefaultCellSize,
                     this->kDefaultCellSpeed,

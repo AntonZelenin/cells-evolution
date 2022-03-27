@@ -7,11 +7,10 @@ namespace cells_evo::graphics {
     }
 
     sf::CircleShape CellDrawer::Get(core::Cell *cell) {
-        // todo make core attrs private float? and add public methods to manipulate? or another class to Get rid of casts
-        sf::CircleShape shape(static_cast<float>(cell->size));
+        sf::CircleShape shape(cell->size);
         shape.setOutlineThickness(this->GetThickness(cell->size));
         shape.setOutlineColor(this->color_provider.Get(&cell->type));
-        shape.setPosition(static_cast<float>(cell->GetPosition().X()), static_cast<float>(cell->GetPosition().Y()));
+        shape.setPosition(cell->GetPosition().X() - cell->size, cell->GetPosition().Y() - cell->size);
         return shape;
     }
 

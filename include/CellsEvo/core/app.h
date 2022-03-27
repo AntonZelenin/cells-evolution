@@ -5,10 +5,15 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "cell.h"
 #include "food.h"
+#include "world.h"
+#include "logic.h"
 
 namespace cells_evo {
     class App {
         sf::RenderWindow *window;
+
+        core::World *world;
+        logic::Logic *logic;
     public:
         App();
         ~App();
