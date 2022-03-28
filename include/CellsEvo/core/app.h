@@ -10,10 +10,12 @@
 
 namespace cells_evo {
     class App {
-        sf::RenderWindow *window;
+        sf::RenderWindow *window_;
 
-        core::World *world;
-        logic::Logic *logic;
+        core::World *world_;
+        logic::Logic *logic_;
+
+        static const int k_frame_micro_sec_ = 16666;
     public:
         App();
         ~App();
@@ -27,7 +29,7 @@ namespace cells_evo {
                 int field_width,
                 int field_height,
                 int size,
-                int min_distance_between_cells
+                int min_distance_between_positions
         );
     }
 }

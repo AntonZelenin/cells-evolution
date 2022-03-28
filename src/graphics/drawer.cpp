@@ -3,19 +3,19 @@
 
 namespace cells_evo::graphics {
     float CellDrawer::GetThickness(float size) const {
-        return size / this->k_thickness_coefficient;
+        return size / this->k_thickness_coefficient_;
     }
 
     sf::CircleShape CellDrawer::Get(core::Cell *cell) {
-        sf::CircleShape shape(cell->size);
-        shape.setOutlineThickness(this->GetThickness(cell->size));
-        shape.setOutlineColor(this->color_provider.Get(&cell->type));
-        shape.setPosition(cell->GetPosition().X() - cell->size, cell->GetPosition().Y() - cell->size);
+        sf::CircleShape shape(cell->size_);
+        shape.setOutlineThickness(this->GetThickness(cell->size_));
+        shape.setOutlineColor(this->color_provider_.Get(&cell->type_));
+        shape.setPosition(cell->GetPosition().X() - cell->size_, cell->GetPosition().Y() - cell->size_);
         return shape;
     }
 
     sf::Color CellColorProvider::Get(const core::Type *type) {
-        return this->mapping[*type];
+        return this->mapping_[*type];
     }
 
     sf::RectangleShape FoodDrawer::Get(core::Food *food) {

@@ -8,16 +8,16 @@
 
 namespace cells_evo::core {
     enum Type {
-        kHunter, kNonhunter
+        K_HUNTER, K_NONHUNTER
     };
 
     class Cell: public core::Entity {
-        unsigned int id;
-        Position position;
+        Position position_;
     public:
-        float size;
-        float speed;
-        Type type;
+        unsigned int id_;
+        float size_;
+        float speed_;
+        Type type_;
         std::vector<Gene> genes{};
 
         Cell(float size, float speed, Type type, Position position);
@@ -28,14 +28,14 @@ namespace cells_evo::core {
     };
 
     class CellGenerator {
-        static const int kFirstGenerationSize = 20;
-        const float kDefaultCellSize = 20.0;
-        const float kDefaultCellSpeed = 1.0;
-        const int kMinDistanceBetweenCells = 1;
+        static const int k_first_generation_size_ = 20;
+        const float k_default_cell_size_ = 20.0;
+        const float k_default_cell_speed_ = 1.0;
+        const int k_min_distance_between_cells_ = 1;
 
         static Type GetCellType();
     public:
-        [[nodiscard]] std::vector<Cell> GetFirstGeneration(int field_width, int field_height, int generation_size) const;
+        [[nodiscard]] std::vector<Cell> Generate(int field_width, int field_height, int generation_size) const;
     };
 }
 

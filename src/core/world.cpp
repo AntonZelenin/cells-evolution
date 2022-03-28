@@ -2,55 +2,50 @@
 
 namespace cells_evo::core {
     World::World() {
-        this->width = 1920;
-        this->height = 1080;
-        this->field.reserve(this->height);
-        for (int i = 0; i < this->width; i++) {
-            std::vector<bool> v(this->width, false);
-            this->field.push_back(v);
-        }
-        this->AddFood(FoodGenerator().GetFirstGeneration(
-                this->width,
-                this->height,
-                20
-        ));
-        this->AddCells(CellGenerator().GetFirstGeneration(
-                this->width,
-                this->height,
-                5
-        ));
+        this->width_ = 1920;
+        this->height_ = 1080;
+        this->GenerateFood(20);
+        this->GenerateCells(5);
     }
 
     void World::AddFood(Food new_food) {
-        // todo this will not work
-        this->field[new_food.GetPosition().X()][new_food.GetPosition().Y()] = true;
-        unsigned int id = this->index_driver.GetNextId();
+        unsigned int id = this->index_driver_.GetNextId();
         new_food.SetId(id);
-        this->food.insert({id, new_food});
+        this->food_.insert({id, new_food});
     }
 
     void World::AddCell(Cell cell) {
-        // todo this will not work
-        this->field[cell.GetPosition().X()][cell.GetPosition().Y()] = true;
-        unsigned int id = this->index_driver.GetNextId();
+        unsigned int id = this->index_driver_.GetNextId();
         cell.SetId(id);
-        this->cells.insert({id, cell});
+        this->cells_.insert({id, cell});
+    }
+
+    void World::GenerateFood(int number) {
+        this->AddFood(this->food_generator_.Generate(
+                this->width_,
+                this->height_,
+                number
+        ));
+    }
+
+    void World::GenerateCells(int number) {
+        this->AddCells(this->cell_generator_.Generate(
+                this->width_,
+                this->height_,
+                number
+        ));
     }
 
     void World::AddFood(const std::vector<Food>& foods) {
         // todo will it work as I expect?
-        for (auto f: foods) {
+        for (const auto& f: foods) {
             this->AddFood(f);
         }
     }
 
     void World::AddCells(const std::vector<Cell>& new_cells) {
-        for (auto c: new_cells) {
+        for (const auto& c: new_cells) {
             this->AddCell(c);
         }
-    }
-
-    void World::Tick() {
-
     }
 }

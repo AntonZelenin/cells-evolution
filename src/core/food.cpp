@@ -5,15 +5,15 @@
 
 
 namespace cells_evo::core {
-    std::vector<Food> FoodGenerator::GetFirstGeneration(
+    std::vector<Food> FoodGenerator::Generate(
             int field_width,
             int field_height,
-            int size = FoodGenerator::kFirstGenerationSize
+            int size = FoodGenerator::k_first_generation_size_
     ) const {
         std::vector<Food> food;
         food.reserve(size);
         auto positions = cells_evo::core::GenerateRandomPositions(
-                field_width, field_height, size, this->kMinDistanceBetweenItems
+                field_width, field_height, size, this->k_min_distance_between_items_
         );
         for (auto& position: positions) {
             food.emplace_back(position);
@@ -21,23 +21,23 @@ namespace cells_evo::core {
         return food;
     }
 
-    Food::Food(Position position) : position(position) {
-        this->id = 0;
+    Food::Food(Position position) : position_(position) {
+        this->id_ = 0;
     }
 
     Position& Food::GetPosition() {
-        return this->position;
+        return this->position_;
     }
 
     unsigned int Food::GetId() {
-        return this->id;
+        return this->id_;
     }
 
     void Food::SetId(unsigned int id) {
-        this->id = id;
+        this->id_ = id;
     }
 
     void Food::SetPosition(Position pos) {
-        this->position = pos;
+        this->position_ = pos;
     }
 }

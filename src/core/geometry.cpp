@@ -15,7 +15,7 @@ namespace cells_evo::core {
         return this->coordinates.y;
     }
 
-    Position Position::operator-(const Position &pos) const {
+    Vector2<float> Position::operator-(const Position &pos) const {
         return {pos.coordinates - this->coordinates};
     }
 

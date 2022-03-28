@@ -4,7 +4,7 @@
 
 namespace cells_evo::core {
     class IndexDriver {
-        unsigned int idx = 1;
+        unsigned int idx_ = 1;
     public:
         unsigned int GetNextId();
     };

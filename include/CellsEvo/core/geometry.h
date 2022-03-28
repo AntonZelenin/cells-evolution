@@ -23,13 +23,13 @@ namespace cells_evo::core {
 
         // todo another construct implementation?
         Position(float x, float y);
-        Position(Vector2<float> coords);
+        explicit Position(Vector2<float> coords);
 
         [[nodiscard]] float X() const;
 
         [[nodiscard]] float Y() const;
 
-        Position operator-(Position const &pos) const;
+        Vector2<float> operator-(Position const &pos) const;
     };
 
     Vector2<float> GetDirectionVector(Position &origin, Position &destination);

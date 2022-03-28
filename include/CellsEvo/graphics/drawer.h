@@ -7,18 +7,18 @@
 
 namespace cells_evo::graphics {
     class CellColorProvider {
-        std::map<core::Type, sf::Color> mapping{
-                {core::Type::kHunter,    sf::Color::Red},
-                {core::Type::kNonhunter, sf::Color::Green},
+        std::map<core::Type, sf::Color> mapping_{
+                {core::Type::K_HUNTER, sf::Color::Red},
+                {core::Type::K_NONHUNTER, sf::Color::Green},
         };
     public:
         sf::Color Get(const core::Type *type);
     };
 
     class CellDrawer {
-        const float k_thickness_coefficient = 5.f;
+        const float k_thickness_coefficient_ = 5.f;
 
-        CellColorProvider color_provider = CellColorProvider();
+        CellColorProvider color_provider_ = CellColorProvider();
 
         [[nodiscard]] float GetThickness(float size) const;
 

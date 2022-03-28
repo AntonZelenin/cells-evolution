@@ -3,9 +3,9 @@
 
 namespace cells_evo::core {
     class Food : Entity {
-        int id;
-        Position position;
+        Position position_;
     public:
+        int id_;
 
         explicit Food(Position position);
 
@@ -19,11 +19,11 @@ namespace cells_evo::core {
     };
 
     class FoodGenerator {
-        static const int kFirstGenerationSize = 20;
-        const int kMinDistanceBetweenItems = 1;
+        static const int k_first_generation_size_ = 20;
+        const int k_min_distance_between_items_ = 1;
 
     public:
-        [[nodiscard]] std::vector<Food> GetFirstGeneration(int field_width, int field_height, int size) const;
+        [[nodiscard]] std::vector<Food> Generate(int field_width, int field_height, int size) const;
     };
 }
 
