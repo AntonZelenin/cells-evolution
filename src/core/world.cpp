@@ -1,11 +1,12 @@
 #include "CellsEvo/core/world.h"
 
 namespace cells_evo::core {
-World::World(int cells_generation_size, int food_generation_size, int width, int height) {
+World::World(int cells_generation_size, int hunter_generation_size, int food_generation_size, int width, int height) {
   width_ = width;
   height_ = height;
-  GenerateFood(food_generation_size);
   GenerateCells(cells_generation_size);
+  GenerateHunterCells(hunter_generation_size);
+  GenerateFood(food_generation_size);
 }
 
 void World::AddFood(Food new_food) {
@@ -20,6 +21,12 @@ void World::AddCell(Cell cell) {
   cells_.insert({id, cell});
 }
 
+void World::AddHunterCell(Cell cell) {
+  unsigned int id = index_driver_.GetNextId();
+  cell.SetId(id);
+  hunter_cells_.insert({id, cell});
+}
+
 void World::GenerateFood(int number) {
   AddFood(food_generator_.Generate(
       width_,
@@ -32,7 +39,17 @@ void World::GenerateCells(int number) {
   AddCells(cell_generator_.Generate(
       width_,
       height_,
-      number
+      number,
+      core::Type::K_NONHUNTER
+  ));
+}
+
+void World::GenerateHunterCells(int number) {
+  AddHunterCells(cell_generator_.Generate(
+      width_,
+      height_,
+      number,
+      core::Type::K_HUNTER
   ));
 }
 
@@ -46,6 +63,12 @@ void World::AddFood(const std::vector<Food> &foods) {
 void World::AddCells(const std::vector<Cell> &new_cells) {
   for (const auto &c : new_cells) {
     AddCell(c);
+  }
+}
+
+void World::AddHunterCells(const std::vector<Cell> &new_cells) {
+  for (const auto &c : new_cells) {
+    AddHunterCell(c);
   }
 }
 }

@@ -16,7 +16,7 @@ namespace cells_evo::graphics {
     };
 
     class CellDrawer {
-        const float k_thickness_coefficient_ = 5.f;
+        const float k_thickness_coefficient_ = 4.f;
 
         CellColorProvider color_provider_ = CellColorProvider();
 

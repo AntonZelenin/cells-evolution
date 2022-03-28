@@ -35,13 +35,14 @@ class Cell : public core::Entity {
 class CellGenerator {
   static const int k_first_generation_size_ = 20;
   const float k_default_cell_size_ = 10.0;
+  // todo these should be genes with some variety
   const float k_default_cell_speed_ = 1.0;
+  const float k_default_hunter_cell_speed_ = 1.4;
   const float k_default_cell_energy_ = 10.0;
   const int k_min_distance_between_cells_ = 1;
-
-  static Type GetCellType();
+  float GetDefaultCellSpeed(Type cell_type) const;
  public:
-  [[nodiscard]] std::vector<Cell> Generate(int field_width, int field_height, int generation_size) const;
+  [[nodiscard]] std::vector<Cell> Generate(int field_width, int field_height, int generation_size, Type cell_type);
 };
 }
 

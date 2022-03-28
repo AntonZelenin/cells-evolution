@@ -43,8 +43,9 @@ void Cell::AddEnergy(float energy) {
 std::vector<Cell> CellGenerator::Generate(
     int field_width,
     int field_height,
-    int generation_size = CellGenerator::k_first_generation_size_
-) const {
+    int generation_size,
+    Type cell_type
+) {
   std::vector<Cell> cells;
   cells.reserve(generation_size);
   auto positions = cells_evo::core::GenerateRandomPositions(
@@ -53,16 +54,21 @@ std::vector<Cell> CellGenerator::Generate(
   for (auto &position : positions) {
     cells.emplace_back(
         k_default_cell_size_,
-        k_default_cell_speed_,
+        GetDefaultCellSpeed(cell_type),
         k_default_cell_energy_,
-        CellGenerator::GetCellType(),
+        cell_type,
         position
     );
   }
   return cells;
 }
 
-Type CellGenerator::GetCellType() {
-  return Type::K_HUNTER;
+float CellGenerator::GetDefaultCellSpeed(Type cell_type) const {
+  switch (cell_type) {
+    case K_HUNTER:
+      return k_default_hunter_cell_speed_;
+    case K_NONHUNTER:
+      return k_default_cell_speed_;
+  }
 }
 }

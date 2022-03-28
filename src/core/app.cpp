@@ -24,6 +24,9 @@ void App::Run() {
     for (auto&[_, cell] : world_->cells_) {
       window_->draw(graphics::CellDrawer().Get(&cell));
     }
+    for (auto&[_, cell] : world_->hunter_cells_) {
+      window_->draw(graphics::CellDrawer().Get(&cell));
+    }
     for (auto&[_, food] : world_->food_) {
       window_->draw(graphics::FoodDrawer::Get(&food));
     }
@@ -37,11 +40,16 @@ void App::Run() {
   }
 }
 
-App::App(int cells_generation_size, int food_generation_size, int window_width, int window_height) {
+App::App(int cells_generation_size,
+         int hunter_generation_size,
+         int food_generation_size,
+         int window_width,
+         int window_height) {
   window_ = new sf::RenderWindow(sf::VideoMode(window_width, window_height), "Cells");
   window_->setVerticalSyncEnabled(true);
 
-  world_ = new core::World(cells_generation_size, food_generation_size, window_width, window_height);
+  world_ =
+      new core::World(cells_generation_size, hunter_generation_size, food_generation_size, window_width, window_height);
   logic_ = new logic::Logic(*world_);
 }
 

@@ -24,7 +24,7 @@ namespace cells_evo::logic {
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         std::default_random_engine generator(seed);
         std::uniform_int_distribution<int> distribution(0, frames);
-        // generate food only once in secs on average
+        // generate food only once in N secs on average
         if (distribution(generator) == 1) {
             world_.GenerateFood(1);
             RebuildCellsFoodCache();
