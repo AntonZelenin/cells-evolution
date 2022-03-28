@@ -14,10 +14,6 @@ class World {
   FoodGenerator food_generator_{};
   CellGenerator cell_generator_{};
 
-  void AddCell(Cell cell);
-
-  void AddHunterCell(Cell cell);
-
   void AddFood(Food food);
 
   void AddFood(const std::vector<Food> &foods);
@@ -40,9 +36,11 @@ class World {
   void GenerateCells(int number);
 
   void GenerateHunterCells(int number);
-};
 
-core::Entity *FindNearest(Position position, std::vector<core::Entity>);
+  void AddCell(Cell cell);
+
+  void AddHunterCell(Cell cell);
+};
 }
 
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_WORLD_H_

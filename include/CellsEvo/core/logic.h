@@ -39,6 +39,8 @@ class Logic {
 
   void DivideCells();
 
+  static core::Cell DivideCell(core::Cell &cell);
+
   void CheckCellsEnergy();
 
   void KillCell(unsigned int cell_id);

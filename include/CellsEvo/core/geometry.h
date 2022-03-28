@@ -2,38 +2,39 @@
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GEOMETRY_H_
 
 namespace cells_evo::core {
-    template<typename T>
-    struct Vector2 {
-        T x;
-        T y;
+template<typename T>
+struct Vector2 {
+  T x;
+  T y;
 
-        Vector2() = default;
+  Vector2() = default;
 
-        Vector2(T x, T y);
+  Vector2(T x, T y);
 
-        float Magnitude();
+  float Magnitude();
 
-        void Normalize();
+  void Normalize();
 
-        Vector2<float> operator-(Vector2<float> const &obj) const;
-    };
+  Vector2<float> operator-(Vector2<float> const &obj) const;
+};
 
-    struct Position {
-        Vector2<float> coordinates{};
+struct Position {
+  Vector2<float> coordinates{};
 
-        // todo another construct implementation?
-        Position(float x, float y);
+  Position() = default;
 
-        explicit Position(Vector2<float> coords);
+  Position(float x, float y);
 
-        [[nodiscard]] float X() const;
+  explicit Position(Vector2<float> coords);
 
-        [[nodiscard]] float Y() const;
+  [[nodiscard]] float X() const;
 
-        Vector2<float> operator-(Position const &pos) const;
-    };
+  [[nodiscard]] float Y() const;
 
-    Vector2<float> GetDirectionVector(Position &origin, Position &destination);
+  Vector2<float> operator-(Position const &pos) const;
+};
+
+Vector2<float> GetDirectionVector(Position &origin, Position &destination);
 }
 
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GEOMETRY_H_

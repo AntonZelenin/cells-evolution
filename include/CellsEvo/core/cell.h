@@ -12,26 +12,38 @@ enum Type {
 };
 
 class Cell : public core::Entity {
-  Position position_;
   const float k_energy_consumption_coefficient_ = 0.001;
-  // this is the energy the cell will give if eaten
-  float energy_;
+  const float k_division_energy_threshold_ = 10;
+  const float k_division_energy_size_coefficient_ = 0.1;
+
+  Position position_;
+
  public:
-  constexpr static const float k_default_energy_value_ = 5;
-  unsigned int id_;
-  float size_;
-  float speed_;
+  constexpr static const float k_default_energy_value_ = 10;
+
+  // todo everything is public =*(
+  // this is the energy the cell will give if eaten
+  float energy_{};
+  unsigned int id_{};
+  float size_{};
+  float speed_{};
   Type type_;
   std::vector<Gene> genes{};
 
   Cell(float size, float speed, float energy, Type type, Position position);
+//  Cell(const Cell &cell);
+
   Position &GetPosition() override;
   void SetPosition(Position pos) override;
   unsigned int GetId() override;
   void SetId(unsigned int id);
-  void ConsumeEnergy();
+  void MoveX(float val);
+  void MoveY(float val);
+  void ConsumeMovementEnergy();
+  void ConsumeDivisionEnergy();
   void AddEnergy(float energy);
   [[nodiscard]] bool HasEnergy() const;
+  [[nodiscard]] bool HasEnergyToDivide() const;
 };
 
 class CellGenerator {
@@ -42,7 +54,7 @@ class CellGenerator {
   const float k_default_hunter_cell_speed_ = 1.4;
   const float k_default_cell_energy_ = 10.0;
   const int k_min_distance_between_cells_ = 1;
-  float GetDefaultCellSpeed(Type cell_type) const;
+  [[nodiscard]] float GetDefaultCellSpeed(Type cell_type) const;
  public:
   [[nodiscard]] std::vector<Cell> Generate(int field_width, int field_height, int generation_size, Type cell_type);
 };
