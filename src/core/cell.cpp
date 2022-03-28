@@ -65,10 +65,8 @@ std::vector<Cell> CellGenerator::Generate(
 
 float CellGenerator::GetDefaultCellSpeed(Type cell_type) const {
   switch (cell_type) {
-    case K_HUNTER:
-      return k_default_hunter_cell_speed_;
-    case K_NONHUNTER:
-      return k_default_cell_speed_;
+    case K_HUNTER:return k_default_hunter_cell_speed_;
+    case K_NONHUNTER:return k_default_cell_speed_;
   }
 }
 }

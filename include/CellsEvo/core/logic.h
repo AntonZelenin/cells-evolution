@@ -7,11 +7,19 @@
 namespace cells_evo::logic {
 class Logic {
   core::World &world_;
+  unsigned int world_ticks_ = 0;
   std::map<unsigned int, unsigned int> cell_food_cache_;
+  std::map<unsigned int, unsigned int> hunter_cell_cell_cache_;
 
   std::optional<core::Food> FindClosestFood(core::Cell &cell);
 
+  std::optional<core::Cell> FindClosestCell(core::Cell &cell);
+
+  void CountTick();
+
   void MoveCells();
+
+  void MoveHunterCells();
 
   void ProcessEvents();
 
@@ -19,9 +27,13 @@ class Logic {
 
   static bool CellGotFood(core::Cell &cell, core::Food &food);
 
+  static bool HunterCellGotCell(core::Cell &hunter_cell, core::Cell &cell);
+
   void RemoveFoodFromCache(const core::Food &food);
 
   void ProcessEatFood(core::Cell &cell);
+
+  void ProcessEatCell(core::Cell &hunter_cell);
 
   void GenerateFood();
 

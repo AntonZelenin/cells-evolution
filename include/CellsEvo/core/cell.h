@@ -14,8 +14,10 @@ enum Type {
 class Cell : public core::Entity {
   Position position_;
   const float k_energy_consumption_coefficient_ = 0.001;
+  // this is the energy the cell will give if eaten
   float energy_;
  public:
+  constexpr static const float k_default_energy_value_ = 5;
   unsigned int id_;
   float size_;
   float speed_;
