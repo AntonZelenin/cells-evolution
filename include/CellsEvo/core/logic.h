@@ -1,41 +1,41 @@
-#ifndef CELLS_EVOLUTION_LOGIC_H
-#define CELLS_EVOLUTION_LOGIC_H
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_H_
 
 #include "cell.h"
 #include "world.h"
 
 namespace cells_evo::logic {
-    class Logic {
-        core::World &world_;
-        std::map<unsigned int, unsigned int> cell_food_cache_;
+class Logic {
+  core::World &world_;
+  std::map<unsigned int, unsigned int> cell_food_cache_;
 
-        void CellAct(core::Cell &cell);
+  void CellAct(core::Cell &cell);
 
-        core::Food &FindClosestFood(core::Cell &cell);
+  core::Food &FindClosestFood(core::Cell &cell);
 
-        void MoveCells();
+  void MoveCells();
 
-        void ProcessEvents();
+  void ProcessEvents();
 
-        void BuildCellsFoodCache();
+  void BuildCellsFoodCache();
 
-        void ClearCache();
+  void ClearCache();
 
-        static bool CellGotFood(core::Cell &cell, core::Food &food);
+  static bool CellGotFood(core::Cell &cell, core::Food &food);
 
-        void RemoveFoodFromCache(const core::Food &food);
+  void RemoveFoodFromCache(const core::Food &food);
 
-        void ProcessEatFood(core::Cell &cell);
+  void ProcessEatFood(core::Cell &cell);
 
-        void GenerateFood();
+  void GenerateFood();
 
-        void DivideCells();
+  void DivideCells();
 
-    public:
-        explicit Logic(core::World &world);
+ public:
+  explicit Logic(core::World &world);
 
-        void WorldTick();
-    };
+  void WorldTick();
+};
 }
 
-#endif //CELLS_EVOLUTION_LOGIC_H
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_H_

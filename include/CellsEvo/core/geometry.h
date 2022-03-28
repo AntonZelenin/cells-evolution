@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_GEOMETRY_H
-#define CELLS_EVOLUTION_GEOMETRY_H
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GEOMETRY_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GEOMETRY_H_
 
 namespace cells_evo::core {
     template<typename T>
@@ -23,6 +23,7 @@ namespace cells_evo::core {
 
         // todo another construct implementation?
         Position(float x, float y);
+
         explicit Position(Vector2<float> coords);
 
         [[nodiscard]] float X() const;
@@ -35,4 +36,4 @@ namespace cells_evo::core {
     Vector2<float> GetDirectionVector(Position &origin, Position &destination);
 }
 
-#endif //CELLS_EVOLUTION_GEOMETRY_H
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GEOMETRY_H_
