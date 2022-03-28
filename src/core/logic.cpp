@@ -5,8 +5,9 @@
 #include <random>
 
 namespace cells_evo::logic {
-Logic::Logic(core::World &world) : world_(world) {
+Logic::Logic(core::World &world, unsigned int food_production_rate) : world_(world) {
   RebuildCellsFoodCache();
+  food_production_rate_ = food_production_rate;
 }
 
 void Logic::WorldTick() {
@@ -22,11 +23,9 @@ void Logic::WorldTick() {
 
 void Logic::GenerateFood() {
   double secs = 2;
-  // todo this is not good
-  int frames = static_cast<int>(secs / 0.016666);
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator(seed);
-  std::uniform_int_distribution<int> distribution(0, frames);
+  std::uniform_int_distribution<unsigned int> distribution(0, food_production_rate_);
   // generate food only once in N secs on average
   if (distribution(generator) == 1) {
     world_.GenerateFood(1);

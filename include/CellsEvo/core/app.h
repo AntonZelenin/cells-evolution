@@ -14,9 +14,17 @@ class App {
   core::World *world_;
   logic::Logic *logic_;
 
-  static const int k_frame_micro_sec_ = 16666;
+  int k_frame_micro_sec_;
+  int fps_;
  public:
-  App(int cells_generation_size, int hunter_generation_size, int food_generation_size, int window_width, int window_height);
+  App(
+      int cells_generation_size,
+      int hunter_generation_size,
+      int food_generation_size,
+      int window_width,
+      int window_height,
+      int fps
+  );
   ~App();
 
   void Run();

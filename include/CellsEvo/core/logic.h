@@ -8,6 +8,7 @@ namespace cells_evo::logic {
 class Logic {
   core::World &world_;
   unsigned int world_ticks_ = 0;
+  unsigned int food_production_rate_;
   std::map<unsigned int, unsigned int> cell_food_cache_;
   std::map<unsigned int, unsigned int> hunter_cell_cell_cache_;
 
@@ -50,7 +51,7 @@ class Logic {
   void KillCell(unsigned int cell_id);
 
  public:
-  explicit Logic(core::World &world);
+  explicit Logic(core::World &world, unsigned int food_production_rate);
 
   void WorldTick();
 };

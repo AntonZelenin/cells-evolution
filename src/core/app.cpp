@@ -40,17 +40,22 @@ void App::Run() {
   }
 }
 
-App::App(int cells_generation_size,
-         int hunter_generation_size,
-         int food_generation_size,
-         int window_width,
-         int window_height) {
+App::App(
+    int cells_generation_size,
+    int hunter_generation_size,
+    int food_generation_size,
+    int window_width,
+    int window_height,
+    int fps
+) {
   window_ = new sf::RenderWindow(sf::VideoMode(window_width, window_height), "Cells");
   window_->setVerticalSyncEnabled(true);
 
   world_ =
       new core::World(cells_generation_size, hunter_generation_size, food_generation_size, window_width, window_height);
-  logic_ = new logic::Logic(*world_);
+  fps_ = fps;
+  k_frame_micro_sec_ = 1000000 / fps;
+  logic_ = new logic::Logic(*world_, fps_);
 }
 
 App::~App() {
