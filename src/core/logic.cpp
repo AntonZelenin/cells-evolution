@@ -75,11 +75,11 @@ void Logic::DivideCells() {
   // todo duplicate
   for (auto &[_, hunter_cell] : world_.hunter_cells_) {
     if (hunter_cell.HasEnergyToDivide()) {
-        core::Cell new_cell = DivideCell(hunter_cell);
-        new_cell.MoveX(hunter_cell.size_ * 2);
-        world_.AddHunterCell(new_cell);
-        hunter_cell.ConsumeDivisionEnergy();
-      }
+      core::Cell new_cell = DivideCell(hunter_cell);
+      new_cell.MoveX(hunter_cell.size_ * 2);
+      world_.AddHunterCell(new_cell);
+      hunter_cell.ConsumeDivisionEnergy();
+    }
   }
 }
 
@@ -158,11 +158,23 @@ void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {
 void Logic::MoveCells() {
   for (auto&[_, cell] : world_.cells_) {
     auto closest_food = FindClosestFood(cell);
-    if (!closest_food) return;
-    auto target_position = closest_food.value().GetPosition();
-    auto direction = core::GetDirectionVector(cell.GetPosition(), target_position);
+    core::Vector2<float> direction{};
+    if (!closest_food || !CouldSensedFood(cell, closest_food.value())) {
+      direction = GetRandomSinDirection();
+    } else {
+      auto target_position = closest_food.value().GetPosition();
+      direction = core::GetDirectionVector(cell.GetPosition(), target_position);
+    }
     Move(cell, direction, cell.speed_);
   }
+}
+
+bool Logic::CouldSensedFood(core::Cell &cell, core::Food &food) {
+  return (cell.GetPosition() - food.GetPosition()).Magnitude() <= core::Cell::k_max_distance_food_detection_;
+}
+
+core::Vector2<float> Logic::GetRandomSinDirection() {
+  return {1.0, 0.5};
 }
 
 void Logic::MoveHunterCells() {

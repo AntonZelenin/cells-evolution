@@ -19,6 +19,10 @@ class Logic {
 
   void MoveCells();
 
+  static bool CouldSensedFood(core::Cell &cell, core::Food &food);
+
+  static core::Vector2<float> GetRandomSinDirection();
+
   void MoveHunterCells();
 
   void ProcessEvents();

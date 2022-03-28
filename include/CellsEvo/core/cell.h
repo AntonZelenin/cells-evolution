@@ -20,6 +20,7 @@ class Cell : public core::Entity {
 
  public:
   constexpr static const float k_default_energy_value_ = 10;
+  constexpr static const float k_max_distance_food_detection_ = 50;
 
   // todo everything is public =*(
   // this is the energy the cell will give if eaten
