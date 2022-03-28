@@ -2,6 +2,6 @@
 
 namespace cells_evo::core {
 unsigned int IndexDriver::GetNextId() {
-  return this->idx_++;
+  return idx_++;
 }
 }

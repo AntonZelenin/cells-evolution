@@ -9,17 +9,13 @@ class Logic {
   core::World &world_;
   std::map<unsigned int, unsigned int> cell_food_cache_;
 
-  void CellAct(core::Cell &cell);
-
-  core::Food &FindClosestFood(core::Cell &cell);
+  std::optional<core::Food> FindClosestFood(core::Cell &cell);
 
   void MoveCells();
 
   void ProcessEvents();
 
-  void BuildCellsFoodCache();
-
-  void ClearCache();
+  void RebuildCellsFoodCache();
 
   static bool CellGotFood(core::Cell &cell, core::Food &food);
 
@@ -30,6 +26,10 @@ class Logic {
   void GenerateFood();
 
   void DivideCells();
+
+  void CheckCellsEnergy();
+
+  void KillCell(unsigned int cell_id);
 
  public:
   explicit Logic(core::World &world);

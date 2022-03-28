@@ -28,7 +28,7 @@ class World {
   int width_;
   int height_;
 
-  World();
+  World(int cells_generation_size, int food_generation_size, int width, int height);
 
   void GenerateFood(int number);
 

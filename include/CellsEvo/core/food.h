@@ -5,7 +5,8 @@ namespace cells_evo::core {
 class Food : Entity {
   Position position_;
  public:
-  int id_;
+  unsigned int id_;
+  constexpr static const float k_default_energy_value_ = 3;
 
   explicit Food(Position position);
 

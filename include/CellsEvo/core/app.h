@@ -16,7 +16,7 @@ class App {
 
   static const int k_frame_micro_sec_ = 16666;
  public:
-  App();
+  App(int cells_generation_size, int food_generation_size, int window_width, int window_height);
   ~App();
 
   void Run();

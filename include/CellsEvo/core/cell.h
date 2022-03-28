@@ -13,6 +13,8 @@ enum Type {
 
 class Cell : public core::Entity {
   Position position_;
+  const float k_energy_consumption_coefficient_ = 0.001;
+  float energy_;
  public:
   unsigned int id_;
   float size_;
@@ -20,17 +22,21 @@ class Cell : public core::Entity {
   Type type_;
   std::vector<Gene> genes{};
 
-  Cell(float size, float speed, Type type, Position position);
+  Cell(float size, float speed, float energy, Type type, Position position);
   Position &GetPosition() override;
   void SetPosition(Position pos) override;
   unsigned int GetId() override;
   void SetId(unsigned int id);
+  void ConsumeEnergy();
+  void AddEnergy(float energy);
+  [[nodiscard]] bool HasEnergy() const;
 };
 
 class CellGenerator {
   static const int k_first_generation_size_ = 20;
-  const float k_default_cell_size_ = 20.0;
+  const float k_default_cell_size_ = 10.0;
   const float k_default_cell_speed_ = 1.0;
+  const float k_default_cell_energy_ = 10.0;
   const int k_min_distance_between_cells_ = 1;
 
   static Type GetCellType();

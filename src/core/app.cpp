@@ -11,23 +11,23 @@ void App::Run() {
   std::chrono::time_point<std::chrono::steady_clock> start;
   long long time_diff;
 
-  while (this->window_->isOpen()) {
+  while (window_->isOpen()) {
     start = std::chrono::steady_clock::now();
 
     sf::Event event{};
-    while (this->window_->pollEvent(event)) {
+    while (window_->pollEvent(event)) {
       if (event.type == sf::Event::Closed)
-        this->window_->close();
+        window_->close();
     }
-    this->logic_->WorldTick();
-    this->window_->clear(sf::Color::Black);
-    for (auto&[_, cell] : this->world_->cells_) {
-      this->window_->draw(graphics::CellDrawer().Get(&cell));
+    logic_->WorldTick();
+    window_->clear(sf::Color::Black);
+    for (auto&[_, cell] : world_->cells_) {
+      window_->draw(graphics::CellDrawer().Get(&cell));
     }
-    for (auto&[_, food] : this->world_->food_) {
-      this->window_->draw(graphics::FoodDrawer::Get(&food));
+    for (auto&[_, food] : world_->food_) {
+      window_->draw(graphics::FoodDrawer::Get(&food));
     }
-    this->window_->display();
+    window_->display();
 
     time_diff = std::chrono::duration_cast<std::chrono::microseconds>(
         std::chrono::steady_clock::now() - start).count();
@@ -37,19 +37,18 @@ void App::Run() {
   }
 }
 
-App::App() {
-  // todo provide configuration?
-  this->window_ = new sf::RenderWindow(sf::VideoMode(2000, 1500), "Cells");
+App::App(int cells_generation_size, int food_generation_size, int window_width, int window_height) {
+  window_ = new sf::RenderWindow(sf::VideoMode(window_width, window_height), "Cells");
   window_->setVerticalSyncEnabled(true);
 
-  this->world_ = new core::World();
-  this->logic_ = new logic::Logic(*this->world_);
+  world_ = new core::World(cells_generation_size, food_generation_size, window_width, window_height);
+  logic_ = new logic::Logic(*world_);
 }
 
 App::~App() {
-  delete this->window_;
-  delete this->logic_;
-  delete this->world_;
+  delete window_;
+  delete logic_;
+  delete world_;
 }
 
 namespace core {
