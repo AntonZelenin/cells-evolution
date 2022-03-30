@@ -5,7 +5,7 @@
 
 namespace cells_evo::logic {
 Logic::Logic(core::World &world, unsigned int food_production_rate) : world_(world) {
-  RebuildCellsFoodCache();
+  non_hunter_logic_.RebuildCellsFoodCache(world_.cells_, world_.food_);
   food_production_rate_ = food_production_rate;
 }
 
@@ -13,8 +13,8 @@ void Logic::WorldTick() {
   CountTick();
 
   Eat();
-  MoveCells();
-  MoveHunterCells();
+  non_hunter_logic_.MoveCells(world_.cells_, world_.food_, world_ticks_);
+  hunter_logic_.MoveCells(world_.hunter_cells_, world_.cells_, world_ticks_);
   CheckCellsEnergy();
   GenerateFood();
   DivideCells();
@@ -27,7 +27,7 @@ void Logic::GenerateFood() {
   // generate food only once in N secs on average
   if (distribution(generator) == 1) {
     world_.GenerateFood(1);
-    RebuildCellsFoodCache();
+    non_hunter_logic_.RebuildCellsFoodCache(world_.cells_, world_.food_);
   }
 }
 
@@ -41,23 +41,11 @@ void Logic::CheckCellsEnergy() {
     if (!hunter_cell.HasEnergy()) hunter_cells_to_kill.push_back(hunter_cell.id_);
   }
   for (auto cell_id : cells_to_kill) {
-    KillCell(cell_id);
+    world_.cells_.erase(cell_id);
   }
   for (auto cell_id : hunter_cells_to_kill) {
-    KillCell(cell_id);
+    world_.cells_.erase(cell_id);
   }
-}
-
-void Logic::KillCell(unsigned int cell_id) {
-  cell_food_cache_.erase(cell_id);
-  std::vector<unsigned int> hunter_cells_to_remove{};
-  for (auto[hunter_cell_id, prey_cell_id] : hunter_cell_cell_cache_) {
-    if (prey_cell_id == cell_id) hunter_cells_to_remove.push_back(hunter_cell_id);
-  }
-  for (auto hunter_cell_id : hunter_cells_to_remove) {
-    hunter_cell_cell_cache_.erase(hunter_cell_id);
-  }
-  world_.cells_.erase(cell_id);
 }
 
 void Logic::DivideCells() {
@@ -91,57 +79,9 @@ core::Cell Logic::DivideCell(core::Cell &cell) {
   };
 }
 
-void Logic::RebuildCellsFoodCache() {
-  cell_food_cache_.clear();
-  for (auto&[_, cell] : world_.cells_) {
-    FindClosestFood(cell);
-  }
-}
-
 void Logic::Eat() {
-  for (auto&[_, cell] : world_.cells_) {
-    ProcessEatFood(cell);
-  }
-  for (auto&[_, hunter_cell] : world_.hunter_cells_) {
-    ProcessEatCell(hunter_cell);
-  }
-}
-
-void Logic::ProcessEatFood(core::Cell &cell) {
-  auto food = FindClosestFood(cell);
-  if (food && CellGotFood(cell, food.value())) {
-    cell.AddEnergy(core::Food::k_default_energy_value_);
-    // todo separate method like KillCell?
-    RemoveFoodFromCache(food.value());
-    world_.food_.erase(food.value().id_);
-  }
-}
-
-void Logic::ProcessEatCell(core::Cell &hunter_cell) {
-  auto cell = FindClosestCell(hunter_cell);
-  if (cell && HunterCellGotCell(hunter_cell, cell.value())) {
-    hunter_cell.AddEnergy(core::Cell::k_default_energy_value_);
-    KillCell(cell.value().id_);
-  }
-}
-
-void Logic::RemoveFoodFromCache(const core::Food &food) {
-  std::vector<unsigned int> cells_to_remove{};
-  for (auto[cell_id, food_id] : cell_food_cache_) {
-    if (food.id_ == food_id) cells_to_remove.push_back(cell_id);
-  }
-  for (auto cell_id : cells_to_remove) {
-    cell_food_cache_.erase(cell_id);
-  }
-}
-
-bool Logic::CellGotFood(core::Cell &cell, core::Food &food) {
-  return (cell.GetPosition() - food.GetPosition()).Magnitude() < cell.size_;
-}
-
-// todo not duplicate?
-bool Logic::HunterCellGotCell(core::Cell &hunter_cell, core::Cell &cell) {
-  return (hunter_cell.GetPosition() - cell.GetPosition()).Magnitude() < (hunter_cell.size_ + cell.size_);
+  non_hunter_logic_.ProcessEatFood(world_.cells_, world_.food_);
+  hunter_logic_.ProcessEatCell(world_.hunter_cells_, world_.cells_);
 }
 
 void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {
@@ -150,89 +90,6 @@ void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {
   auto new_pos = core::Position(position.X() + (direction.x * speed), position.Y() + (direction.y * speed));
   cell.SetPosition(new_pos);
   cell.ConsumeMovementEnergy();
-}
-
-void Logic::MoveCells() {
-  for (auto&[_, cell] : world_.cells_) {
-    auto direction = ChooseDirection(cell);
-    Move(cell, direction, cell.speed_);
-  }
-}
-
-core::Vector2<float> Logic::ChooseDirection(core::Cell &cell) {
-  core::Vector2<float> direction{};
-  auto closest_food = FindClosestFood(cell);
-  if (!closest_food || !CouldSensedFood(cell, closest_food.value())) {
-    direction = GetRandomSinDirection();
-  } else {
-    auto target_position = closest_food.value().GetPosition();
-    direction = core::GetDirectionVector(cell.GetPosition(), target_position);
-  }
-  return direction;
-}
-
-bool Logic::CouldSensedFood(core::Cell &cell, core::Food &food) {
-  return (cell.GetPosition() - food.GetPosition()).Magnitude() <= core::Cell::k_max_distance_food_detection_;
-}
-
-core::Vector2<float> Logic::GetRandomSinDirection() {
-  // todo here
-  return {1.0, 0.5};
-}
-
-void Logic::MoveHunterCells() {
-  // update once in 10 frames
-  if (world_ticks_ % 10 == 0) hunter_cell_cell_cache_.clear();
-  for (auto&[_, cell] : world_.hunter_cells_) {
-    auto closest_cell = FindClosestCell(cell);
-    if (!closest_cell) return;
-    auto target_position = closest_cell.value().GetPosition();
-    auto direction = core::GetDirectionVector(cell.GetPosition(), target_position);
-    Move(cell, direction, cell.speed_);
-  }
-}
-
-// todo I want it to return a reference
-std::optional<core::Food> Logic::FindClosestFood(core::Cell &cell) {
-  if (world_.food_.empty())
-    return {};
-  if (cell_food_cache_.find(cell.id_) != cell_food_cache_.end())
-    return world_.food_.find(cell_food_cache_.find(cell.id_)->second)->second;
-
-  unsigned int closest_food_idx;
-  float min_distance = std::numeric_limits<float>::max();
-  for (auto&[idx, food] : world_.food_) {
-    // todo seems position makes life harder
-    auto dist = (food.GetPosition() - cell.GetPosition()).Magnitude();
-    if (dist < min_distance) {
-      min_distance = dist;
-      closest_food_idx = idx;
-    }
-  }
-
-  cell_food_cache_.insert({cell.id_, closest_food_idx});
-  return world_.food_.find(closest_food_idx)->second;
-}
-
-// todo looks like duplicate
-std::optional<core::Cell> Logic::FindClosestCell(core::Cell &hunter_cell) {
-  if (world_.cells_.empty())
-    return {};
-  if (hunter_cell_cell_cache_.find(hunter_cell.id_) != hunter_cell_cell_cache_.end())
-    return world_.cells_.find(hunter_cell_cell_cache_.find(hunter_cell.id_)->second)->second;
-
-  unsigned int closest_cell_idx;
-  float min_distance = std::numeric_limits<float>::max();
-  for (auto&[idx, cell] : world_.cells_) {
-    auto dist = (cell.GetPosition() - hunter_cell.GetPosition()).Magnitude();
-    if (dist < min_distance) {
-      min_distance = dist;
-      closest_cell_idx = idx;
-    }
-  }
-
-  hunter_cell_cell_cache_.insert({hunter_cell.id_, closest_cell_idx});
-  return world_.cells_.find(closest_cell_idx)->second;
 }
 
 void Logic::CountTick() {
