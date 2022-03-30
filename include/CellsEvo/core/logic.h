@@ -5,12 +5,23 @@
 #include "world.h"
 
 namespace cells_evo::logic {
+class NonHunterLogic {
+
+};
+
+class HunterLogic {
+
+};
+
 class Logic {
   core::World &world_;
   unsigned int world_ticks_ = 0;
   unsigned int food_production_rate_;
   std::map<unsigned int, unsigned int> cell_food_cache_;
   std::map<unsigned int, unsigned int> hunter_cell_cell_cache_;
+
+  HunterLogic hunter_logic_;
+  NonHunterLogic non_hunter_logic_;
 
   std::optional<core::Food> FindClosestFood(core::Cell &cell);
 
@@ -26,7 +37,7 @@ class Logic {
 
   void MoveHunterCells();
 
-  void ProcessEvents();
+  void Eat();
 
   void RebuildCellsFoodCache();
 
@@ -54,6 +65,8 @@ class Logic {
   explicit Logic(core::World &world, unsigned int food_production_rate);
 
   void WorldTick();
+
+  core::Vector2<float> ChooseDirection(core::Cell &cell);
 };
 }
 

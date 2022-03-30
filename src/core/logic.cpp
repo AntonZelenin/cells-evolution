@@ -1,6 +1,5 @@
 #include "CellsEvo/core/logic.h"
 #include "CellsEvo/core/geometry.h"
-
 #include <vector>
 #include <random>
 
@@ -13,7 +12,7 @@ Logic::Logic(core::World &world, unsigned int food_production_rate) : world_(wor
 void Logic::WorldTick() {
   CountTick();
 
-  ProcessEvents();
+  Eat();
   MoveCells();
   MoveHunterCells();
   CheckCellsEnergy();
@@ -22,7 +21,6 @@ void Logic::WorldTick() {
 }
 
 void Logic::GenerateFood() {
-  double secs = 2;
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator(seed);
   std::uniform_int_distribution<unsigned int> distribution(0, food_production_rate_);
@@ -100,7 +98,7 @@ void Logic::RebuildCellsFoodCache() {
   }
 }
 
-void Logic::ProcessEvents() {
+void Logic::Eat() {
   for (auto&[_, cell] : world_.cells_) {
     ProcessEatFood(cell);
   }
@@ -156,16 +154,21 @@ void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {
 
 void Logic::MoveCells() {
   for (auto&[_, cell] : world_.cells_) {
-    auto closest_food = FindClosestFood(cell);
-    core::Vector2<float> direction{};
-    if (!closest_food || !CouldSensedFood(cell, closest_food.value())) {
-      direction = GetRandomSinDirection();
-    } else {
-      auto target_position = closest_food.value().GetPosition();
-      direction = core::GetDirectionVector(cell.GetPosition(), target_position);
-    }
+    auto direction = ChooseDirection(cell);
     Move(cell, direction, cell.speed_);
   }
+}
+
+core::Vector2<float> Logic::ChooseDirection(core::Cell &cell) {
+  core::Vector2<float> direction{};
+  auto closest_food = FindClosestFood(cell);
+  if (!closest_food || !CouldSensedFood(cell, closest_food.value())) {
+    direction = GetRandomSinDirection();
+  } else {
+    auto target_position = closest_food.value().GetPosition();
+    direction = core::GetDirectionVector(cell.GetPosition(), target_position);
+  }
+  return direction;
 }
 
 bool Logic::CouldSensedFood(core::Cell &cell, core::Food &food) {
@@ -173,6 +176,7 @@ bool Logic::CouldSensedFood(core::Cell &cell, core::Food &food) {
 }
 
 core::Vector2<float> Logic::GetRandomSinDirection() {
+  // todo here
   return {1.0, 0.5};
 }
 

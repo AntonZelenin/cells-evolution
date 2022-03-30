@@ -46,16 +46,22 @@ App::App(
     int food_generation_size,
     int window_width,
     int window_height,
-    int fps
+    int fps,
+    int food_production_rate_reverse
 ) {
   window_ = new sf::RenderWindow(sf::VideoMode(window_width, window_height), "Cells");
   window_->setVerticalSyncEnabled(true);
 
-  world_ =
-      new core::World(cells_generation_size, hunter_generation_size, food_generation_size, window_width, window_height);
+  world_ = new core::World(
+      cells_generation_size,
+      hunter_generation_size,
+      food_generation_size,
+      window_width,
+      window_height
+  );
   fps_ = fps;
   k_frame_micro_sec_ = 1000000 / fps;
-  logic_ = new logic::Logic(*world_, fps_);
+  logic_ = new logic::Logic(*world_, fps_ * food_production_rate_reverse);
 }
 
 App::~App() {

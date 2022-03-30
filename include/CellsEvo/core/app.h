@@ -23,7 +23,8 @@ class App {
       int food_generation_size,
       int window_width,
       int window_height,
-      int fps
+      int fps,
+      int food_production_rate_reverse
   );
   ~App();
 
