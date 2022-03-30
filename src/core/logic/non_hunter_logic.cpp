@@ -2,8 +2,8 @@
 
 namespace cells_evo::logic {
 void NonHunterLogic::MoveCells(
-    std::map<unsigned int, core::Cell> &cells,
-    std::map<unsigned int, core::Food> &food,
+    std::unordered_map<unsigned int, core::Cell> &cells,
+    std::unordered_map<unsigned int, core::Food> &food,
     unsigned int world_tick
 ) {
   for (auto&[_, cell] : cells) {
@@ -11,18 +11,23 @@ void NonHunterLogic::MoveCells(
     Move(cell, direction, cell.speed_);
   }
 }
-core::Vector2<float> NonHunterLogic::ChooseDirection(core::Cell &cell, std::map<unsigned int, core::Food> &food) {
+
+core::Vector2<float> NonHunterLogic::ChooseDirection(
+    core::Cell &cell,
+    std::unordered_map<unsigned int, core::Food> &food
+) {
   core::Vector2<float> direction{};
   auto closest_food = FindClosestFood(cell, food);
   if (!closest_food || !CouldSensedFood(cell, closest_food.value())) {
-    direction = GetRandomSinDirection();
+    direction = GetRandomDirection(cell);
   } else {
     auto target_position = closest_food.value().GetPosition();
     direction = core::GetDirectionVector(cell.GetPosition(), target_position);
   }
   return direction;
 }
-std::optional<core::Food> NonHunterLogic::FindClosestFood(core::Cell &cell, std::map<unsigned int, core::Food> &foods) {
+
+std::optional<core::Food> NonHunterLogic::FindClosestFood(core::Cell &cell, std::unordered_map<unsigned int, core::Food> &foods) {
   if (foods.empty())
     return {};
   auto cached_closest_food = cell_food_cache_.find(cell.id_);
@@ -49,18 +54,20 @@ std::optional<core::Food> NonHunterLogic::FindClosestFood(core::Cell &cell, std:
   cell_food_cache_.insert({cell.id_, closest_food_idx});
   return foods.find(closest_food_idx)->second;
 }
+
 void NonHunterLogic::RebuildCellsFoodCache(
-    std::map<unsigned int, core::Cell> &cells,
-    std::map<unsigned int, core::Food> &food
+    std::unordered_map<unsigned int, core::Cell> &cells,
+    std::unordered_map<unsigned int, core::Food> &food
 ) {
   cell_food_cache_.clear();
   for (auto&[_, cell] : cells) {
     FindClosestFood(cell, food);
   }
 }
+
 void NonHunterLogic::ProcessEatFood(
-    std::map<unsigned int, core::Cell> &cells,
-    std::map<unsigned int, core::Food> &food
+    std::unordered_map<unsigned int, core::Cell> &cells,
+    std::unordered_map<unsigned int, core::Food> &food
 ) {
   for (auto&[_, cell] : cells) {
     auto closest_food = FindClosestFood(cell, food);
@@ -69,13 +76,30 @@ void NonHunterLogic::ProcessEatFood(
       food.erase(closest_food.value().id_);
     }
   }
-
 }
+
 bool NonHunterLogic::CellGotFood(core::Cell &cell, core::Food &food) {
   return (cell.GetPosition() - food.GetPosition()).Magnitude() < cell.size_;
 }
-core::Vector2<float> NonHunterLogic::GetRandomSinDirection() {
-  // todo here
-  return {1.0, 0.5};
+
+core::Vector2<float> NonHunterLogic::GetRandomDirection(core::Cell &cell) {
+  auto cached_direction = cell_direction_cache_.find(cell.id_);
+  auto cached_wait = cell_wait_cache_.find(cell.id_);
+  // todo clean me when a cell is dead
+  if (cached_wait == cell_wait_cache_.end()) {
+    cell_wait_cache_.insert({cell.id_, 0});
+    cached_wait = cell_wait_cache_.find(cell.id_);
+  }
+  cached_wait->second += 1;
+  if (cached_direction == cell_direction_cache_.end() || cached_wait->second % cell.GetDirectionChangeFactor() == 0
+  ) {
+    cell_direction_cache_.erase(cell.id_);
+    auto coords = core::GetRandomFloats(-1, 1, 2);
+    auto direction = core::Vector2<float>(coords[0], coords[1]);
+    direction.Normalize();
+    cell_direction_cache_.insert({cell.id_, direction});
+    return direction;
+  }
+  return cached_direction->second;
 }
 }

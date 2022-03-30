@@ -3,7 +3,7 @@
 namespace cells_evo::logic {
 std::optional<core::Cell> HunterLogic::FindClosestCell(
     core::Cell &hunter_cell,
-    std::map<unsigned int, core::Cell> &cells
+    std::unordered_map<unsigned int, core::Cell> &cells
 ) {
   if (cells.empty())
     return {};
@@ -32,8 +32,8 @@ std::optional<core::Cell> HunterLogic::FindClosestCell(
   return cells.find(closest_cell_idx)->second;
 }
 void HunterLogic::MoveCells(
-    std::map<unsigned int, core::Cell> &hunter_cells,
-    std::map<unsigned int, core::Cell> &cells,
+    std::unordered_map<unsigned int, core::Cell> &hunter_cells,
+    std::unordered_map<unsigned int, core::Cell> &cells,
     unsigned int world_tick
 ) {
   // update once in 10 frames
@@ -47,8 +47,8 @@ void HunterLogic::MoveCells(
   }
 }
 void HunterLogic::ProcessEatCell(
-    std::map<unsigned int, core::Cell> &hunter_cells,
-    std::map<unsigned int, core::Cell> &cells
+    std::unordered_map<unsigned int, core::Cell> &hunter_cells,
+    std::unordered_map<unsigned int, core::Cell> &cells
 ) {
   for (auto&[_, hunter_cell] : hunter_cells) {
     auto cell = FindClosestCell(hunter_cell, cells);

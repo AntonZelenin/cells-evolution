@@ -1,9 +1,9 @@
 #ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GENES_H_
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GENES_H_
 
-namespace cells_evo::core {
-class Gene {
-
+namespace cells_evo::genome {
+enum Genes {
+  DIRECTION_CHANGE_FACTOR
 };
 }
 

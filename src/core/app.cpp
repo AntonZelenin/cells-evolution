@@ -61,7 +61,10 @@ App::App(
   );
   fps_ = fps;
   k_frame_micro_sec_ = 1000000 / fps;
-  logic_ = new logic::Logic(*world_, static_cast<unsigned int>(static_cast<float>(fps_) / food_production_rate));
+  auto food_prod_rate = food_production_rate != 0.0 ?
+      static_cast<unsigned int>(static_cast<float>(fps_) / food_production_rate)
+      : 0;
+  logic_ = new logic::Logic(*world_, food_prod_rate);
 }
 
 App::~App() {

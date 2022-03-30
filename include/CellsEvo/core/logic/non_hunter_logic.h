@@ -10,34 +10,41 @@ namespace cells_evo::logic {
 void Move(core::Cell &cell, core::Vector2<float> &direction, float speed);
 
 class NonHunterLogic {
-  std::map<unsigned int, unsigned int> cell_food_cache_;
  public:
   void MoveCells(
-      std::map<unsigned int, core::Cell> &cells,
-      std::map<unsigned int, core::Food> &food,
+      std::unordered_map<unsigned int, core::Cell> &cells,
+      std::unordered_map<unsigned int, core::Food> &food,
       unsigned int world_tick
   );
 
-  core::Vector2<float> ChooseDirection(core::Cell &cell, std::map<unsigned int, core::Food> &food);
+  void RebuildCellsFoodCache(
+      std::unordered_map<unsigned int, core::Cell> &cells,
+      std::unordered_map<unsigned int, core::Food> &food
+  );
+
+  void ProcessEatFood(
+      std::unordered_map<unsigned int, core::Cell> &cells,
+      std::unordered_map<unsigned int, core::Food> &food
+  );
+
+ private:
+  std::unordered_map<unsigned int, unsigned int> cell_food_cache_;
+  std::unordered_map<unsigned int, core::Vector2<float>> cell_direction_cache_;
+  std::unordered_map<unsigned int, unsigned int> cell_wait_cache_;
+
+  core::Vector2<float> ChooseDirection(
+      core::Cell &cell,
+      std::unordered_map<unsigned int, core::Food> &food
+  );
 
   // todo I want it to return a reference, do I?
-  std::optional<core::Food> FindClosestFood(core::Cell &cell, std::map<unsigned int, core::Food> &foods);
+  std::optional<core::Food> FindClosestFood(core::Cell &cell, std::unordered_map<unsigned int, core::Food> &foods);
 
   static bool CouldSensedFood(core::Cell &cell, core::Food &food) {
     return (cell.GetPosition() - food.GetPosition()).Magnitude() <= core::Cell::k_max_distance_food_detection_;
   }
 
-  core::Vector2<float> GetRandomSinDirection();
-
-  void RebuildCellsFoodCache(
-      std::map<unsigned int, core::Cell> &cells,
-      std::map<unsigned int, core::Food> &food
-  );
-
-  void ProcessEatFood(
-      std::map<unsigned int, core::Cell> &cells,
-      std::map<unsigned int, core::Food> &food
-  );
+  core::Vector2<float> GetRandomDirection(core::Cell &cell);
 
   static bool CellGotFood(core::Cell &cell, core::Food &food);
 };

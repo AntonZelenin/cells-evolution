@@ -5,6 +5,7 @@
 #include "geometry.h"
 #include "genes.h"
 #include "base.h"
+#include "genes.h"
 
 namespace cells_evo::core {
 enum Type {
@@ -29,7 +30,7 @@ class Cell : public core::Entity {
   float size_{};
   float speed_{};
   Type type_;
-  std::vector<Gene> genes{};
+//  std::vector<Gene> genes{};
 
   Cell(float size, float speed, float energy, Type type, Position position);
 //  Cell(const Cell &cell);
@@ -45,6 +46,11 @@ class Cell : public core::Entity {
   void AddEnergy(float energy);
   [[nodiscard]] bool HasEnergy() const;
   [[nodiscard]] bool HasEnergyToDivide() const;
+
+  int GetDirectionChangeFactor() {
+    return 120;
+//    return cells_evo::genome::Genes::DIRECTION_CHANGE_FACTOR;
+  }
 };
 
 class CellGenerator {

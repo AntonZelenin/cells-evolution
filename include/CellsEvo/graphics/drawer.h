@@ -1,13 +1,13 @@
 #ifndef CELLS_EVOLUTION_DRAWER_H
 #define CELLS_EVOLUTION_DRAWER_H
 
-#include <map>
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include "CellsEvo/core.h"
 
 namespace cells_evo::graphics {
     class CellColorProvider {
-        std::map<core::Type, sf::Color> mapping_{
+        std::unordered_map<core::Type, sf::Color> mapping_{
                 {core::Type::K_HUNTER, sf::Color::Red},
                 {core::Type::K_NONHUNTER, sf::Color::Green},
         };

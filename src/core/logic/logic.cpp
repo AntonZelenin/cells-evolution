@@ -16,11 +16,15 @@ void Logic::WorldTick() {
   CountTick();
 
   Eat();
-  non_hunter_logic_.MoveCells(world_.cells_, world_.food_, world_ticks_);
-  hunter_logic_.MoveCells(world_.hunter_cells_, world_.cells_, world_ticks_);
+  MoveCells();
   CheckCellsEnergy();
   GenerateFood();
   DivideCells();
+}
+
+void Logic::MoveCells() {
+  non_hunter_logic_.MoveCells(world_.cells_, world_.food_, world_ticks_);
+  hunter_logic_.MoveCells(world_.hunter_cells_, world_.cells_, world_ticks_);
 }
 
 void Logic::GenerateFood() {
@@ -28,7 +32,7 @@ void Logic::GenerateFood() {
   std::default_random_engine generator(seed);
   std::uniform_int_distribution<unsigned int> distribution(0, food_production_rate_reverse_);
   // generate food only once in N secs on average
-  if (distribution(generator) == 1) {
+  if (food_production_rate_reverse_ != 0 && distribution(generator) == 1) {
     world_.GenerateFood(1);
     non_hunter_logic_.RebuildCellsFoodCache(world_.cells_, world_.food_);
   }

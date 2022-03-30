@@ -35,6 +35,7 @@ class Logic {
   explicit Logic(core::World &world, unsigned int food_production_rate);
 
   void WorldTick();
+  void MoveCells();
 };
 }
 

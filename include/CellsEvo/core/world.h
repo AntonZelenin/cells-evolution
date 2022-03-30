@@ -2,7 +2,7 @@
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_WORLD_H_
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include "CellsEvo/core/cell.h"
 #include "CellsEvo/core/food.h"
 #include "tools.h"
@@ -23,9 +23,9 @@ class World {
   void AddHunterCells(const std::vector<Cell> &new_cells);
 
  public:
-  std::map<unsigned int, Food> food_{};
-  std::map<unsigned int, Cell> cells_{};
-  std::map<unsigned int, Cell> hunter_cells_{};
+  std::unordered_map<unsigned int, Food> food_{};
+  std::unordered_map<unsigned int, Cell> cells_{};
+  std::unordered_map<unsigned int, Cell> hunter_cells_{};
   int width_;
   int height_;
 
