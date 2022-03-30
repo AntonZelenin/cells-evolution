@@ -20,7 +20,6 @@ class Food : Entity {
 };
 
 class FoodGenerator {
-  static const int k_first_generation_size_ = 20;
   const int k_min_distance_between_items_ = 1;
 
  public:

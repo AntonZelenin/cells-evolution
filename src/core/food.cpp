@@ -7,7 +7,7 @@ namespace cells_evo::core {
 std::vector<Food> FoodGenerator::Generate(
     int field_width,
     int field_height,
-    int size = FoodGenerator::k_first_generation_size_
+    int size
 ) const {
   std::vector<Food> food;
   food.reserve(size);
