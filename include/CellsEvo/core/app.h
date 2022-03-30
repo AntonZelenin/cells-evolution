@@ -5,7 +5,7 @@
 #include "cell.h"
 #include "food.h"
 #include "world.h"
-#include "logic.h"
+#include "CellsEvo/core/logic/logic.h"
 
 namespace cells_evo {
 class App {

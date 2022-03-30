@@ -1,4 +1,4 @@
-#include "CellsEvo/core/logic.h"
+#include "CellsEvo/core/logic/logic.h"
 #include "CellsEvo/core/geometry.h"
 #include <vector>
 #include <random>
