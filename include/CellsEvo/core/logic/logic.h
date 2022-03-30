@@ -14,7 +14,7 @@ void Move(core::Cell &cell, core::Vector2<float> &direction, float speed);
 class Logic {
   core::World &world_;
   unsigned int world_ticks_ = 0;
-  unsigned int food_production_rate_;
+  unsigned int food_production_rate_reverse_;
 
   HunterLogic hunter_logic_{};
   NonHunterLogic non_hunter_logic_{};

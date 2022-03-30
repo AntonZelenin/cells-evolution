@@ -24,7 +24,7 @@ class App {
       int window_width,
       int window_height,
       int fps,
-      int food_production_rate
+      float food_production_rate
   );
   ~App();
 

@@ -1,12 +1,15 @@
 #include "CellsEvo/core/logic/logic.h"
 #include "CellsEvo/core/geometry.h"
+#include "CellsEvo/core/logic/non_hunter_logic.h"
+#include "CellsEvo/core/logic/hunter_logic.h"
+
 #include <vector>
 #include <random>
 
 namespace cells_evo::logic {
 Logic::Logic(core::World &world, unsigned int food_production_rate) : world_(world) {
   non_hunter_logic_.RebuildCellsFoodCache(world_.cells_, world_.food_);
-  food_production_rate_ = food_production_rate;
+  food_production_rate_reverse_ = food_production_rate;
 }
 
 void Logic::WorldTick() {
@@ -23,7 +26,7 @@ void Logic::WorldTick() {
 void Logic::GenerateFood() {
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator(seed);
-  std::uniform_int_distribution<unsigned int> distribution(0, food_production_rate_);
+  std::uniform_int_distribution<unsigned int> distribution(0, food_production_rate_reverse_);
   // generate food only once in N secs on average
   if (distribution(generator) == 1) {
     world_.GenerateFood(1);
