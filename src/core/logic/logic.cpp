@@ -15,6 +15,7 @@ void Logic::WorldTick() {
 
   Eat();
   MoveCells();
+  CheckCrossedBoundaries();
   CheckCellsEnergy();
   GenerateFood();
   DivideCells();
@@ -23,6 +24,31 @@ void Logic::WorldTick() {
 void Logic::MoveCells() {
   cell_logic_.MoveCells(world_.cells_, world_.food_, world_ticks_);
   cell_logic_.MoveCells(world_.hunter_cells_, world_.cells_, world_ticks_);
+}
+
+void Logic::CheckCrossedBoundaries() {
+  for (auto &[_, cell]: world_.cells_) {
+    CheckCellCrossedBoundaries(cell);
+  }
+  for (auto &[_, cell]: world_.hunter_cells_) {
+    CheckCellCrossedBoundaries(cell);
+  }
+}
+
+void Logic::CheckCellCrossedBoundaries(core::Cell &cell) const {
+  // todo this is slow
+  auto pos = cell.GetPosition();
+  if (pos.X() < 0.0 + cell.GetSize()) {
+    pos.coordinates.x = cell.GetSize();
+  } else if (pos.X() > static_cast<float>(world_.width_) - cell.GetSize()) {
+    pos.coordinates.x = static_cast<float>(world_.width_) - cell.GetSize();
+  }
+  if (pos.Y() < 0.0 + cell.GetSize()) {
+    pos.coordinates.y = cell.GetSize();
+  } else if (pos.Y() > static_cast<float>(world_.height_) - cell.GetSize()) {
+    pos.coordinates.x = static_cast<float>(world_.height_) - cell.GetSize();
+  }
+  cell.SetPosition(pos);
 }
 
 void Logic::GenerateFood() {

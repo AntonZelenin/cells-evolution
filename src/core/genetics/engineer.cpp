@@ -4,7 +4,7 @@ namespace cells_evo::genetics {
 Gene Engineer::CopyGene(const Gene &gene) {
   Gene new_gene = gene;
   if (ShouldMutate()) {
-    new_gene.value *= cells_evo::core::GetRandomNormalFloats(-1, 1, 1)[0];
+    new_gene.value *= cells_evo::core::GetRandomNormalFloats(1, 0.5, 1)[0];
     new_gene.value = std::min(new_gene.value, gene_config_cacher_.GetGeneConfig(new_gene.type).max);
     new_gene.value = std::max(new_gene.value, gene_config_cacher_.GetGeneConfig(new_gene.type).min);
   }

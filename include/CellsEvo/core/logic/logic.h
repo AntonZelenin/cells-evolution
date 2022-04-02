@@ -27,6 +27,8 @@ class Logic {
 
   void WorldTick();
   void MoveCells();
+  void CheckCellCrossedBoundaries(core::Cell &cell) const;
+  void CheckCrossedBoundaries();
 };
 }
 

@@ -32,13 +32,11 @@ std::vector<float> GetRandomFloats(float from, float  to, unsigned int number) {
   return numbers;
 }
 
-// todo they are very similar -_-
-std::vector<float> GetRandomNormalFloats(float from, float  to, unsigned int number) {
+std::vector<float> GetRandomNormalFloats(float mean, float deviation, unsigned int number) {
   std::vector<float> numbers{};
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator(seed);
-  std::normal_distribution<float> distribution(from, to);
-
+  std::normal_distribution<float> distribution(mean, deviation);
   for (; number > 0; number--) {
     numbers.push_back(distribution(generator));
   }

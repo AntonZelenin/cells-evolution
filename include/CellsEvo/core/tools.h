@@ -14,7 +14,7 @@ class IndexDriver {
 
 std::vector<int> GetRandomInts(int from, int  to, unsigned int number);
 std::vector<float> GetRandomFloats(float from, float  to, unsigned int number);
-std::vector<float> GetRandomNormalFloats(float from, float  to, unsigned int number);
+std::vector<float> GetRandomNormalFloats(float mean, float deviation, unsigned int number);
 
 std::vector<Position> GenerateRandomPositions(
     int field_width,

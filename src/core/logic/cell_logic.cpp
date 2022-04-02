@@ -10,7 +10,7 @@ core::Vector2<float> CellLogic::GetRandomDirection(core::Cell &cell) {
   auto cached_wait = cell_wait_cache_.find(cell.id_);
   // todo clean me when a cell is dead
   if (cached_wait == cell_wait_cache_.end()) {
-    cell_wait_cache_.insert({cell.id_, 0});
+    cell_wait_cache_.insert({cell.id_, 0.0});
     cached_wait = cell_wait_cache_.find(cell.id_);
   }
   cached_wait->second += 1;
