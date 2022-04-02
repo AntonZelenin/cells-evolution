@@ -1,13 +1,23 @@
-#include "CellsEvo/core.h"
 #include "CellsEvo/core/cell.h"
 
 namespace cells_evo::core {
-Cell::Cell(float size, float speed, float energy, Type type, Position position) : position_(position) {
+Cell::Cell(
+    float size,
+    float speed,
+    float energy,
+    Type type,
+    Position position,
+    std::vector<genetics::Gene> const &genes
+)
+    : position_(position) {
   id_ = 0;
   size_ = size;
   speed_ = speed;
   type_ = type;
   energy_ = energy;
+  for (auto gene : genes) {
+    genes_.insert({gene.type, gene});
+  }
 }
 
 Position &Cell::GetPosition() {
@@ -65,34 +75,4 @@ bool Cell::HasEnergyToDivide() const {
 //  speed_ = cell.speed_;
 //  type_ = cell.type_;
 //}
-
-std::vector<Cell> CellGenerator::Generate(
-    int field_width,
-    int field_height,
-    int generation_size,
-    Type cell_type
-) {
-  std::vector<Cell> cells;
-  cells.reserve(generation_size);
-  auto positions = cells_evo::core::GenerateRandomPositions(
-      field_width, field_height, generation_size, k_min_distance_between_cells_
-  );
-  for (auto &position : positions) {
-    cells.emplace_back(
-        k_default_cell_size_,
-        GetDefaultCellSpeed(cell_type),
-        k_default_cell_energy_,
-        cell_type,
-        position
-    );
-  }
-  return cells;
-}
-
-float CellGenerator::GetDefaultCellSpeed(Type cell_type) const {
-  switch (cell_type) {
-    case K_HUNTER:return k_default_hunter_cell_speed_;
-    case K_NONHUNTER:return k_default_cell_speed_;
-  }
-}
 }

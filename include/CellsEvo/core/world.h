@@ -6,13 +6,13 @@
 #include "CellsEvo/core/cell.h"
 #include "CellsEvo/core/food.h"
 #include "tools.h"
+#include "cell_generator.h"
 
 namespace cells_evo::core {
 class World {
-  // todo do I need to delete these in destructor?
   IndexDriver index_driver_{};
   FoodGenerator food_generator_{};
-  CellGenerator cell_generator_{};
+  core::CellGenerator cell_generator_{};
 
   void AddFood(Food food);
 

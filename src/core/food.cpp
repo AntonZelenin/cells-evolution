@@ -1,7 +1,5 @@
-#include "CellsEvo/core.h"
+#include "CellsEvo/core/tools.h"
 #include "CellsEvo/core/food.h"
-
-#include <random>
 
 namespace cells_evo::core {
 std::vector<Food> FoodGenerator::Generate(

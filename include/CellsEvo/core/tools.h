@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <random>
+#include "geometry.h"
 
 namespace cells_evo::core {
 class IndexDriver {
@@ -13,6 +14,14 @@ class IndexDriver {
 
 std::vector<int> GetRandomInts(int from, int  to, unsigned int number);
 std::vector<float> GetRandomFloats(float from, float  to, unsigned int number);
+std::vector<float> GetRandomNormalFloats(float from, float  to, unsigned int number);
+
+std::vector<Position> GenerateRandomPositions(
+    int field_width,
+    int field_height,
+    int size,
+    int min_distance_between_positions
+);
 }
 
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_TOOLS_H_

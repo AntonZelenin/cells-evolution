@@ -1,9 +1,10 @@
-#ifndef CELLS_EVOLUTION_DRAWER_H
-#define CELLS_EVOLUTION_DRAWER_H
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_GRAPHICS_DRAWER_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_GRAPHICS_DRAWER_H_
 
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
-#include "CellsEvo/core.h"
+#include "CellsEvo/core/cell.h"
+#include "CellsEvo/core/food.h"
 
 namespace cells_evo::graphics {
     class CellColorProvider {
@@ -33,4 +34,4 @@ namespace cells_evo::graphics {
     };
 }
 
-#endif //CELLS_EVOLUTION_DRAWER_H
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_GRAPHICS_DRAWER_H_

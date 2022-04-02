@@ -2,6 +2,7 @@
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_NON_HUNTER_LOGIC_H_
 
 #include "CellsEvo/core/cell.h"
+#include "CellsEvo/core/food.h"
 #include "CellsEvo/core/world.h"
 
 namespace cells_evo::logic {
@@ -30,7 +31,7 @@ class NonHunterLogic {
  private:
   std::unordered_map<unsigned int, unsigned int> cell_food_cache_;
   std::unordered_map<unsigned int, core::Vector2<float>> cell_direction_cache_;
-  std::unordered_map<unsigned int, unsigned int> cell_wait_cache_;
+  std::unordered_map<unsigned int, int> cell_wait_cache_;
 
   core::Vector2<float> ChooseDirection(
       core::Cell &cell,

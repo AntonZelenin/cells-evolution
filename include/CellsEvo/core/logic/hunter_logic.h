@@ -27,6 +27,10 @@ class HunterLogic {
 
   // todo not duplicate?
   static bool HunterCellGotCell(core::Cell &hunter_cell, core::Cell &cell);
+
+  static bool CouldSensedCell(core::Cell &hunter_cell, core::Cell &cell) {
+    return (hunter_cell.GetPosition() - cell.GetPosition()).Magnitude() <= core::Cell::k_max_distance_food_detection_;
+  }
 };
 }
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_HUNTER_LOGIC_H_

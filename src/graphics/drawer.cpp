@@ -1,5 +1,4 @@
 #include "CellsEvo/graphics.h"
-#include "CellsEvo/core.h"
 
 namespace cells_evo::graphics {
 float CellDrawer::GetThickness(float size) const {

@@ -1,4 +1,4 @@
-#include "CellsEvo/core.h"
+#include "CellsEvo/core/app.h"
 
 int main() {
   cells_evo::App(
@@ -7,11 +7,11 @@ int main() {
       20,
 //      1,
 //      0,
-//      0,
+//      35,
       2000,
       1500,
       60,
-      0.0
+      1.0
   ).Run();
   return 0;
 }

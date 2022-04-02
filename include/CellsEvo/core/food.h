@@ -1,6 +1,9 @@
 #ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_FOOD_H_
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_FOOD_H_
 
+#include <vector>
+#include "base.h"
+
 namespace cells_evo::core {
 class Food : Entity {
   Position position_;

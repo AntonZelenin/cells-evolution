@@ -51,7 +51,7 @@ void Logic::CheckCellsEnergy() {
     world_.cells_.erase(cell_id);
   }
   for (auto cell_id : hunter_cells_to_kill) {
-    world_.cells_.erase(cell_id);
+    world_.hunter_cells_.erase(cell_id);
   }
 }
 
@@ -77,13 +77,15 @@ void Logic::DivideCells() {
 
 // todo copy constructor?
 core::Cell Logic::DivideCell(core::Cell &cell) {
-  return {
+  core::Cell new_cell{
       cell.size_,
       cell.speed_,
       cell.energy_ / 2,
       cell.type_,
-      core::Position(cell.GetPosition().X(), cell.GetPosition().Y())
+      core::Position(cell.GetPosition().X(), cell.GetPosition().Y()),
+      genetic_engineer_.CopyGenes(cell.genes_)
   };
+  return new_cell;
 }
 
 void Logic::Eat() {

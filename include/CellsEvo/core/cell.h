@@ -2,14 +2,15 @@
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_H_
 
 #include <vector>
+#include <unordered_map>
 #include "geometry.h"
-#include "genes.h"
+#include "genetics/genes.h"
 #include "base.h"
-#include "genes.h"
 
 namespace cells_evo::core {
 enum Type {
-  K_HUNTER, K_NONHUNTER
+  K_HUNTER,
+  K_NONHUNTER,
 };
 
 class Cell : public core::Entity {
@@ -21,7 +22,7 @@ class Cell : public core::Entity {
 
  public:
   constexpr static const float k_default_energy_value_ = 10;
-  constexpr static const float k_max_distance_food_detection_ = 150;
+  constexpr static const float k_max_distance_food_detection_ = 200;
 
   // todo everything is public =*(
   // this is the energy the cell will give if eaten
@@ -30,9 +31,16 @@ class Cell : public core::Entity {
   float size_{};
   float speed_{};
   Type type_;
-//  std::vector<Gene> genes{};
+  std::unordered_map<genetics::GeneType, genetics::Gene> genes_{};
 
-  Cell(float size, float speed, float energy, Type type, Position position);
+  Cell(
+      float size,
+      float speed,
+      float energy,
+      Type type,
+      Position position,
+      std::vector<genetics::Gene> const &genes
+  );
 //  Cell(const Cell &cell);
 
   Position &GetPosition() override;
@@ -48,21 +56,8 @@ class Cell : public core::Entity {
   [[nodiscard]] bool HasEnergyToDivide() const;
 
   int GetDirectionChangeFactor() {
-    return 120;
-//    return cells_evo::genome::Genes::DIRECTION_CHANGE_FACTOR;
+    return static_cast<int>(genes_.find(genetics::GeneType::DIRECTION_CHANGE_FACTOR)->second.value);
   }
-};
-
-class CellGenerator {
-  const float k_default_cell_size_ = 10.0;
-  // todo these should be genes with some variety
-  const float k_default_cell_speed_ = 1.0;
-  const float k_default_hunter_cell_speed_ = 1.4;
-  const float k_default_cell_energy_ = 10.0;
-  const int k_min_distance_between_cells_ = 1;
-  [[nodiscard]] float GetDefaultCellSpeed(Type cell_type) const;
- public:
-  [[nodiscard]] std::vector<Cell> Generate(int field_width, int field_height, int generation_size, Type cell_type);
 };
 }
 

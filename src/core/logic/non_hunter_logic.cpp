@@ -16,6 +16,7 @@ core::Vector2<float> NonHunterLogic::ChooseDirection(
     core::Cell &cell,
     std::unordered_map<unsigned int, core::Food> &food
 ) {
+  // todo probably it should be generic, use for all types of cell
   core::Vector2<float> direction{};
   auto closest_food = FindClosestFood(cell, food);
   if (!closest_food || !CouldSensedFood(cell, closest_food.value())) {
@@ -91,7 +92,8 @@ core::Vector2<float> NonHunterLogic::GetRandomDirection(core::Cell &cell) {
     cached_wait = cell_wait_cache_.find(cell.id_);
   }
   cached_wait->second += 1;
-  if (cached_direction == cell_direction_cache_.end() || cached_wait->second % cell.GetDirectionChangeFactor() == 0
+  if (
+      cached_direction == cell_direction_cache_.end() || cached_wait->second % cell.GetDirectionChangeFactor() == 0
   ) {
     cell_direction_cache_.erase(cell.id_);
     auto coords = core::GetRandomFloats(-1, 1, 2);
