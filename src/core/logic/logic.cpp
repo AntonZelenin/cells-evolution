@@ -46,7 +46,7 @@ void Logic::CheckCellCrossedBoundaries(core::Cell &cell) const {
   if (pos.Y() < 0.0 + cell.GetSize()) {
     pos.coordinates.y = cell.GetSize();
   } else if (pos.Y() > static_cast<float>(world_.height_) - cell.GetSize()) {
-    pos.coordinates.x = static_cast<float>(world_.height_) - cell.GetSize();
+    pos.coordinates.y = static_cast<float>(world_.height_) - cell.GetSize();
   }
   cell.SetPosition(pos);
 }
