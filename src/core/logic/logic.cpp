@@ -27,10 +27,10 @@ void Logic::MoveCells() {
 }
 
 void Logic::CheckCrossedBoundaries() {
-  for (auto &[_, cell]: world_.cells_) {
+  for (auto &[_, cell] : world_.cells_) {
     CheckCellCrossedBoundaries(cell);
   }
-  for (auto &[_, cell]: world_.hunter_cells_) {
+  for (auto &[_, cell] : world_.hunter_cells_) {
     CheckCellCrossedBoundaries(cell);
   }
 }
@@ -80,30 +80,37 @@ void Logic::CheckCellsEnergy() {
 }
 
 void Logic::DivideCells() {
+  std::vector<core::Cell> new_cells;
   for (auto &[_, cell] : world_.cells_) {
     if (cell.HasEnergyToDivide()) {
       core::Cell new_cell = DivideCell(cell);
-      new_cell.MoveX(cell.size_ * 2);
-      world_.AddCell(new_cell);
+      new_cell.MoveX(cell.GetSize() * 2);
+      new_cells.push_back(new_cell);
       cell.ConsumeDivisionEnergy();
     }
   }
+  for (const auto &cell : new_cells) {
+    world_.AddCell(cell);
+  }
+
   // todo duplicate
+  std::vector<core::Cell> new_hunter_cells;
   for (auto &[_, hunter_cell] : world_.hunter_cells_) {
     if (hunter_cell.HasEnergyToDivide()) {
       core::Cell new_cell = DivideCell(hunter_cell);
-      new_cell.MoveX(hunter_cell.size_ * 2);
-      world_.AddHunterCell(new_cell);
+      new_cell.MoveX(hunter_cell.GetSize() * 2);
+      new_hunter_cells.push_back(new_cell);
       hunter_cell.ConsumeDivisionEnergy();
     }
+  }
+  for (const auto &cell : new_hunter_cells) {
+    world_.AddHunterCell(cell);
   }
 }
 
 // todo copy constructor?
 core::Cell Logic::DivideCell(core::Cell &cell) {
   core::Cell new_cell{
-      cell.size_,
-      cell.speed_,
       cell.energy_ / 2,
       cell.type_,
       core::Position(cell.GetPosition().X(), cell.GetPosition().Y()),

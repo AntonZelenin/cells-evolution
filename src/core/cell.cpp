@@ -2,8 +2,6 @@
 
 namespace cells_evo::core {
 Cell::Cell(
-    float size,
-    float speed,
     float energy,
     Type type,
     Position position,
@@ -11,8 +9,6 @@ Cell::Cell(
 )
     : position_(position) {
   id_ = 0;
-  size_ = size;
-  speed_ = speed;
   type_ = type;
   energy_ = energy;
   for (auto gene : genes) {
@@ -24,8 +20,12 @@ Position &Cell::GetPosition() {
   return position_;
 }
 
-float Cell::GetSize() {
-  return size_;
+float Cell::GetSize() const {
+  return genes_.find(genetics::GeneType::SIZE)->second.value;
+}
+
+float Cell::GetSpeed() const {
+  return genes_.find(genetics::GeneType::SPEED)->second.value;
 }
 
 unsigned int Cell::GetId() {
@@ -52,7 +52,7 @@ void Cell::SetPosition(Position pos) {
 }
 
 void Cell::ConsumeMovementEnergy() {
-  energy_ -= size_ * speed_ * k_energy_consumption_coefficient_;
+  energy_ -= GetSize() * GetSpeed() * k_energy_consumption_coefficient_;
 }
 
 void Cell::ConsumeDivisionEnergy() {
@@ -68,15 +68,19 @@ void Cell::AddEnergy(float energy) {
 }
 
 bool Cell::HasEnergyToDivide() const {
-  return energy_ > (k_division_energy_threshold_ * k_division_energy_size_coefficient_ * size_);
+  return energy_ > (k_division_energy_threshold_ * k_division_energy_size_coefficient_ * GetSize());
+}
+
+int Cell::GetDirectionChangeFactor() {
+  return static_cast<int>(genes_.find(genetics::GeneType::DIRECTION_CHANGE_FACTOR)->second.value);
 }
 
 // todo every cell move to the same point when copy constructor is implemented
 //Cell::Cell(const Cell &cell) {
 //  position_ = Position(cell.position_.X(), cell.position_.Y());
 //  energy_ = cell.energy_ / 2;
-//  size_ = cell.size_;
-//  speed_ = cell.speed_;
+//  size_ = cell.GetSize();
+//  speed_ = cell.GetSpeed();
 //  type_ = cell.type_;
 //}
 }

@@ -7,23 +7,23 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
     case DIRECTION_CHANGE_FACTOR:
       return {
           120,
-          0.1,
+          0.2,
           0,
           1000
       };
     case SIZE:
       return {
-          5,
-          0.1,
-          0,
+          7,
+          0.2,
+          1.5,
           100
       };
     case SPEED:
       return {
-          1,
+          1.2,
+          0.2,
           0.1,
-          0,
-          150
+          10
       };
     case HARD_SHELL:
       return {
@@ -35,8 +35,8 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
     case ENERGY_TO_DIVIDE:
       return {
           10,
-          0.1,
-          0,
+          0.2,
+          5,
           100
       };
     case DIVISION_COOLDOWN:

@@ -10,7 +10,7 @@ class Entity {
   virtual Position &GetPosition() = 0;
   virtual void SetPosition(Position) = 0;
   virtual unsigned int GetId() = 0;
-  virtual float GetSize() = 0;
+  [[nodiscard]] virtual float GetSize() const = 0;
 };
 }
 

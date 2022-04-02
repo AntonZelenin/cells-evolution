@@ -9,18 +9,18 @@ class Food : public Entity {
   Position position_;
  public:
   unsigned int id_;
-  constexpr static const float k_default_energy_value_ = 3;
 
   explicit Food(Position position);
 
   Position &GetPosition() override;
-  float GetSize() override;
+  [[nodiscard]] float GetSize() const override;
 
   void SetPosition(Position) override;
 
   unsigned int GetId() override;
 
   void SetId(unsigned int id);
+  static inline float GetNutritionValue() { return 5.0; };
 };
 
 class FoodGenerator {

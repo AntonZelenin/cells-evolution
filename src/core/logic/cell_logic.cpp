@@ -2,7 +2,7 @@
 
 namespace cells_evo::logic {
 bool CellLogic::CellGotFood(core::Cell &cell, core::Entity &food_entity) {
-  return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() < (cell.size_ + food_entity.GetSize());
+  return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() < (cell.GetSize() + food_entity.GetSize());
 }
 
 core::Vector2<float> CellLogic::GetRandomDirection(core::Cell &cell) {

@@ -54,7 +54,7 @@ class CellLogic {
     if (world_tick % 10 == 0) cell_food_cache_.clear();
     for (auto&[_, cell] : cells) {
       auto direction = ChooseDirection(cell, food_entities);
-      Move(cell, direction, cell.speed_);
+      Move(cell, direction, cell.GetSpeed());
     }
   }
 
@@ -66,7 +66,7 @@ class CellLogic {
     for (auto&[_, cell] : cells) {
       auto food = FindClosestFood(cell, food_entities);
       if (food && CellGotFood(cell, food.value())) {
-        cell.AddEnergy(T::k_default_energy_value_);
+        cell.AddEnergy(food.value().GetNutritionValue());
         // todo this is not good
         food_entities.erase(food.value().id_);
       }

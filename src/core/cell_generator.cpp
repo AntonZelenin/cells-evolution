@@ -14,8 +14,6 @@ std::vector<core::Cell> CellGenerator::Generate(
   );
   for (auto &position : positions) {
     cells.emplace_back(
-        k_default_cell_size_,
-        GetDefaultCellSpeed(cell_type),
         k_default_cell_energy_,
         cell_type,
         position,
@@ -23,12 +21,5 @@ std::vector<core::Cell> CellGenerator::Generate(
     );
   }
   return cells;
-}
-
-float CellGenerator::GetDefaultCellSpeed(core::Type cell_type) const {
-  switch (cell_type) {
-    case core::Type::K_HUNTER:return k_default_hunter_cell_speed_;
-    case core::Type::K_NONHUNTER:return k_default_cell_speed_;
-  }
 }
 }
