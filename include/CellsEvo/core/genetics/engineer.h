@@ -20,7 +20,7 @@ class GeneConfigCacher {
 };
 
 class Engineer {
-  const int mutation_chance_ = 10;
+  const int mutation_chance_ = 20;
   // todo it should explicitly use cacher, is it ok?
   GeneConfigCacher gene_config_cacher_{};
 

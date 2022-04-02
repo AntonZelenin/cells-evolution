@@ -6,7 +6,7 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
   switch (gene_type) {
     case DIRECTION_CHANGE_FACTOR:
       return {
-          120,
+          240,
           0.2,
           0,
           1000
@@ -15,7 +15,7 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
       return {
           7,
           0.2,
-          1.5,
+          2,
           100
       };
     case SPEED:

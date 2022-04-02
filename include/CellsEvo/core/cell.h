@@ -15,13 +15,14 @@ enum Type {
 
 class Cell : public Entity {
   const float k_energy_consumption_coefficient_ = 0.001;
-  const float k_division_energy_threshold_ = 8;
+  const float k_division_energy_threshold_ = 6;
   const float k_division_energy_size_coefficient_ = 0.3;
+  const float k_nutrition_value_coefficient_ = 1.3;
 
   Position position_;
 
  public:
-  constexpr static const float k_max_distance_food_detection_ = 200;
+  constexpr static const float k_max_distance_food_detection_ = 180;
 
   // todo everything is public =*(
   // this is the energy the cell will give if eaten
@@ -53,7 +54,7 @@ class Cell : public Entity {
   [[nodiscard]] bool HasEnergyToDivide() const;
 
   int GetDirectionChangeFactor();
-  [[nodiscard]] inline float GetNutritionValue() const { return GetSize(); };
+  [[nodiscard]] inline float GetNutritionValue() const { return GetSize() * k_nutrition_value_coefficient_; };
 };
 }
 
