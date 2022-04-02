@@ -55,12 +55,12 @@ static Position GenerateRandomPosition(
   auto min_dist_between_cells = static_cast<float>(min_distance_between_cells);
   Vector2<float> pos{};
   bool is_ok = false;
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  std::default_random_engine generator(seed);
+  std::uniform_int_distribution<int> x_distribution(0, width);
+  std::uniform_int_distribution<int> y_distribution(0, height);
   while (not is_ok) {
     is_ok = true;
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::default_random_engine generator(seed);
-    std::uniform_int_distribution<int> x_distribution(0, width);
-    std::uniform_int_distribution<int> y_distribution(0, height);
     pos = Vector2<float>(
         static_cast<float>(x_distribution(generator)),
         static_cast<float>( y_distribution(generator))
