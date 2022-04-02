@@ -44,6 +44,7 @@ class Cell : public core::Entity {
 //  Cell(const Cell &cell);
 
   Position &GetPosition() override;
+  float GetSize() override;
   void SetPosition(Position pos) override;
   unsigned int GetId() override;
   void SetId(unsigned int id);

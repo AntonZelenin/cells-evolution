@@ -1,14 +1,12 @@
-#include "CellsEvo/core/logic/logic.h"
-#include "CellsEvo/core/geometry.h"
-#include "CellsEvo/core/logic/non_hunter_logic.h"
-#include "CellsEvo/core/logic/hunter_logic.h"
-
 #include <vector>
 #include <random>
+#include "CellsEvo/core/logic/logic.h"
+#include "CellsEvo/core/geometry.h"
+#include "CellsEvo/core/logic/hunter_logic.h"
 
 namespace cells_evo::logic {
 Logic::Logic(core::World &world, unsigned int food_production_rate) : world_(world) {
-  non_hunter_logic_.RebuildCellsFoodCache(world_.cells_, world_.food_);
+  cell_logic_.RebuildCellsFoodCache(world_.cells_, world_.food_);
   food_production_rate_reverse_ = food_production_rate;
 }
 
@@ -23,8 +21,8 @@ void Logic::WorldTick() {
 }
 
 void Logic::MoveCells() {
-  non_hunter_logic_.MoveCells(world_.cells_, world_.food_, world_ticks_);
-  hunter_logic_.MoveCells(world_.hunter_cells_, world_.cells_, world_ticks_);
+  cell_logic_.MoveCells(world_.cells_, world_.food_, world_ticks_);
+  cell_logic_.MoveCells(world_.hunter_cells_, world_.cells_, world_ticks_);
 }
 
 void Logic::GenerateFood() {
@@ -34,7 +32,7 @@ void Logic::GenerateFood() {
   // generate food only once in N secs on average
   if (food_production_rate_reverse_ != 0 && distribution(generator) == 1) {
     world_.GenerateFood(1);
-    non_hunter_logic_.RebuildCellsFoodCache(world_.cells_, world_.food_);
+    cell_logic_.RebuildCellsFoodCache(world_.cells_, world_.food_);
   }
 }
 
@@ -89,8 +87,8 @@ core::Cell Logic::DivideCell(core::Cell &cell) {
 }
 
 void Logic::Eat() {
-  non_hunter_logic_.ProcessEatFood(world_.cells_, world_.food_);
-  hunter_logic_.ProcessEatCell(world_.hunter_cells_, world_.cells_);
+  cell_logic_.ProcessEatFood(world_.cells_, world_.food_);
+  cell_logic_.ProcessEatFood(world_.hunter_cells_, world_.cells_);
 }
 
 void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {

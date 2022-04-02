@@ -24,6 +24,10 @@ Position &Cell::GetPosition() {
   return position_;
 }
 
+float Cell::GetSize() {
+  return size_;
+}
+
 unsigned int Cell::GetId() {
   // todo duplicate
   return id_;

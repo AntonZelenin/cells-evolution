@@ -14,6 +14,7 @@ class Food : Entity {
   explicit Food(Position position);
 
   Position &GetPosition() override;
+  float GetSize() override;
 
   void SetPosition(Position) override;
 

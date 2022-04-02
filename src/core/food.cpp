@@ -37,4 +37,7 @@ void Food::SetId(unsigned int id) {
 void Food::SetPosition(Position pos) {
   position_ = pos;
 }
+float Food::GetSize() {
+  return 0.1;
+}
 }
