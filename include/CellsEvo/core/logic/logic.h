@@ -3,7 +3,7 @@
 
 #include "CellsEvo/core/cell.h"
 #include "CellsEvo/core/genetics/engineer.h"
-#include "hunter_logic.h"
+#include "cell_logic.h"
 #include "CellsEvo/core/world.h"
 
 namespace cells_evo::logic {
