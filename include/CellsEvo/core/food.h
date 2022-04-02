@@ -5,7 +5,7 @@
 #include "base.h"
 
 namespace cells_evo::core {
-class Food : Entity {
+class Food : public Entity {
   Position position_;
  public:
   unsigned int id_;

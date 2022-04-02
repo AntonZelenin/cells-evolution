@@ -87,8 +87,8 @@ core::Cell Logic::DivideCell(core::Cell &cell) {
 }
 
 void Logic::Eat() {
-  cell_logic_.ProcessEatFood(world_.cells_, world_.food_);
-  cell_logic_.ProcessEatFood(world_.hunter_cells_, world_.cells_);
+  cell_logic_.ProcessEatFood<core::Food>(world_.cells_, world_.food_);
+  cell_logic_.ProcessEatFood<core::Cell>(world_.hunter_cells_, world_.cells_);
 }
 
 void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {

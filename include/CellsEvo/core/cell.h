@@ -13,7 +13,7 @@ enum Type {
   K_NONHUNTER,
 };
 
-class Cell : public core::Entity {
+class Cell : public Entity {
   const float k_energy_consumption_coefficient_ = 0.001;
   const float k_division_energy_threshold_ = 10;
   const float k_division_energy_size_coefficient_ = 0.1;
