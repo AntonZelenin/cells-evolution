@@ -9,10 +9,6 @@ namespace cells_evo::logic {
 void Move(core::Cell &cell, core::Vector2<float> &direction, float speed);
 
 class CellLogic {
-  std::unordered_map<unsigned int, unsigned int> cell_food_cache_;
-  std::unordered_map<unsigned int, core::Vector2<float>> cell_direction_cache_;
-  std::unordered_map<unsigned int, int> cell_wait_cache_;
-
   template<typename T>
   std::optional<T> FindClosestFood(
       core::Cell &cell,
@@ -20,13 +16,11 @@ class CellLogic {
   ) {
     if (food_entities.empty())
       return {};
-    auto cached_closest_food = cell_food_cache_.find(cell.id_);
-    if (cached_closest_food != cell_food_cache_.end()) {
-      auto food = food_entities.find(cached_closest_food->second);
+    auto cached_closest_food = cell.GetFoodTargetId();
+    if (cached_closest_food) {
+      auto food = food_entities.find(cached_closest_food.value());
       if (food != food_entities.end())
         return food->second;
-      else
-        cell_food_cache_.erase(cell.id_);
     }
 
     unsigned int closest_food_idx;
@@ -39,7 +33,7 @@ class CellLogic {
       }
     }
 
-    cell_food_cache_.insert({cell.id_, closest_food_idx});
+    cell.SetFoodTargetId(closest_food_idx);
     return food_entities.find(closest_food_idx)->second;
   }
 
@@ -50,9 +44,9 @@ class CellLogic {
       std::unordered_map<unsigned int, T> &food_entities,
       unsigned int world_tick
   ) {
-    // update once in 10 frames
-    if (world_tick % 10 == 0) cell_food_cache_.clear();
     for (auto&[_, cell] : cells) {
+      // check for new food every N frames
+      if (cell.lifetime_ % 15 == 0) cell.ClearFoodTarget();
       auto direction = ChooseDirection(cell, food_entities);
       Move(cell, direction, cell.GetSpeed());
     }
@@ -94,11 +88,7 @@ class CellLogic {
     return direction;
   }
 
-  core::Vector2<float> GetRandomDirection(core::Cell &cell);
-  void RebuildCellsFoodCache(
-      std::unordered_map<unsigned int, core::Cell> &cells,
-      std::unordered_map<unsigned int, core::Food> &food
-  );
+  static core::Vector2<float> GetRandomDirection(core::Cell &cell);
 };
 }
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_CELL_LOGIC_H_

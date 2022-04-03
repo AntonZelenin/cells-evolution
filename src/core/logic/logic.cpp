@@ -6,7 +6,6 @@
 
 namespace cells_evo::logic {
 Logic::Logic(core::World &world, unsigned int food_production_rate) : world_(world) {
-  cell_logic_.RebuildCellsFoodCache(world_.cells_, world_.food_);
   food_production_rate_reverse_ = food_production_rate;
 }
 
@@ -58,7 +57,6 @@ void Logic::GenerateFood() {
   // generate food only once in N secs on average
   if (food_production_rate_reverse_ != 0 && distribution(generator) == 1) {
     world_.GenerateFood(1);
-    cell_logic_.RebuildCellsFoodCache(world_.cells_, world_.food_);
   }
 }
 
@@ -133,6 +131,20 @@ void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {
 }
 
 void Logic::CountTick() {
+  for (auto &[_, cell]: world_.cells_) {
+    if (cell.lifetime_ == std::numeric_limits<unsigned int>::max())
+      cell.lifetime_ = 0;
+    else
+      cell.lifetime_++;
+  }
+  // todo duplicates again
+  for (auto &[_, cell]: world_.hunter_cells_) {
+    if (cell.lifetime_ == std::numeric_limits<unsigned int>::max())
+      cell.lifetime_ = 0;
+    else
+      cell.lifetime_++;
+  }
+  // todo remove?
   if (world_ticks_ == std::numeric_limits<unsigned int>::max())
     world_ticks_ = 0;
   else

@@ -6,9 +6,9 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
   switch (gene_type) {
     case DIRECTION_CHANGE_FACTOR:
       return {
-          240,
-          0.2,
-          0,
+          200,
+          20,
+          0.1,
           1000
       };
     case SIZE:

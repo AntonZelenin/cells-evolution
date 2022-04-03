@@ -28,6 +28,22 @@ float Cell::GetSpeed() const {
   return genes_.find(genetics::GeneType::SPEED)->second.value * k_speed_size_coefficient_ * GetSize();
 }
 
+std::optional<unsigned int> Cell::GetFoodTargetId() const {
+  return food_target_id_;
+}
+
+void Cell::SetFoodTargetId(unsigned int food_id) {
+  food_target_id_ = food_id;
+}
+
+[[nodiscard]] std::optional<core::Vector2<float>> Cell::GetDirection() const {
+  return direction_;
+}
+
+void Cell::SetDirection(core::Vector2<float> direction) {
+  direction_ = direction;
+}
+
 unsigned int Cell::GetId() {
   // todo duplicate
   return id_;
