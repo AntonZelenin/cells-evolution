@@ -41,8 +41,7 @@ class CellLogic {
   template<typename T>
   void MoveCells(
       std::unordered_map<unsigned int, core::Cell> &cells,
-      std::unordered_map<unsigned int, T> &food_entities,
-      unsigned int world_tick
+      std::unordered_map<unsigned int, T> &food_entities
   ) {
     for (auto&[_, cell] : cells) {
       // check for new food every N frames

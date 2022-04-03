@@ -68,7 +68,7 @@ class Cell : public Entity {
   [[nodiscard]] bool HasEnergyToDivide() const;
 
   int GetDirectionChangeFactor();
-  [[nodiscard]] inline float GetNutritionValue() const { return energy_ + GetSize() * k_nutrition_value_coefficient_; };
+  [[nodiscard]] inline float GetNutritionValue() const { return energy_ /* + GetSize() * k_nutrition_value_coefficient_*/; };
 };
 }
 

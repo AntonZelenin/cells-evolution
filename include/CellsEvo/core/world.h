@@ -15,11 +15,9 @@ class World {
   core::CellGenerator cell_generator_{};
 
   void AddFood(Food food);
-
   void AddFood(const std::vector<Food> &foods);
 
   void AddCells(const std::vector<Cell> &new_cells);
-
   void AddHunterCells(const std::vector<Cell> &new_cells);
 
  public:
@@ -32,13 +30,10 @@ class World {
   World(int cells_generation_size, int hunter_generation_size, int food_generation_size, int width, int height);
 
   void GenerateFood(int number);
-
   void GenerateCells(int number);
-
   void GenerateHunterCells(int number);
 
   void AddCell(Cell cell);
-
   void AddHunterCell(Cell cell);
 };
 }

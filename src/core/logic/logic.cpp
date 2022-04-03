@@ -21,8 +21,8 @@ void Logic::WorldTick() {
 }
 
 void Logic::MoveCells() {
-  cell_logic_.MoveCells(world_.cells_, world_.food_, world_ticks_);
-  cell_logic_.MoveCells(world_.hunter_cells_, world_.cells_, world_ticks_);
+  cell_logic_.MoveCells(world_.cells_, world_.food_);
+  cell_logic_.MoveCells(world_.hunter_cells_, world_.cells_);
 }
 
 void Logic::CheckCrossedBoundaries() {
@@ -65,7 +65,7 @@ void Logic::CheckCellsEnergy() {
   for (auto &[_, cell] : world_.cells_) {
     if (!cell.HasEnergy()) cells_to_kill.push_back(cell.id_);
   }
-  // todo I guess I should keep hunter cells and cells together
+  // todo maybe I should keep hunter cells and cells together
   for (auto &[_, hunter_cell] : world_.hunter_cells_) {
     if (!hunter_cell.HasEnergy()) hunter_cells_to_kill.push_back(hunter_cell.id_);
   }
