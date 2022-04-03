@@ -25,7 +25,7 @@ float Cell::GetSize() const {
 }
 
 float Cell::GetSpeed() const {
-  return genes_.find(genetics::GeneType::SPEED)->second.value;
+  return genes_.find(genetics::GeneType::SPEED)->second.value * k_speed_size_coefficient_ * GetSize();
 }
 
 unsigned int Cell::GetId() {
