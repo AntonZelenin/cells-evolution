@@ -11,14 +11,10 @@ class Food : public EdibleEntity {
   unsigned int id_;
 
   explicit Food(Position position);
-
   Position &GetPosition() override;
   [[nodiscard]] float GetSize() const override;
-
   void SetPosition(Position) override;
-
   unsigned int GetId() override;
-
   void SetId(unsigned int id);
   [[nodiscard]] inline float GetNutritionValue() const override { return 5.0; };
 };

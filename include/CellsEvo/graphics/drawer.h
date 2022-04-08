@@ -13,7 +13,7 @@ namespace cells_evo::graphics {
                 {core::Type::K_NONHUNTER, sf::Color::Green},
         };
     public:
-        sf::Color Get(const core::Type *type);
+        sf::Color Get(const core::Type &type);
     };
 
     class CellDrawer {

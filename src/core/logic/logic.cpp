@@ -25,12 +25,12 @@ void Logic::MoveCells() {
     if (cell->type_ == core::Type::K_NONHUNTER)
       non_hunter_cell_logic_.MoveCell(
           *cell,
-          reinterpret_cast<core::EdibleEntityStorage *>(&world_.food_)
+          reinterpret_cast<core::EdibleEntityStorage &>(world_.food_)
       );
     else
       hunter_cell_logic_.MoveCell(
           *cell,
-          reinterpret_cast<core::EdibleEntityStorage *>(&world_.cells_)
+          reinterpret_cast<core::EdibleEntityStorage &>(world_.cells_)
       );
   }
 }
@@ -108,12 +108,12 @@ void Logic::Eat() {
     if (cell->type_ == core::Type::K_NONHUNTER)
       non_hunter_cell_logic_.ProcessEatFood(
           *cell,
-          reinterpret_cast<core::EdibleEntityStorage *>(&world_.food_)
+          reinterpret_cast<core::EdibleEntityStorage &>(world_.food_)
       );
     else
       hunter_cell_logic_.ProcessEatFood(
           *cell,
-          reinterpret_cast<core::EdibleEntityStorage *>(&world_.cells_)
+          reinterpret_cast<core::EdibleEntityStorage &>(world_.cells_)
       );
   }
 }

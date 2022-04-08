@@ -8,11 +8,8 @@ struct Vector2 {
   T y;
 
   Vector2() = default;
-
   Vector2(T x, T y);
-
   float Magnitude();
-
   void Normalize();
 
   Vector2<float> operator-(Vector2<float> const &obj) const;
@@ -20,15 +17,10 @@ struct Vector2 {
 
 struct Position {
   Vector2<float> coordinates{};
-
   Position() = default;
-
   Position(float x, float y);
-
   explicit Position(Vector2<float> coords);
-
   [[nodiscard]] float X() const;
-
   [[nodiscard]] float Y() const;
 
   Vector2<float> operator-(Position const &pos) const;

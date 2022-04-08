@@ -39,23 +39,23 @@ class NonHunterCellLogic {
  public:
   virtual void MoveCell(
       core::Cell &cell,
-      core::EdibleEntityStorage *food_entities
+      core::EdibleEntityStorage &food_entities
   ) {
     // check for new food every N frames
     if (cell.lifetime_ % 15 == 0) cell.ClearFoodTarget();
-    auto direction = ChooseDirection(cell, *food_entities);
+    auto direction = ChooseDirection(cell, food_entities);
     Move(cell, direction, cell.GetSpeed());
   }
 
   void ProcessEatFood(
       core::Cell &cell,
-      core::EdibleEntityStorage *food_entities
+      core::EdibleEntityStorage &food_entities
   ) {
-    auto food = FindClosestFood(cell, *food_entities);
+    auto food = FindClosestFood(cell, food_entities);
     if (food != nullptr && CellGotFood(cell, *food)) {
       cell.AddEnergy(food->GetNutritionValue());
       // todo this is not good
-      food_entities->erase(food->GetId());
+      food_entities.erase(food->GetId());
     }
   }
 
