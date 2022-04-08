@@ -8,25 +8,24 @@ namespace cells_evo::logic {
 // todo remove, it's temporary
 void Move(core::Cell &cell, core::Vector2<float> &direction, float speed);
 
-class CellLogic {
-  template<typename T>
-  std::optional<T> FindClosestFood(
+class NonHunterCellLogic {
+  virtual std::shared_ptr<core::EdibleEntity> FindClosestFood(
       core::Cell &cell,
-      std::unordered_map<unsigned int, T> &food_entities
+      std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> &foods
   ) {
-    if (food_entities.empty())
-      return {};
+    if (foods.empty())
+      return nullptr;
     auto cached_closest_food = cell.GetFoodTargetId();
     if (cached_closest_food) {
-      auto food = food_entities.find(cached_closest_food.value());
-      if (food != food_entities.end())
+      auto food = foods.find(cached_closest_food.value());
+      if (food != foods.end())
         return food->second;
     }
 
     unsigned int closest_food_idx;
     float min_distance = std::numeric_limits<float>::max();
-    for (auto&[idx, food] : food_entities) {
-      auto dist = (cell.GetPosition() - food.GetPosition()).Magnitude();
+    for (auto&[idx, food] : foods) {
+      auto dist = (cell.GetPosition() - food->GetPosition()).Magnitude();
       if (dist < min_distance) {
         min_distance = dist;
         closest_food_idx = idx;
@@ -34,31 +33,29 @@ class CellLogic {
     }
 
     cell.SetFoodTargetId(closest_food_idx);
-    return food_entities.find(closest_food_idx)->second;
+    return foods.find(closest_food_idx)->second;
   }
 
  public:
-  template<typename T>
-  void MoveCells(
+  virtual void MoveCell(
       core::Cell &cell,
-      std::unordered_map<unsigned int, T> &food_entities
+      std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> *food_entities
   ) {
     // check for new food every N frames
     if (cell.lifetime_ % 15 == 0) cell.ClearFoodTarget();
-    auto direction = ChooseDirection(cell, food_entities);
+    auto direction = ChooseDirection(cell, *food_entities);
     Move(cell, direction, cell.GetSpeed());
   }
 
-  template<typename T>
   void ProcessEatFood(
       core::Cell &cell,
-      std::unordered_map<unsigned int, T> &food_entities
+      std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> *food_entities
   ) {
-    auto food = FindClosestFood(cell, food_entities);
-    if (food && CellGotFood(cell, food.value())) {
-      cell.AddEnergy(food.value().GetNutritionValue());
+    auto food = FindClosestFood(cell, *food_entities);
+    if (food != nullptr && CellGotFood(cell, *food)) {
+      cell.AddEnergy(food->GetNutritionValue());
       // todo this is not good
-      food_entities.erase(food.value().id_);
+      food_entities->erase(food->GetId());
     }
   }
 
@@ -69,21 +66,52 @@ class CellLogic {
     return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() <= core::Cell::k_max_distance_food_detection_;
   }
 
-  template<typename T>
-  core::Vector2<float> ChooseDirection(core::Cell &cell, std::unordered_map<unsigned int, T> &food_entities) {
+  core::Vector2<float> ChooseDirection(core::Cell &cell, std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> &food_entities) {
     // todo probably it should be generic, use for all types of cell
     core::Vector2<float> direction{};
     auto closest_food = FindClosestFood(cell, food_entities);
-    if (!closest_food || !CouldSensedFood(cell, closest_food.value())) {
+    if (!closest_food || !CouldSensedFood(cell, *closest_food)) {
       direction = GetRandomDirection(cell);
     } else {
-      auto target_position = closest_food.value().GetPosition();
+      auto target_position = closest_food->GetPosition();
       direction = core::GetDirectionVector(cell.GetPosition(), target_position);
     }
     return direction;
   }
 
   static core::Vector2<float> GetRandomDirection(core::Cell &cell);
+};
+
+class HunterCellLogic : public NonHunterCellLogic {
+  std::shared_ptr<core::EdibleEntity> FindClosestFood(
+      core::Cell &cell,
+      std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> &cells
+  ) override {
+    auto cc = reinterpret_cast<std::unordered_map<unsigned int, std::shared_ptr<core::Cell>>&>(cells);
+
+    if (cells.empty())
+      return {};
+    auto cached_closest_food = cell.GetFoodTargetId();
+    if (cached_closest_food) {
+      auto food = cells.find(cached_closest_food.value());
+      if (food != cells.end())
+        return food->second;
+    }
+
+    unsigned int closest_food_idx = 0;
+    float min_distance = std::numeric_limits<float>::max();
+    for (auto&[idx, prey_cell] : cc) {
+      if (prey_cell->type_ == core::K_HUNTER) continue;
+      auto dist = (cell.GetPosition() - prey_cell->GetPosition()).Magnitude();
+      if (dist < min_distance) {
+        min_distance = dist;
+        closest_food_idx = idx;
+      }
+    }
+    if (closest_food_idx == 0) return {};
+    cell.SetFoodTargetId(closest_food_idx);
+    return cells.find(closest_food_idx)->second;
+  }
 };
 }
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_CELL_LOGIC_H_

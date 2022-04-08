@@ -21,10 +21,10 @@ void App::Run() {
     logic_->WorldTick();
     window_->clear(sf::Color::Black);
     for (auto&[_, cell] : world_->cells_) {
-      window_->draw(graphics::CellDrawer().Get(&cell));
+      window_->draw(graphics::CellDrawer().Get(cell));
     }
     for (auto&[_, food] : world_->food_) {
-      window_->draw(graphics::FoodDrawer::Get(&food));
+      window_->draw(graphics::FoodDrawer::Get(food));
     }
     window_->display();
 

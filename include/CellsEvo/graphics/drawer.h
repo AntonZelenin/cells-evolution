@@ -24,13 +24,13 @@ namespace cells_evo::graphics {
         [[nodiscard]] float GetThickness(float size) const;
 
     public:
-        sf::CircleShape Get(core::Cell *cell);
+        sf::CircleShape Get(const std::shared_ptr<core::Cell>& cell);
     };
 
 // todo make interface for drawers
     class FoodDrawer {
     public:
-        static sf::RectangleShape Get(core::Food *food);
+        static sf::RectangleShape Get(const std::shared_ptr<core::Food>& food);
     };
 }
 

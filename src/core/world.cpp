@@ -9,16 +9,16 @@ World::World(int cells_generation_size, int hunter_generation_size, int food_gen
   GenerateFood(food_generation_size);
 }
 
-void World::AddFood(Food new_food) {
+void World::AddFood(std::shared_ptr<Food> new_food) {
   unsigned int id = index_driver_.GetNextId();
-  new_food.SetId(id);
-  food_.insert({id, new_food});
+  new_food->SetId(id);
+  food_.insert({id, std::move(new_food)});
 }
 
-void World::AddCell(Cell cell) {
+void World::AddCell(std::shared_ptr<Cell> cell) {
   unsigned int id = index_driver_.GetNextId();
-  cell.SetId(id);
-  cells_.insert({id, cell});
+  cell->SetId(id);
+  cells_.insert({id, std::move(cell)});
 }
 
 void World::GenerateFood(int number) {
@@ -47,16 +47,16 @@ void World::GenerateHunterCells(int number) {
   ));
 }
 
-void World::AddFood(const std::vector<Food> &foods) {
+void World::AddFood(std::vector<std::shared_ptr<Food>> foods) {
   // todo will it work as I expect?
-  for (const auto &f : foods) {
-    AddFood(f);
+  for (auto &f : foods) {
+    AddFood(std::move(f));
   }
 }
 
-void World::AddCells(const std::vector<Cell> &new_cells) {
-  for (const auto &c : new_cells) {
-    AddCell(c);
+void World::AddCells(std::vector<std::shared_ptr<Cell>> new_cells) {
+  for (auto &c : new_cells) {
+    AddCell(std::move(c));
   }
 }
 }

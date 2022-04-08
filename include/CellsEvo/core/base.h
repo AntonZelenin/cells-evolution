@@ -12,6 +12,11 @@ class Entity {
   virtual unsigned int GetId() = 0;
   [[nodiscard]] virtual float GetSize() const = 0;
 };
+
+class EdibleEntity : public Entity {
+ public:
+  [[nodiscard]] inline virtual float GetNutritionValue() const = 0;
+};
 }
 
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_BASE_H_

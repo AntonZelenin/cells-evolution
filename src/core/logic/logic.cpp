@@ -21,17 +21,23 @@ void Logic::WorldTick() {
 }
 
 void Logic::MoveCells() {
-  for (auto &[_, cell]: world_.cells_) {
-    if (cell.type_ == core::Type::K_NONHUNTER)
-      cell_logic_.MoveCells(cell, world_.food_);
+  for (auto &[_, cell] : world_.cells_) {
+    if (cell->type_ == core::Type::K_NONHUNTER)
+      non_hunter_cell_logic_.MoveCell(
+          *cell,
+          reinterpret_cast<std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> *>(&world_.food_)
+      );
     else
-      cell_logic_.MoveCells(cell, world_.cells_);
+      hunter_cell_logic_.MoveCell(
+          *cell,
+          reinterpret_cast<std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> *>(&world_.cells_)
+      );
   }
 }
 
 void Logic::CheckCrossedBoundaries() {
   for (auto &[_, cell] : world_.cells_) {
-    CheckCellCrossedBoundaries(cell);
+    CheckCellCrossedBoundaries(*cell);
   }
 }
 
@@ -64,7 +70,7 @@ void Logic::GenerateFood() {
 void Logic::CheckCellsEnergy() {
   std::vector<unsigned int> cells_to_kill{};
   for (auto &[_, cell] : world_.cells_) {
-    if (!cell.HasEnergy()) cells_to_kill.push_back(cell.id_);
+    if (!cell->HasEnergy()) cells_to_kill.push_back(cell->id_);
   }
   for (auto cell_id : cells_to_kill) {
     world_.cells_.erase(cell_id);
@@ -72,37 +78,43 @@ void Logic::CheckCellsEnergy() {
 }
 
 void Logic::DivideCells() {
-  std::vector<core::Cell> new_cells;
+  std::vector<std::shared_ptr<core::Cell>> new_cells;
   for (auto &[_, cell] : world_.cells_) {
-    if (cell.HasEnergyToDivide()) {
-      core::Cell new_cell = DivideCell(cell);
-      new_cell.MoveX(cell.GetSize() * 2);
+    if (cell->HasEnergyToDivide()) {
+      auto new_cell = DivideCell(*cell);
+      new_cell->MoveX(cell->GetSize() * 2);
       new_cells.push_back(new_cell);
-      cell.ConsumeDivisionEnergy();
+      cell->ConsumeDivisionEnergy();
     }
   }
-  for (const auto &cell : new_cells) {
-    world_.AddCell(cell);
+  for (auto &cell : new_cells) {
+    world_.AddCell(std::move(cell));
   }
 }
 
 // todo copy constructor?
-core::Cell Logic::DivideCell(core::Cell &cell) {
-  core::Cell new_cell{
+std::shared_ptr<core::Cell> Logic::DivideCell(core::Cell &cell) {
+  auto new_cell = std::make_shared<core::Cell>(
       cell.energy_ / 2,
       cell.type_,
       core::Position(cell.GetPosition().X(), cell.GetPosition().Y()),
       genetic_engineer_.CopyGenes(cell.genes_)
-  };
-  return new_cell;
+  );
+  return std::move(new_cell);
 }
 
 void Logic::Eat() {
-  for (auto &[_, cell]: world_.cells_) {
-    if (cell.type_ == core::Type::K_NONHUNTER)
-      cell_logic_.ProcessEatFood(cell, world_.food_);
+  for (auto &[_, cell] : world_.cells_) {
+    if (cell->type_ == core::Type::K_NONHUNTER)
+      non_hunter_cell_logic_.ProcessEatFood(
+          *cell,
+          reinterpret_cast<std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> *>(&world_.food_)
+      );
     else
-      cell_logic_.ProcessEatFood(cell, world_.cells_);
+      hunter_cell_logic_.ProcessEatFood(
+          *cell,
+          reinterpret_cast<std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> *>(&world_.cells_)
+      );
   }
 }
 
@@ -115,11 +127,11 @@ void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {
 }
 
 void Logic::CountTick() {
-  for (auto &[_, cell]: world_.cells_) {
-    if (cell.lifetime_ == std::numeric_limits<unsigned int>::max())
-      cell.lifetime_ = 0;
+  for (auto &[_, cell] : world_.cells_) {
+    if (cell->lifetime_ == std::numeric_limits<unsigned int>::max())
+      cell->lifetime_ = 0;
     else
-      cell.lifetime_++;
+      cell->lifetime_++;
   }
   // todo remove?
   if (world_ticks_ == std::numeric_limits<unsigned int>::max())

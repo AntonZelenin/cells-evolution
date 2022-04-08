@@ -5,7 +5,7 @@
 #include "base.h"
 
 namespace cells_evo::core {
-class Food : public Entity {
+class Food : public EdibleEntity {
   Position position_;
  public:
   unsigned int id_;
@@ -20,14 +20,14 @@ class Food : public Entity {
   unsigned int GetId() override;
 
   void SetId(unsigned int id);
-  static inline float GetNutritionValue() { return 5.0; };
+  [[nodiscard]] inline float GetNutritionValue() const override { return 5.0; };
 };
 
 class FoodGenerator {
   const int k_min_distance_between_items_ = 1;
 
  public:
-  [[nodiscard]] std::vector<Food> Generate(int field_width, int field_height, int size) const;
+  [[nodiscard]] std::vector<std::shared_ptr<Food>> Generate(int field_width, int field_height, int size) const;
 };
 }
 

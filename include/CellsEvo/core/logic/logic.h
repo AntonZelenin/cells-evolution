@@ -12,14 +12,15 @@ class Logic {
   unsigned int world_ticks_ = 0;
   unsigned int food_production_rate_reverse_;
 
-  CellLogic cell_logic_{};
+  HunterCellLogic hunter_cell_logic_{};
+  NonHunterCellLogic non_hunter_cell_logic_{};
   genetics::Engineer genetic_engineer_{};
 
   void CountTick();
   void Eat();
   void GenerateFood();
   void DivideCells();
-  core::Cell DivideCell(core::Cell &cell);
+  std::shared_ptr<core::Cell> DivideCell(core::Cell &cell);
   void CheckCellsEnergy();
 
  public:

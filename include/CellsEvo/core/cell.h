@@ -13,7 +13,7 @@ enum Type {
   K_NONHUNTER,
 };
 
-class Cell : public Entity {
+class Cell : public EdibleEntity {
   const float k_energy_consumption_coefficient_ = 0.0005;
   const float k_division_energy_threshold_ = 6;
   const float k_division_energy_size_coefficient_ = 0.2;
@@ -68,7 +68,7 @@ class Cell : public Entity {
   [[nodiscard]] bool HasEnergyToDivide() const;
 
   int GetDirectionChangeFactor();
-  [[nodiscard]] inline float GetNutritionValue() const { return energy_ /* + GetSize() * k_nutrition_value_coefficient_*/; };
+  [[nodiscard]] inline float GetNutritionValue() const override { return energy_ /* + GetSize() * k_nutrition_value_coefficient_*/; };
 };
 }
 
