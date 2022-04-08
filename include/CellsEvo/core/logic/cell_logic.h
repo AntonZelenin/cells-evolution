@@ -40,29 +40,25 @@ class CellLogic {
  public:
   template<typename T>
   void MoveCells(
-      std::unordered_map<unsigned int, core::Cell> &cells,
+      core::Cell &cell,
       std::unordered_map<unsigned int, T> &food_entities
   ) {
-    for (auto&[_, cell] : cells) {
-      // check for new food every N frames
-      if (cell.lifetime_ % 15 == 0) cell.ClearFoodTarget();
-      auto direction = ChooseDirection(cell, food_entities);
-      Move(cell, direction, cell.GetSpeed());
-    }
+    // check for new food every N frames
+    if (cell.lifetime_ % 15 == 0) cell.ClearFoodTarget();
+    auto direction = ChooseDirection(cell, food_entities);
+    Move(cell, direction, cell.GetSpeed());
   }
 
   template<typename T>
   void ProcessEatFood(
-      std::unordered_map<unsigned int, core::Cell> &cells,
+      core::Cell &cell,
       std::unordered_map<unsigned int, T> &food_entities
   ) {
-    for (auto&[_, cell] : cells) {
-      auto food = FindClosestFood(cell, food_entities);
-      if (food && CellGotFood(cell, food.value())) {
-        cell.AddEnergy(food.value().GetNutritionValue());
-        // todo this is not good
-        food_entities.erase(food.value().id_);
-      }
+    auto food = FindClosestFood(cell, food_entities);
+    if (food && CellGotFood(cell, food.value())) {
+      cell.AddEnergy(food.value().GetNutritionValue());
+      // todo this is not good
+      food_entities.erase(food.value().id_);
     }
   }
 

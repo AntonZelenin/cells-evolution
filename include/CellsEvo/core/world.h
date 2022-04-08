@@ -18,12 +18,10 @@ class World {
   void AddFood(const std::vector<Food> &foods);
 
   void AddCells(const std::vector<Cell> &new_cells);
-  void AddHunterCells(const std::vector<Cell> &new_cells);
 
  public:
   std::unordered_map<unsigned int, Food> food_{};
   std::unordered_map<unsigned int, Cell> cells_{};
-  std::unordered_map<unsigned int, Cell> hunter_cells_{};
   int width_;
   int height_;
 
@@ -34,7 +32,6 @@ class World {
   void GenerateHunterCells(int number);
 
   void AddCell(Cell cell);
-  void AddHunterCell(Cell cell);
 };
 }
 

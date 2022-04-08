@@ -23,9 +23,6 @@ void App::Run() {
     for (auto&[_, cell] : world_->cells_) {
       window_->draw(graphics::CellDrawer().Get(&cell));
     }
-    for (auto&[_, cell] : world_->hunter_cells_) {
-      window_->draw(graphics::CellDrawer().Get(&cell));
-    }
     for (auto&[_, food] : world_->food_) {
       window_->draw(graphics::FoodDrawer::Get(&food));
     }

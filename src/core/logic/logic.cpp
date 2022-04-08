@@ -21,15 +21,16 @@ void Logic::WorldTick() {
 }
 
 void Logic::MoveCells() {
-  cell_logic_.MoveCells(world_.cells_, world_.food_);
-  cell_logic_.MoveCells(world_.hunter_cells_, world_.cells_);
+  for (auto &[_, cell]: world_.cells_) {
+    if (cell.type_ == core::Type::K_NONHUNTER)
+      cell_logic_.MoveCells(cell, world_.food_);
+    else
+      cell_logic_.MoveCells(cell, world_.cells_);
+  }
 }
 
 void Logic::CheckCrossedBoundaries() {
   for (auto &[_, cell] : world_.cells_) {
-    CheckCellCrossedBoundaries(cell);
-  }
-  for (auto &[_, cell] : world_.hunter_cells_) {
     CheckCellCrossedBoundaries(cell);
   }
 }
@@ -61,19 +62,12 @@ void Logic::GenerateFood() {
 }
 
 void Logic::CheckCellsEnergy() {
-  std::vector<unsigned int> cells_to_kill{}, hunter_cells_to_kill{};
+  std::vector<unsigned int> cells_to_kill{};
   for (auto &[_, cell] : world_.cells_) {
     if (!cell.HasEnergy()) cells_to_kill.push_back(cell.id_);
   }
-  // todo maybe I should keep hunter cells and cells together
-  for (auto &[_, hunter_cell] : world_.hunter_cells_) {
-    if (!hunter_cell.HasEnergy()) hunter_cells_to_kill.push_back(hunter_cell.id_);
-  }
   for (auto cell_id : cells_to_kill) {
     world_.cells_.erase(cell_id);
-  }
-  for (auto cell_id : hunter_cells_to_kill) {
-    world_.hunter_cells_.erase(cell_id);
   }
 }
 
@@ -90,20 +84,6 @@ void Logic::DivideCells() {
   for (const auto &cell : new_cells) {
     world_.AddCell(cell);
   }
-
-  // todo duplicate
-  std::vector<core::Cell> new_hunter_cells;
-  for (auto &[_, hunter_cell] : world_.hunter_cells_) {
-    if (hunter_cell.HasEnergyToDivide()) {
-      core::Cell new_cell = DivideCell(hunter_cell);
-      new_cell.MoveX(hunter_cell.GetSize() * 2);
-      new_hunter_cells.push_back(new_cell);
-      hunter_cell.ConsumeDivisionEnergy();
-    }
-  }
-  for (const auto &cell : new_hunter_cells) {
-    world_.AddHunterCell(cell);
-  }
 }
 
 // todo copy constructor?
@@ -118,8 +98,12 @@ core::Cell Logic::DivideCell(core::Cell &cell) {
 }
 
 void Logic::Eat() {
-  cell_logic_.ProcessEatFood<core::Food>(world_.cells_, world_.food_);
-  cell_logic_.ProcessEatFood<core::Cell>(world_.hunter_cells_, world_.cells_);
+  for (auto &[_, cell]: world_.cells_) {
+    if (cell.type_ == core::Type::K_NONHUNTER)
+      cell_logic_.ProcessEatFood(cell, world_.food_);
+    else
+      cell_logic_.ProcessEatFood(cell, world_.cells_);
+  }
 }
 
 void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {
@@ -132,13 +116,6 @@ void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {
 
 void Logic::CountTick() {
   for (auto &[_, cell]: world_.cells_) {
-    if (cell.lifetime_ == std::numeric_limits<unsigned int>::max())
-      cell.lifetime_ = 0;
-    else
-      cell.lifetime_++;
-  }
-  // todo duplicates again
-  for (auto &[_, cell]: world_.hunter_cells_) {
     if (cell.lifetime_ == std::numeric_limits<unsigned int>::max())
       cell.lifetime_ = 0;
     else

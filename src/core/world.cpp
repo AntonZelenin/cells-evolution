@@ -21,12 +21,6 @@ void World::AddCell(Cell cell) {
   cells_.insert({id, cell});
 }
 
-void World::AddHunterCell(Cell cell) {
-  unsigned int id = index_driver_.GetNextId();
-  cell.SetId(id);
-  hunter_cells_.insert({id, cell});
-}
-
 void World::GenerateFood(int number) {
   AddFood(food_generator_.Generate(
       width_,
@@ -45,7 +39,7 @@ void World::GenerateCells(int number) {
 }
 
 void World::GenerateHunterCells(int number) {
-  AddHunterCells(cell_generator_.Generate(
+  AddCells(cell_generator_.Generate(
       width_,
       height_,
       number,
@@ -63,12 +57,6 @@ void World::AddFood(const std::vector<Food> &foods) {
 void World::AddCells(const std::vector<Cell> &new_cells) {
   for (const auto &c : new_cells) {
     AddCell(c);
-  }
-}
-
-void World::AddHunterCells(const std::vector<Cell> &new_cells) {
-  for (const auto &c : new_cells) {
-    AddHunterCell(c);
   }
 }
 }
