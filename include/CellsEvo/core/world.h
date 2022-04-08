@@ -9,6 +9,10 @@
 #include "cell_generator.h"
 
 namespace cells_evo::core {
+typedef std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> EdibleEntityStorage;
+typedef std::unordered_map<unsigned int, std::shared_ptr<core::Cell>> CellStorage;
+typedef std::unordered_map<unsigned int, std::shared_ptr<core::Food>> FoodStorage;
+
 class World {
   IndexDriver index_driver_{};
   FoodGenerator food_generator_{};
@@ -19,8 +23,8 @@ class World {
   void AddCells(std::vector<std::shared_ptr<Cell>> new_cells);
 
  public:
-  std::unordered_map<unsigned int, std::shared_ptr<Food>> food_{};
-  std::unordered_map<unsigned int, std::shared_ptr<Cell>> cells_{};
+  FoodStorage food_{};
+  CellStorage cells_{};
   int width_;
   int height_;
 

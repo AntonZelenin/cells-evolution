@@ -11,7 +11,7 @@ void Move(core::Cell &cell, core::Vector2<float> &direction, float speed);
 class NonHunterCellLogic {
   virtual std::shared_ptr<core::EdibleEntity> FindClosestFood(
       core::Cell &cell,
-      std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> &foods
+      core::EdibleEntityStorage &foods
   ) {
     if (foods.empty())
       return nullptr;
@@ -39,7 +39,7 @@ class NonHunterCellLogic {
  public:
   virtual void MoveCell(
       core::Cell &cell,
-      std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> *food_entities
+      core::EdibleEntityStorage *food_entities
   ) {
     // check for new food every N frames
     if (cell.lifetime_ % 15 == 0) cell.ClearFoodTarget();
@@ -49,7 +49,7 @@ class NonHunterCellLogic {
 
   void ProcessEatFood(
       core::Cell &cell,
-      std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> *food_entities
+      core::EdibleEntityStorage *food_entities
   ) {
     auto food = FindClosestFood(cell, *food_entities);
     if (food != nullptr && CellGotFood(cell, *food)) {
@@ -66,7 +66,7 @@ class NonHunterCellLogic {
     return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() <= core::Cell::k_max_distance_food_detection_;
   }
 
-  core::Vector2<float> ChooseDirection(core::Cell &cell, std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> &food_entities) {
+  core::Vector2<float> ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
     // todo probably it should be generic, use for all types of cell
     core::Vector2<float> direction{};
     auto closest_food = FindClosestFood(cell, food_entities);
@@ -85,10 +85,8 @@ class NonHunterCellLogic {
 class HunterCellLogic : public NonHunterCellLogic {
   std::shared_ptr<core::EdibleEntity> FindClosestFood(
       core::Cell &cell,
-      std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> &cells
+      core::EdibleEntityStorage &cells
   ) override {
-    auto cc = reinterpret_cast<std::unordered_map<unsigned int, std::shared_ptr<core::Cell>>&>(cells);
-
     if (cells.empty())
       return {};
     auto cached_closest_food = cell.GetFoodTargetId();
@@ -100,7 +98,7 @@ class HunterCellLogic : public NonHunterCellLogic {
 
     unsigned int closest_food_idx = 0;
     float min_distance = std::numeric_limits<float>::max();
-    for (auto&[idx, prey_cell] : cc) {
+    for (auto&[idx, prey_cell] : reinterpret_cast<core::CellStorage&>(cells)) {
       if (prey_cell->type_ == core::K_HUNTER) continue;
       auto dist = (cell.GetPosition() - prey_cell->GetPosition()).Magnitude();
       if (dist < min_distance) {
