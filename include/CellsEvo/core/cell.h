@@ -17,7 +17,7 @@ class Cell : public EdibleEntity {
   const float k_energy_consumption_coefficient_ = 0.0005;
   const float k_division_energy_size_coefficient_ = 1.0;
   const float k_hunger_coefficient_ = 0.7;
-  const float k_speed_size_coefficient_ = 0.1;
+  const float k_speed_size_coefficient_ = 0.23;
   const float k_vital_functions_energy_consumption_ = 0.00005;
   constexpr static const float k_max_distance_food_detection_ = 180;
 

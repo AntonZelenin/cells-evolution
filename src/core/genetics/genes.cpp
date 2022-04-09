@@ -20,10 +20,10 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
       };
     case SPEED:
       return {
-          1.2,
-          0.5,
-          0.1,
-          10
+          0.4,
+          0.2,
+          0.05,
+          6
       };
     case ENERGY:
       return {
