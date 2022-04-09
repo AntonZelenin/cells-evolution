@@ -2,6 +2,7 @@
 #include <random>
 #include "CellsEvo/core/logic/logic.h"
 #include "CellsEvo/core/geometry.h"
+#include "CellsEvo/core/collision_resolution.h"
 #include "CellsEvo/core/logic/cell_logic.h"
 
 namespace cells_evo::logic {
@@ -11,8 +12,9 @@ Logic::Logic(core::World &world, unsigned int food_production_rate) : world_(wor
 
 void Logic::WorldTick() {
   CountTick();
+  auto colliding_cells = collisions::CollisionDetector::Detect(world_.cells_);
 
-  Eat();
+  colliding_cells = Eat(colliding_cells);
   MoveCells();
   CheckCrossedBoundaries();
   CheckCellsEnergy();
@@ -37,24 +39,19 @@ void Logic::MoveCells() {
 
 void Logic::CheckCrossedBoundaries() {
   for (auto &[_, cell] : world_.cells_) {
-    CheckCellCrossedBoundaries(*cell);
+    auto pos = cell->GetPosition();
+    if (pos.X() < 0.0 + cell->GetRadius()) {
+      pos.coordinates.x = cell->GetRadius();
+    } else if (pos.X() > static_cast<float>(world_.width_) - cell->GetRadius()) {
+      pos.coordinates.x = static_cast<float>(world_.width_) - cell->GetRadius();
+    }
+    if (pos.Y() < 0.0 + cell->GetRadius()) {
+      pos.coordinates.y = cell->GetRadius();
+    } else if (pos.Y() > static_cast<float>(world_.height_) - cell->GetRadius()) {
+      pos.coordinates.y = static_cast<float>(world_.height_) - cell->GetRadius();
+    }
+    cell->SetPosition(pos);
   }
-}
-
-void Logic::CheckCellCrossedBoundaries(core::Cell &cell) const {
-  // todo this is slow
-  auto pos = cell.GetPosition();
-  if (pos.X() < 0.0 + cell.GetSize()) {
-    pos.coordinates.x = cell.GetSize();
-  } else if (pos.X() > static_cast<float>(world_.width_) - cell.GetSize()) {
-    pos.coordinates.x = static_cast<float>(world_.width_) - cell.GetSize();
-  }
-  if (pos.Y() < 0.0 + cell.GetSize()) {
-    pos.coordinates.y = cell.GetSize();
-  } else if (pos.Y() > static_cast<float>(world_.height_) - cell.GetSize()) {
-    pos.coordinates.y = static_cast<float>(world_.height_) - cell.GetSize();
-  }
-  cell.SetPosition(pos);
 }
 
 void Logic::GenerateFood() {
@@ -82,7 +79,7 @@ void Logic::DivideCells() {
   for (auto &[_, cell] : world_.cells_) {
     if (cell->HasEnergyToDivide()) {
       auto new_cell = DivideCell(*cell);
-      new_cell->MoveX(cell->GetSize() * 2);
+      new_cell->MoveX(cell->GetRadius() * 2);
       new_cells.push_back(new_cell);
       cell->ConsumeDivisionEnergy();
     }
@@ -103,19 +100,67 @@ std::shared_ptr<core::Cell> Logic::DivideCell(core::Cell &cell) {
   return std::move(new_cell);
 }
 
-void Logic::Eat() {
+// todo refactor
+collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
   for (auto &[_, cell] : world_.cells_) {
     if (cell->type_ == core::Type::K_NONHUNTER)
+      // todo this method now is only used in one place, so it can be specific
       non_hunter_cell_logic_.ProcessEatFood(
           *cell,
           reinterpret_cast<core::EdibleEntityStorage &>(world_.food_)
       );
-    else
-      hunter_cell_logic_.ProcessEatFood(
-          *cell,
-          reinterpret_cast<core::EdibleEntityStorage &>(world_.cells_)
-      );
   }
+  std::vector<unsigned int> eaten_cell_ids;
+  std::vector<std::vector<collisions::CellPtrPair>::iterator> not_existing_pairs;
+  for (
+      auto colliding_cell_pair = colliding_cells.begin();
+      colliding_cell_pair != colliding_cells.end();
+      colliding_cell_pair++
+      ) {
+    if (HunterGotPrey(*colliding_cell_pair)) {
+      auto prey_cell = ExtractPrey(*colliding_cell_pair);
+      if (std::find(eaten_cell_ids.begin(), eaten_cell_ids.end(), prey_cell->GetId()) != eaten_cell_ids.end())
+        continue;
+      // todo it's duplicate
+      ExtractHunter(*colliding_cell_pair)->AddEnergy(prey_cell->GetNutritionValue());
+      eaten_cell_ids.push_back(prey_cell->GetId());
+      not_existing_pairs.push_back(colliding_cell_pair);
+      world_.cells_.erase(prey_cell->GetId());
+    }
+  }
+
+  collisions::CellPtrPairs colliding_without_eaten;
+  for (
+      auto colliding_pair = colliding_cells.begin();
+      colliding_pair != colliding_cells.end();
+      colliding_pair++
+      ) {
+    if (std::find(not_existing_pairs.begin(), not_existing_pairs.end(), colliding_pair) == not_existing_pairs.end()) {
+      colliding_without_eaten.push_back(*colliding_pair);
+    }
+  }
+
+  return colliding_without_eaten;
+}
+
+bool Logic::HunterGotPrey(collisions::CellPtrPair &cell_pair) {
+  // todo make method is hunter
+  return (cell_pair.first->type_ == core::K_HUNTER && cell_pair.second->type_ != core::K_HUNTER)
+      || (cell_pair.first->type_ != core::K_HUNTER && cell_pair.second->type_ == core::K_HUNTER);
+}
+
+std::shared_ptr<core::Cell> &Logic::ExtractHunter(collisions::CellPtrPair &cell_pair) {
+  if (cell_pair.first->type_ == core::K_HUNTER)
+    return cell_pair.first;
+  else
+    return cell_pair.second;
+}
+
+std::shared_ptr<core::Cell> &Logic::ExtractPrey(collisions::CellPtrPair &cell_pair) {
+  if (cell_pair.first->type_ == core::K_NONHUNTER)
+    return cell_pair.first;
+  else
+    return cell_pair.second;
 }
 
 void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {
@@ -133,10 +178,5 @@ void Logic::CountTick() {
     else
       cell->lifetime_++;
   }
-  // todo remove?
-  if (world_ticks_ == std::numeric_limits<unsigned int>::max())
-    world_ticks_ = 0;
-  else
-    world_ticks_++;
 }
 }

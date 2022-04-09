@@ -20,12 +20,12 @@ Position &Cell::GetPosition() {
   return position_;
 }
 
-float Cell::GetSize() const {
+float Cell::GetRadius() const {
   return genes_.find(genetics::GeneType::SIZE)->second.value;
 }
 
 float Cell::GetSpeed() const {
-  return genes_.find(genetics::GeneType::SPEED)->second.value * k_speed_size_coefficient_ * GetSize();
+  return genes_.find(genetics::GeneType::SPEED)->second.value * k_speed_size_coefficient_ * GetRadius();
 }
 
 std::optional<unsigned int> Cell::GetFoodTargetId() const {
@@ -68,7 +68,7 @@ void Cell::SetPosition(Position pos) {
 }
 
 void Cell::ConsumeMovementEnergy() {
-  energy_ -= GetSize() * GetSpeed() * k_energy_consumption_coefficient_;
+  energy_ -= GetRadius() * GetSpeed() * k_energy_consumption_coefficient_;
 }
 
 void Cell::ConsumeDivisionEnergy() {
@@ -84,7 +84,7 @@ void Cell::AddEnergy(float energy) {
 }
 
 bool Cell::HasEnergyToDivide() const {
-  return energy_ > (k_division_energy_threshold_ * k_division_energy_size_coefficient_ * GetSize());
+  return energy_ > (k_division_energy_threshold_ * k_division_energy_size_coefficient_ * GetRadius());
 }
 
 int Cell::GetDirectionChangeFactor() {
@@ -95,7 +95,7 @@ int Cell::GetDirectionChangeFactor() {
 //Cell::Cell(const Cell &cell) {
 //  position_ = Position(cell.position_.X(), cell.position_.Y());
 //  energy_ = cell.energy_ / 2;
-//  size_ = cell.GetSize();
+//  size_ = cell.GetRadius();
 //  speed_ = cell.GetSpeed();
 //  type_ = cell.type_;
 //}

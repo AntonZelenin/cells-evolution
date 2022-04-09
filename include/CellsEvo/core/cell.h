@@ -45,7 +45,7 @@ class Cell : public EdibleEntity {
 //  Cell(const Cell &cell);
 
   Position &GetPosition() override;
-  [[nodiscard]] float GetSize() const override;
+  [[nodiscard]] float GetRadius() const override;
   [[nodiscard]] float GetSpeed() const;
 
   [[nodiscard]] std::optional<unsigned int> GetFoodTargetId() const;
@@ -68,7 +68,7 @@ class Cell : public EdibleEntity {
   [[nodiscard]] bool HasEnergyToDivide() const;
 
   int GetDirectionChangeFactor();
-  [[nodiscard]] inline float GetNutritionValue() const override { return energy_ /* + GetSize() * k_nutrition_value_coefficient_*/; };
+  [[nodiscard]] inline float GetNutritionValue() const override { return energy_ /* + GetRadius() * k_nutrition_value_coefficient_*/; };
 };
 }
 

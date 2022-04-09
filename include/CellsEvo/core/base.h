@@ -4,13 +4,12 @@
 #include "geometry.h"
 
 namespace cells_evo::core {
-// todo make abstract class with attributes?
 class Entity {
  public:
   virtual Position &GetPosition() = 0;
   virtual void SetPosition(Position) = 0;
   virtual unsigned int GetId() = 0;
-  [[nodiscard]] virtual float GetSize() const = 0;
+  [[nodiscard]] virtual float GetRadius() const = 0;
 };
 
 class EdibleEntity : public Entity {

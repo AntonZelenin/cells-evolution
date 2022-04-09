@@ -38,7 +38,7 @@ void Food::SetId(unsigned int id) {
 void Food::SetPosition(Position pos) {
   position_ = pos;
 }
-float Food::GetSize() const {
+float Food::GetRadius() const {
   return 0.1;
 }
 }

@@ -12,7 +12,7 @@ class Food : public EdibleEntity {
 
   explicit Food(Position position);
   Position &GetPosition() override;
-  [[nodiscard]] float GetSize() const override;
+  [[nodiscard]] float GetRadius() const override;
   void SetPosition(Position) override;
   unsigned int GetId() override;
   void SetId(unsigned int id);

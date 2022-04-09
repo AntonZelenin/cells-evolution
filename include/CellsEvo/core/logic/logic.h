@@ -5,31 +5,35 @@
 #include "CellsEvo/core/genetics/engineer.h"
 #include "cell_logic.h"
 #include "CellsEvo/core/world.h"
+#include "CellsEvo/core/collision_resolution.h"
 
 namespace cells_evo::logic {
 class Logic {
   cells_evo::core::World &world_;
-  unsigned int world_ticks_ = 0;
   unsigned int food_production_rate_reverse_;
 
   HunterCellLogic hunter_cell_logic_{};
   NonHunterCellLogic non_hunter_cell_logic_{};
   genetics::Engineer genetic_engineer_{};
+//  collisions::CollisionDetector collision_detector_{};
+//  collisions::CollisionResolver collision_resolver_{};
 
   void CountTick();
-  void Eat();
+  collisions::CellPtrPairs Eat(collisions::CellPtrPairs &colliding_cells);
   void GenerateFood();
   void DivideCells();
   std::shared_ptr<core::Cell> DivideCell(core::Cell &cell);
   void CheckCellsEnergy();
+  void CheckCrossedBoundaries();
+  void MoveCells();
+  static bool HunterGotPrey(collisions::CellPtrPair &cell_pair);
+  static std::shared_ptr<core::Cell> &ExtractHunter(collisions::CellPtrPair &cell_pair);
+  static std::shared_ptr<core::Cell> &ExtractPrey(collisions::CellPtrPair &cell_pair);
 
  public:
   explicit Logic(core::World &world, unsigned int food_production_rate);
 
   void WorldTick();
-  void MoveCells();
-  void CheckCellCrossedBoundaries(core::Cell &cell) const;
-  void CheckCrossedBoundaries();
 };
 }
 

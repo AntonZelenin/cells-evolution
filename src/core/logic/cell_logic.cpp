@@ -2,7 +2,7 @@
 
 namespace cells_evo::logic {
 bool NonHunterCellLogic::CellGotFood(core::Cell &cell, core::Entity &food_entity) {
-  return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() < (cell.GetSize() + food_entity.GetSize());
+  return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() < (cell.GetRadius() + food_entity.GetRadius());
 }
 
 core::Vector2<float> NonHunterCellLogic::GetRandomDirection(core::Cell &cell) {

@@ -9,9 +9,12 @@
 #include "cell_generator.h"
 
 namespace cells_evo::core {
-typedef std::unordered_map<unsigned int, std::shared_ptr<core::EdibleEntity>> EdibleEntityStorage;
-typedef std::unordered_map<unsigned int, std::shared_ptr<core::Cell>> CellStorage;
-typedef std::unordered_map<unsigned int, std::shared_ptr<core::Food>> FoodStorage;
+// todo
+typedef unsigned int ID;
+// todo move to appropriate files?
+typedef std::unordered_map<ID, std::shared_ptr<core::EdibleEntity>> EdibleEntityStorage;
+typedef std::unordered_map<ID, std::shared_ptr<core::Cell>> CellStorage;
+typedef std::unordered_map<ID, std::shared_ptr<core::Food>> FoodStorage;
 
 class World {
   IndexDriver index_driver_{};
