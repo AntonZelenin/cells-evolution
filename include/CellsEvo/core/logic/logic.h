@@ -24,6 +24,7 @@ class Logic {
   void DivideCells();
   std::shared_ptr<core::Cell> DivideCell(core::Cell &cell);
   void CheckCellsEnergy();
+  void TeleportCrossedBoundaries();
   void CheckCrossedBoundaries();
   void MoveCells();
   static bool HunterGotPrey(collisions::CellPtrPair &cell_pair);

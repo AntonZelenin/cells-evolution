@@ -16,7 +16,8 @@ void Logic::WorldTick() {
 
   colliding_cells = Eat(colliding_cells);
   MoveCells();
-  CheckCrossedBoundaries();
+//  CheckCrossedBoundaries();
+  TeleportCrossedBoundaries();
   CheckCellsEnergy();
   GenerateFood();
   DivideCells();
@@ -37,9 +38,26 @@ void Logic::MoveCells() {
   }
 }
 
+void Logic::TeleportCrossedBoundaries() {
+  for (auto &[_, cell] : world_.cells_) {
+    auto &pos = cell->GetPosition();
+    if (pos.X() < 0.0) {
+      pos.coordinates.x = static_cast<float>(world_.width_);
+    } else if (pos.X() > static_cast<float>(world_.width_)) {
+      pos.coordinates.x = 0.0;
+    }
+    if (pos.Y() < 0.0) {
+      pos.coordinates.y = static_cast<float>(world_.height_);
+    } else if (pos.Y() > static_cast<float>(world_.height_)) {
+      pos.coordinates.y = 0.0;
+    }
+  }
+}
+
+// todo what if I make some static methods functions and remove them from headers?
 void Logic::CheckCrossedBoundaries() {
   for (auto &[_, cell] : world_.cells_) {
-    auto pos = cell->GetPosition();
+    auto &pos = cell->GetPosition();
     if (pos.X() < 0.0 + cell->GetRadius()) {
       pos.coordinates.x = cell->GetRadius();
     } else if (pos.X() > static_cast<float>(world_.width_) - cell->GetRadius()) {
@@ -50,7 +68,6 @@ void Logic::CheckCrossedBoundaries() {
     } else if (pos.Y() > static_cast<float>(world_.height_) - cell->GetRadius()) {
       pos.coordinates.y = static_cast<float>(world_.height_) - cell->GetRadius();
     }
-    cell->SetPosition(pos);
   }
 }
 
