@@ -15,6 +15,7 @@ void Logic::WorldTick() {
   auto colliding_cells = collisions::CollisionDetector::Detect(world_.cells_);
 
   colliding_cells = Eat(colliding_cells);
+  collisions::CollisionResolver::ResolveCollisions(colliding_cells);
   MoveCells();
 //  CheckCrossedBoundaries();
   TeleportCrossedBoundaries();

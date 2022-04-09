@@ -18,6 +18,7 @@ struct less_by_x {
 // todo implement more advanced collision resolver in future
 class CollisionDetector {
  public:
+  // todo move to cpp
   // todo it should be generic, accept iterator or something similar
   static CellPtrPairs Detect(core::CellStorage &cells) {
     std::vector<std::shared_ptr<core::Cell>> v_cells;
@@ -60,7 +61,22 @@ class CollisionDetector {
 };
 
 class CollisionResolver {
-
+ public:
+  static void ResolveCollisions(CellPtrPairs &colliding_cells) {
+    // it assumes there are no pairs of hunter-nonhunter
+    for (auto &pair : colliding_cells) {
+      // todo does & make difference?
+//      auto &[first, second] = pair;
+//      auto diff = first->GetPosition() - second->GetPosition();
+//      auto distance = diff.Magnitude();
+//      auto direction = diff;
+//      direction.Normalize();
+//
+//      auto &first_pos = first->GetPosition(), &sec_pos = second->GetPosition();
+//      first_pos.coordinates += (direction * distance);
+//      sec_pos.coordinates += (direction * distance * -1);
+    }
+  }
 };
 }
 
