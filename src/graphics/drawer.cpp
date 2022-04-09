@@ -7,6 +7,7 @@ float CellDrawer::GetThickness(float size) const {
 
 sf::CircleShape CellDrawer::Get(const std::shared_ptr<core::Cell> &cell) {
   sf::CircleShape shape(cell->GetRadius());
+  shape.setFillColor(sf::Color(194, 255, 254));
   shape.setOutlineThickness(this->GetThickness(cell->GetRadius()));
   shape.setOutlineColor(this->color_provider_.Get(cell->type_));
   shape.setPosition(cell->GetPosition().x - cell->GetRadius(), cell->GetPosition().y - cell->GetRadius());

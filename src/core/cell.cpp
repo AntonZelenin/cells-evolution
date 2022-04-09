@@ -44,6 +44,10 @@ void Cell::SetDirection(core::Vector2<float> direction) {
   direction_ = direction;
 }
 
+void Cell::ClearDirection() {
+  direction_ = {};
+}
+
 unsigned int Cell::GetId() {
   return id_;
 }
@@ -79,14 +83,32 @@ bool Cell::HasEnergy() const {
 
 void Cell::AddEnergy(float energy) {
   energy_ += energy;
+  if (energy_ > GetRadius() * 2.f) energy_ = GetRadius() * 2.f;
 }
 
 bool Cell::HasEnergyToDivide() const {
   return energy_ > (k_division_energy_threshold_ * k_division_energy_size_coefficient_ * GetRadius());
 }
 
+bool Cell::DivisionCooldownPassed() const {
+  return division_cooldown_ == 0;
+}
+
+void Cell::StartDivisionCooldown() {
+  division_cooldown_ = static_cast<unsigned int>(genes_.find(genetics::GeneType::DIVISION_COOLDOWN)->second.value);
+}
+
 int Cell::GetDirectionChangeFactor() {
   return static_cast<int>(genes_.find(genetics::GeneType::DIRECTION_CHANGE_FACTOR)->second.value);
+}
+
+void Cell::Tick() {
+  if (lifetime_ == std::numeric_limits<unsigned int>::max())
+    lifetime_ = 0;
+  else
+    lifetime_++;
+  if (division_cooldown_ > 0)
+    division_cooldown_--;
 }
 
 // todo every cell move to the same point when copy constructor is implemented

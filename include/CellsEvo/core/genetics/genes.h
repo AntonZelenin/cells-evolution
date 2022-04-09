@@ -14,6 +14,7 @@ enum GeneType {
   RUN_FROM_HUNTER,
   SIZE,
   SPEED,
+  ENERGY,
 };
 
 struct Gene {

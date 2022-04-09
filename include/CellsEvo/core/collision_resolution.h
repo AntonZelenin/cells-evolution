@@ -61,6 +61,7 @@ class CollisionDetector {
 };
 
 class CollisionResolver {
+  constexpr static const float k_collision_distance_dont_remember_ = 0.3;
  public:
   static void ResolveCollisions(CellPtrPairs &colliding_cells) {
     // it assumes there are no pairs of hunter-nonhunter
@@ -69,7 +70,7 @@ class CollisionResolver {
       auto &[cell_1, cell_2] = pair;
       auto radius_sum = cell_1->GetRadius() + cell_2->GetRadius();
       auto diff_vector = cell_1->GetPosition() - cell_2->GetPosition();
-      auto distance_to_move = radius_sum - diff_vector.Magnitude() + 0.1f;
+      auto distance_to_move = radius_sum - diff_vector.Magnitude() + CollisionResolver::k_collision_distance_dont_remember_;
       auto direction = diff_vector;
       direction.Normalize();
 

@@ -17,8 +17,8 @@ void Logic::WorldTick() {
   auto colliding_cells = collisions::CollisionDetector::Detect(world_.cells_);
   colliding_cells = Eat(colliding_cells);
   collisions::CollisionResolver::ResolveCollisions(colliding_cells);
-//  CheckCrossedBoundaries();
-  TeleportCrossedBoundaries();
+  CheckCrossedBoundaries();
+//  TeleportCrossedBoundaries();
   CheckCellsEnergy();
   GenerateFood();
   DivideCells();
@@ -26,17 +26,21 @@ void Logic::WorldTick() {
 
 void Logic::MoveCells() {
   for (auto &[_, cell] : world_.cells_) {
-    if (cell->type_ == core::Type::K_NONHUNTER)
-      non_hunter_cell_logic_.MoveCell(
-          *cell,
-          reinterpret_cast<core::EdibleEntityStorage &>(world_.food_)
-      );
-    else
-      hunter_cell_logic_.MoveCell(
-          *cell,
-          reinterpret_cast<core::EdibleEntityStorage &>(world_.cells_)
-      );
+    MoveCell(cell);
   }
+}
+
+void Logic::MoveCell(std::shared_ptr<core::Cell> &cell) {
+  if (cell->type_ == core::Type::K_NONHUNTER)
+    non_hunter_cell_logic_.MoveCell(
+        *cell,
+        reinterpret_cast<core::EdibleEntityStorage &>(world_.food_)
+    );
+  else
+    hunter_cell_logic_.MoveCell(
+        *cell,
+        reinterpret_cast<core::EdibleEntityStorage &>(world_.cells_)
+    );
 }
 
 void Logic::TeleportCrossedBoundaries() {
@@ -59,16 +63,25 @@ void Logic::TeleportCrossedBoundaries() {
 void Logic::CheckCrossedBoundaries() {
   for (auto &[_, cell] : world_.cells_) {
     auto &pos = cell->GetPosition();
+    bool hit_the_wall = false;
+
     if (pos.x < 0.0 + cell->GetRadius()) {
       pos.x = cell->GetRadius();
+      hit_the_wall = true;
     } else if (pos.x > static_cast<float>(world_.width_) - cell->GetRadius()) {
       pos.x = static_cast<float>(world_.width_) - cell->GetRadius();
+      hit_the_wall = true;
     }
+
     if (pos.y < 0.0 + cell->GetRadius()) {
       pos.y = cell->GetRadius();
+      hit_the_wall = true;
     } else if (pos.y > static_cast<float>(world_.height_) - cell->GetRadius()) {
       pos.y = static_cast<float>(world_.height_) - cell->GetRadius();
+      hit_the_wall = true;
     }
+
+    if (hit_the_wall) cell->ClearDirection();
   }
 }
 
@@ -95,7 +108,7 @@ void Logic::CheckCellsEnergy() {
 void Logic::DivideCells() {
   std::vector<std::shared_ptr<core::Cell>> new_cells;
   for (auto &[_, cell] : world_.cells_) {
-    if (cell->HasEnergyToDivide()) {
+    if (cell->HasEnergyToDivide() && cell->DivisionCooldownPassed()) {
       auto new_cell = DivideCell(*cell);
       new_cell->MoveX(cell->GetRadius() * 2);
       new_cells.push_back(new_cell);
@@ -115,6 +128,8 @@ std::shared_ptr<core::Cell> Logic::DivideCell(core::Cell &cell) {
       core::Position(cell.GetPosition().x, cell.GetPosition().y),
       genetic_engineer_.CopyGenes(cell.genes_)
   );
+  cell.StartDivisionCooldown();
+  new_cell->StartDivisionCooldown();
   return std::move(new_cell);
 }
 
@@ -181,17 +196,14 @@ std::shared_ptr<core::Cell> &Logic::ExtractPrey(collisions::CellPtrPair &cell_pa
     return cell_pair.second;
 }
 
-void Move(core::Cell &cell, core::Vector2<float> const &direction, float speed) {
-  cell.GetPosition() += direction * speed;
+void Move(core::Cell &cell, core::Vector2<float> const &direction) {
+  cell.GetPosition() += direction * cell.GetSpeed();
   cell.ConsumeMovementEnergy();
 }
 
 void Logic::CountTick() {
   for (auto &[_, cell] : world_.cells_) {
-    if (cell->lifetime_ == std::numeric_limits<unsigned int>::max())
-      cell->lifetime_ = 0;
-    else
-      cell->lifetime_++;
+    cell->Tick();
   }
 }
 }

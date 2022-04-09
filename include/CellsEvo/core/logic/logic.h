@@ -27,6 +27,7 @@ class Logic {
   void TeleportCrossedBoundaries();
   void CheckCrossedBoundaries();
   void MoveCells();
+  void MoveCell(std::shared_ptr<core::Cell> &cell);
   static bool HunterGotPrey(collisions::CellPtrPair &cell_pair);
   static std::shared_ptr<core::Cell> &ExtractHunter(collisions::CellPtrPair &cell_pair);
   static std::shared_ptr<core::Cell> &ExtractPrey(collisions::CellPtrPair &cell_pair);

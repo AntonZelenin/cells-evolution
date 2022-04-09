@@ -14,16 +14,23 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
     case SIZE:
       return {
           7,
-          0.2,
-          2.5,
+          0.3,
+          3,
           100
       };
     case SPEED:
       return {
           1.2,
-          0.2,
+          0.3,
           0.1,
           10
+      };
+    case ENERGY:
+      return {
+          10,
+          0.3,
+          5,
+          50
       };
     case HARD_SHELL:
       return {
@@ -41,9 +48,9 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
       };
     case DIVISION_COOLDOWN:
       return {
-          120,
-          0.1,
-          120,
+          240,
+          10,
+          180,
           1000
       };
     case RUN_FROM_HUNTER:

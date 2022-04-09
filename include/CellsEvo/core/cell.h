@@ -27,6 +27,7 @@ class Cell : public EdibleEntity {
 
  public:
   unsigned int lifetime_ = 0;
+  unsigned int division_cooldown_ = 0;
   constexpr static const float k_max_distance_food_detection_ = 180;
 
   // todo everything is public =*(
@@ -47,11 +48,9 @@ class Cell : public EdibleEntity {
   Position &GetPosition() override;
   [[nodiscard]] float GetRadius() const override;
   [[nodiscard]] float GetSpeed() const;
-
   [[nodiscard]] std::optional<unsigned int> GetFoodTargetId() const;
   void SetFoodTargetId(unsigned int food_id);
   void ClearFoodTarget() { food_target_id_ = {}; }
-
   [[nodiscard]] std::optional<core::Vector2<float>> GetDirection() const;
   void SetDirection(core::Vector2<float> food_id);
 //  void ClearFoodTarget() { food_target_id_ = {}; }
@@ -69,6 +68,10 @@ class Cell : public EdibleEntity {
 
   int GetDirectionChangeFactor();
   [[nodiscard]] inline float GetNutritionValue() const override { return energy_ /* + GetRadius() * k_nutrition_value_coefficient_*/; };
+  [[nodiscard]] bool DivisionCooldownPassed() const;
+  void StartDivisionCooldown();
+  void Tick();
+  void ClearDirection();
 };
 }
 
