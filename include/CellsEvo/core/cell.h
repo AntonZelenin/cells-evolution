@@ -19,6 +19,7 @@ class Cell : public EdibleEntity {
   const float k_hunger_coefficient_ = 0.7;
   const float k_speed_size_coefficient_ = 0.1;
   const float k_vital_functions_energy_consumption_ = 0.00005;
+  constexpr static const float k_max_distance_food_detection_ = 180;
 
   std::optional<unsigned int> food_target_id_{};
   std::optional<core::Vector2<float>> direction_{};
@@ -28,7 +29,6 @@ class Cell : public EdibleEntity {
  public:
   unsigned int lifetime_ = 0;
   unsigned int division_cooldown_ = 0;
-  constexpr static const float k_max_distance_food_detection_ = 180;
 
   // todo everything is public =*(
   float energy_{};
@@ -60,6 +60,7 @@ class Cell : public EdibleEntity {
   unsigned int GetId() override;
   Position &GetPosition() override;
   [[nodiscard]] float GetRadius() const override;
+  [[nodiscard]] float GetMaxFoodDetectionDistance() const;
   [[nodiscard]] float GetSpeed() const;
   [[nodiscard]] std::optional<unsigned int> GetFoodTargetId() const;
   [[nodiscard]] bool HasEnergy() const;
@@ -72,7 +73,8 @@ class Cell : public EdibleEntity {
   [[nodiscard]] bool IsHungry() const;
   [[nodiscard]] float GetMaxEnergy() const;
   [[nodiscard]] float GetDivisionEnergy() const;
-
+  [[nodiscard]] bool IsHunter() const;
+  [[nodiscard]] bool IsNonHunter() const;
 };
 }
 

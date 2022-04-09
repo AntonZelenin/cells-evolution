@@ -27,6 +27,21 @@ float Cell::GetSpeed() const {
   return genes_.find(genetics::GeneType::SPEED)->second.value * k_speed_size_coefficient_ * GetRadius();
 }
 
+bool Cell::IsHunter() const {
+  return type_ == core::Type::K_HUNTER;
+}
+
+bool Cell::IsNonHunter() const {
+  return type_ == core::Type::K_NONHUNTER;
+}
+
+float Cell::GetMaxFoodDetectionDistance() const {
+  if (IsNonHunter())
+    return k_max_distance_food_detection_ * 0.9;
+  else
+    return k_max_distance_food_detection_ * 1.2;
+}
+
 std::optional<unsigned int> Cell::GetFoodTargetId() const {
   return food_target_id_;
 }

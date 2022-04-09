@@ -35,7 +35,7 @@ void NonHunterCellLogic::ProcessEatFood(core::Cell &cell, core::EdibleEntityStor
 }
 
 bool NonHunterCellLogic::CouldSensedFood(core::Cell &cell, core::Entity &food_entity) {
-  return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() <= core::Cell::k_max_distance_food_detection_;
+  return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() <= cell.GetMaxFoodDetectionDistance();
 }
 
 core::Vector2<float> NonHunterCellLogic::ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
@@ -93,7 +93,7 @@ std::shared_ptr<core::EdibleEntity> HunterCellLogic::FindClosestFood(
   unsigned int closest_food_idx = 0;
   float min_distance = std::numeric_limits<float>::max();
   for (auto&[idx, prey_cell] : reinterpret_cast<core::CellStorage &>(cells)) {
-    if (prey_cell->type_ == core::K_HUNTER) continue;
+    if (prey_cell->IsHunter()) continue;
     auto dist = (cell.GetPosition() - prey_cell->GetPosition()).Magnitude();
     if (dist < min_distance) {
       min_distance = dist;

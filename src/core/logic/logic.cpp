@@ -31,7 +31,7 @@ void Logic::MoveCells() {
 }
 
 void Logic::MoveCell(std::shared_ptr<core::Cell> &cell) {
-  if (cell->type_ == core::Type::K_NONHUNTER)
+  if (cell->IsNonHunter())
     non_hunter_cell_logic_.MoveCell(
         *cell,
         reinterpret_cast<core::EdibleEntityStorage &>(world_.food_)
@@ -133,10 +133,14 @@ std::shared_ptr<core::Cell> Logic::DivideCell(core::Cell &cell) {
   return std::move(new_cell);
 }
 
+bool CanKill(std::shared_ptr<core::Cell> &hunter_cell, std::shared_ptr<core::Cell> &prey_cell) {
+  return prey_cell->GetRadius() < hunter_cell->GetRadius() * 1.5;
+}
+
 // todo refactor
 collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
   for (auto &[_, cell] : world_.cells_) {
-    if (cell->type_ == core::Type::K_NONHUNTER)
+    if (cell->IsNonHunter())
       // todo this method now is only used in one place, so it can be specific
       non_hunter_cell_logic_.ProcessEatFood(
           *cell,
@@ -155,7 +159,7 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
       auto hunter_cell =ExtractHunter(*colliding_cell_pair);
       if (std::find(eaten_cell_ids.begin(), eaten_cell_ids.end(), prey_cell->GetId()) != eaten_cell_ids.end())
         continue;
-      if (!hunter_cell->IsHungry()) continue;
+      if (!hunter_cell->IsHungry() || !CanKill(hunter_cell, prey_cell)) continue;
       // todo it's duplicate
       hunter_cell->AddEnergy(prey_cell->GetNutritionValue());
       eaten_cell_ids.push_back(prey_cell->GetId());
@@ -180,19 +184,19 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
 
 bool Logic::HunterGotPrey(collisions::CellPtrPair &cell_pair) {
   // todo make method is hunter
-  return (cell_pair.first->type_ == core::K_HUNTER && cell_pair.second->type_ != core::K_HUNTER)
-      || (cell_pair.first->type_ != core::K_HUNTER && cell_pair.second->type_ == core::K_HUNTER);
+  return (cell_pair.first->IsHunter() && cell_pair.second->IsNonHunter())
+      || (cell_pair.first->IsNonHunter() && cell_pair.second->IsHunter());
 }
 
 std::shared_ptr<core::Cell> &Logic::ExtractHunter(collisions::CellPtrPair &cell_pair) {
-  if (cell_pair.first->type_ == core::K_HUNTER)
+  if (cell_pair.first->IsHunter())
     return cell_pair.first;
   else
     return cell_pair.second;
 }
 
 std::shared_ptr<core::Cell> &Logic::ExtractPrey(collisions::CellPtrPair &cell_pair) {
-  if (cell_pair.first->type_ == core::K_NONHUNTER)
+  if (cell_pair.first->IsNonHunter())
     return cell_pair.first;
   else
     return cell_pair.second;

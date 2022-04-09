@@ -15,13 +15,13 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
       return {
           7,
           0.3,
-          3,
+          4,
           100
       };
     case SPEED:
       return {
           1.2,
-          0.3,
+          0.5,
           0.1,
           10
       };
