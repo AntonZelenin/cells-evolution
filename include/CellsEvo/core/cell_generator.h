@@ -5,7 +5,6 @@
 
 namespace cells_evo::core {
 class CellGenerator {
-  const float k_default_cell_energy_ = 10.0;
   const int k_min_distance_between_cells_ = 10;
   // todo two classes have genetics engineers, that's bad
   genetics::Engineer genetic_engineer_{};

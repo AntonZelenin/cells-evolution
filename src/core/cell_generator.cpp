@@ -14,11 +14,11 @@ std::vector<std::shared_ptr<core::Cell>> CellGenerator::Generate(
   );
   for (auto &position : positions) {
     auto cell = std::make_shared<Cell>(
-        k_default_cell_energy_,
         cell_type,
         position,
         genetic_engineer_.GenerateBaseGenes(cell_type)
     );
+    cell->AddEnergy(cell->GetDivisionEnergy());
     cells.push_back(cell);
   }
   return cells;

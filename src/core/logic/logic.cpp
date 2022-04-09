@@ -123,13 +123,13 @@ void Logic::DivideCells() {
 // todo copy constructor?
 std::shared_ptr<core::Cell> Logic::DivideCell(core::Cell &cell) {
   auto new_cell = std::make_shared<core::Cell>(
-      cell.energy_ / 2,
       cell.type_,
       core::Position(cell.GetPosition().x, cell.GetPosition().y),
       genetic_engineer_.CopyGenes(cell.genes_)
   );
-  cell.StartDivisionCooldown();
+  new_cell->AddEnergy(cell.energy_ / 2);
   new_cell->StartDivisionCooldown();
+  cell.StartDivisionCooldown();
   return std::move(new_cell);
 }
 
@@ -152,10 +152,12 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
       ) {
     if (HunterGotPrey(*colliding_cell_pair)) {
       auto prey_cell = ExtractPrey(*colliding_cell_pair);
+      auto hunter_cell =ExtractHunter(*colliding_cell_pair);
       if (std::find(eaten_cell_ids.begin(), eaten_cell_ids.end(), prey_cell->GetId()) != eaten_cell_ids.end())
         continue;
+      if (!hunter_cell->IsHungry()) continue;
       // todo it's duplicate
-      ExtractHunter(*colliding_cell_pair)->AddEnergy(prey_cell->GetNutritionValue());
+      hunter_cell->AddEnergy(prey_cell->GetNutritionValue());
       eaten_cell_ids.push_back(prey_cell->GetId());
       not_existing_pairs.push_back(colliding_cell_pair);
       world_.cells_.erase(prey_cell->GetId());

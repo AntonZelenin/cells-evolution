@@ -27,7 +27,7 @@ void NonHunterCellLogic::ChangeDirection(core::Cell &cell, core::EdibleEntitySto
 
 void NonHunterCellLogic::ProcessEatFood(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
   auto food = FindClosestFood(cell, food_entities);
-  if (food != nullptr && CellGotFood(cell, *food)) {
+  if (food != nullptr && CellGotFood(cell, *food) && cell.IsHungry()) {
     cell.AddEnergy(food->GetNutritionValue());
     // todo this is not good
     food_entities.erase(food->GetId());
