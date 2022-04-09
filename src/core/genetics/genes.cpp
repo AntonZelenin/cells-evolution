@@ -13,22 +13,22 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
       };
     case SIZE:
       return {
-          7,
-          0.3,
+          5,
+          0.5,
           4,
           100
       };
     case SPEED:
       return {
+          0.3,
           0.4,
-          0.2,
           0.05,
           6
       };
     case ENERGY:
       return {
           10,
-          0.3,
+          0.4,
           5,
           50
       };
@@ -42,7 +42,7 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
     case ENERGY_TO_DIVIDE:
       return {
           10,
-          0.2,
+          0.3,
           5,
           100
       };
@@ -53,8 +53,10 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
           180,
           1000
       };
-    case RUN_FROM_HUNTER:
+    case AVOID_HUNTERS:
     case PREFER_FOOD_OVER_HUNTER:
+    case STICK_TO_FRIEND:
+    case AVOID_FRIENDS:
       return {
           0.5,
           0.1,
