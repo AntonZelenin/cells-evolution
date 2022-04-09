@@ -45,21 +45,19 @@ void Cell::SetDirection(core::Vector2<float> direction) {
 }
 
 unsigned int Cell::GetId() {
-  // todo duplicate
   return id_;
 }
 
 void Cell::SetId(unsigned int id) {
-  // todo duplicate
   id_ = id;
 }
 
 void Cell::MoveX(float val) {
-  position_.coordinates.x += val;
+  position_.x += val;
 }
 
 void Cell::MoveY(float val) {
-  position_.coordinates.y += val;
+  position_.y += val;
 }
 
 // todo maybe update? do I need it?
@@ -93,7 +91,7 @@ int Cell::GetDirectionChangeFactor() {
 
 // todo every cell move to the same point when copy constructor is implemented
 //Cell::Cell(const Cell &cell) {
-//  position_ = Position(cell.position_.X(), cell.position_.Y());
+//  position_ = Position(cell.position_.x, cell.position_.y);
 //  energy_ = cell.energy_ / 2;
 //  size_ = cell.GetRadius();
 //  speed_ = cell.GetSpeed();

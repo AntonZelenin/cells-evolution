@@ -64,13 +64,13 @@ static Position GenerateRandomPosition(
         static_cast<float>( y_distribution(generator))
     );
     for (auto &p : occupied_positions) {
-      if ((p.coordinates - pos).Magnitude() <= min_dist_between_cells) {
+      if ((p - pos).Magnitude() <= min_dist_between_cells) {
         is_ok = false;
         break;
       }
     }
   }
-  return Position(pos);
+  return pos;
 }
 
 std::vector<Position> GenerateRandomPositions(

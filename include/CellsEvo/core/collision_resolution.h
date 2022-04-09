@@ -11,7 +11,7 @@ typedef std::vector<CellPtrPair> CellPtrPairs;
 
 struct less_by_x {
   inline bool operator()(const std::shared_ptr<core::Entity> &entity_1, const std::shared_ptr<core::Entity> &entity_2) {
-    return entity_1->GetPosition().X() < entity_2->GetPosition().X();
+    return entity_1->GetPosition().x < entity_2->GetPosition().x;
   }
 };
 
@@ -48,11 +48,11 @@ class CollisionDetector {
   }
 
   static float LeftEdgeX(const std::shared_ptr<core::Cell> &cell_ptr) {
-    return (*cell_ptr).GetPosition().X() - (*cell_ptr).GetRadius();
+    return (*cell_ptr).GetPosition().x - (*cell_ptr).GetRadius();
   }
 
   static float RightEdgeX(const std::shared_ptr<core::Cell> &cell_ptr) {
-    return (*cell_ptr).GetPosition().X() + (*cell_ptr).GetRadius();
+    return (*cell_ptr).GetPosition().x + (*cell_ptr).GetRadius();
   }
 
   static bool CellsCollide(const std::shared_ptr<core::Cell> &cell_1, const std::shared_ptr<core::Cell> &cell_2) {
@@ -66,15 +66,15 @@ class CollisionResolver {
     // it assumes there are no pairs of hunter-nonhunter
     for (auto &pair : colliding_cells) {
       // todo does & make difference?
-//      auto &[first, second] = pair;
-//      auto diff = first->GetPosition() - second->GetPosition();
-//      auto distance = diff.Magnitude();
-//      auto direction = diff;
-//      direction.Normalize();
-//
-//      auto &first_pos = first->GetPosition(), &sec_pos = second->GetPosition();
-//      first_pos.coordinates += (direction * distance);
-//      sec_pos.coordinates += (direction * distance * -1);
+      auto &[cell_1, cell_2] = pair;
+      auto radius_sum = cell_1->GetRadius() + cell_2->GetRadius();
+      auto diff_vector = cell_1->GetPosition() - cell_2->GetPosition();
+      auto distance_to_move = radius_sum - diff_vector.Magnitude() + 0.1f;
+      auto direction = diff_vector;
+      direction.Normalize();
+
+      cell_1->GetPosition() += direction * (distance_to_move * -1.0f * (cell_1->GetRadius() / radius_sum));
+      cell_2->GetPosition() += direction * (distance_to_move * (cell_2->GetRadius() / radius_sum));
     }
   }
 };

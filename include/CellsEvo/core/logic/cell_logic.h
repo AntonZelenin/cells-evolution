@@ -6,7 +6,7 @@
 
 namespace cells_evo::logic {
 // todo remove, it's temporary
-void Move(core::Cell &cell, core::Vector2<float> &direction, float speed);
+void Move(core::Cell &cell, core::Vector2<float> const &direction, float speed);
 
 class NonHunterCellLogic {
   virtual std::shared_ptr<core::EdibleEntity> FindClosestFood(
@@ -73,8 +73,7 @@ class NonHunterCellLogic {
     if (!closest_food || !CouldSensedFood(cell, *closest_food)) {
       direction = GetRandomDirection(cell);
     } else {
-      auto target_position = closest_food->GetPosition();
-      direction = core::GetDirectionVector(cell.GetPosition(), target_position);
+      direction = core::GetDirectionVector(cell.GetPosition(),  closest_food->GetPosition());
     }
     return direction;
   }

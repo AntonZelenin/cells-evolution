@@ -3,6 +3,10 @@
 
 namespace cells_evo::core {
 template<typename T>
+struct Vector2;
+typedef Vector2<float> Position;
+
+template<typename T>
 struct Vector2 {
   T x;
   T y;
@@ -12,18 +16,11 @@ struct Vector2 {
   float Magnitude();
   void Normalize();
 
+  // todo not generic definitions -_-
   Vector2<float> operator-(Vector2<float> const &obj) const;
-};
-
-struct Position {
-  Vector2<float> coordinates{};
-  Position() = default;
-  Position(float x, float y);
-  explicit Position(Vector2<float> coords);
-  [[nodiscard]] float X() const;
-  [[nodiscard]] float Y() const;
-
-  Vector2<float> operator-(Position const &pos) const;
+//  Vector2<float> operator+(Vector2<float> const &obj) const;
+  void operator+=(Vector2<float> const &obj);
+  Vector2<float> operator*(float val) const;
 };
 
 Vector2<float> GetDirectionVector(Position &origin, Position &destination);

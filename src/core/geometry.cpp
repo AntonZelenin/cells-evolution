@@ -3,26 +3,6 @@
 #include "CellsEvo/core/geometry.h"
 
 namespace cells_evo::core {
-Position::Position(float x, float y) {
-  coordinates = Vector2<float>(x, y);
-}
-
-float Position::X() const {
-  return coordinates.x;
-}
-
-float Position::Y() const {
-  return coordinates.y;
-}
-
-Vector2<float> Position::operator-(const Position &pos) const {
-  return {pos.coordinates - coordinates};
-}
-
-Position::Position(Vector2<float> coords) {
-  coordinates = coords;
-}
-
 template<typename T>
 Vector2<T>::Vector2(T x, T y) {
   this->x = x;
@@ -48,9 +28,25 @@ Vector2<float> Vector2<T>::operator-(const Vector2<float> &obj) const {
   return Vector2<float>{obj.x - x, obj.y - y};
 }
 
-// todo
-Vector2<float> GetDirectionVector(Position &origin, Position &destination) {
-  Vector2<float> vec{destination.X() - origin.X(), destination.Y() - origin.Y()};
+//template<typename T>
+//Vector2<float> Vector2<T>::operator+(const Vector2<float> &obj) const {
+//  return Vector2<float>{obj.x + x, obj.y + y};
+//}
+
+// todo strange definition -_-
+template<>
+void Vector2<float>::operator+=(const Vector2<float> &obj) {
+  x += obj.x;
+  y += obj.y;
+}
+
+template<>
+Vector2<float> Vector2<float>::operator*(float val) const {
+  return Vector2<float>{x * val, y * val};
+}
+
+Vector2<float> GetDirectionVector(Position &vec_1, Position &vec_2) {
+  Vector2<float> vec{vec_1 - vec_2};
   vec.Normalize();
   return vec;
 }

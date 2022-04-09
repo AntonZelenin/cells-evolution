@@ -12,11 +12,11 @@ Logic::Logic(core::World &world, unsigned int food_production_rate) : world_(wor
 
 void Logic::WorldTick() {
   CountTick();
-  auto colliding_cells = collisions::CollisionDetector::Detect(world_.cells_);
 
+  MoveCells();
+  auto colliding_cells = collisions::CollisionDetector::Detect(world_.cells_);
   colliding_cells = Eat(colliding_cells);
   collisions::CollisionResolver::ResolveCollisions(colliding_cells);
-  MoveCells();
 //  CheckCrossedBoundaries();
   TeleportCrossedBoundaries();
   CheckCellsEnergy();
@@ -42,15 +42,15 @@ void Logic::MoveCells() {
 void Logic::TeleportCrossedBoundaries() {
   for (auto &[_, cell] : world_.cells_) {
     auto &pos = cell->GetPosition();
-    if (pos.X() < 0.0) {
-      pos.coordinates.x = static_cast<float>(world_.width_);
-    } else if (pos.X() > static_cast<float>(world_.width_)) {
-      pos.coordinates.x = 0.0;
+    if (pos.x < 0.0) {
+      pos.x = static_cast<float>(world_.width_);
+    } else if (pos.x > static_cast<float>(world_.width_)) {
+      pos.x = 0.0;
     }
-    if (pos.Y() < 0.0) {
-      pos.coordinates.y = static_cast<float>(world_.height_);
-    } else if (pos.Y() > static_cast<float>(world_.height_)) {
-      pos.coordinates.y = 0.0;
+    if (pos.y < 0.0) {
+      pos.y = static_cast<float>(world_.height_);
+    } else if (pos.y > static_cast<float>(world_.height_)) {
+      pos.y = 0.0;
     }
   }
 }
@@ -59,15 +59,15 @@ void Logic::TeleportCrossedBoundaries() {
 void Logic::CheckCrossedBoundaries() {
   for (auto &[_, cell] : world_.cells_) {
     auto &pos = cell->GetPosition();
-    if (pos.X() < 0.0 + cell->GetRadius()) {
-      pos.coordinates.x = cell->GetRadius();
-    } else if (pos.X() > static_cast<float>(world_.width_) - cell->GetRadius()) {
-      pos.coordinates.x = static_cast<float>(world_.width_) - cell->GetRadius();
+    if (pos.x < 0.0 + cell->GetRadius()) {
+      pos.x = cell->GetRadius();
+    } else if (pos.x > static_cast<float>(world_.width_) - cell->GetRadius()) {
+      pos.x = static_cast<float>(world_.width_) - cell->GetRadius();
     }
-    if (pos.Y() < 0.0 + cell->GetRadius()) {
-      pos.coordinates.y = cell->GetRadius();
-    } else if (pos.Y() > static_cast<float>(world_.height_) - cell->GetRadius()) {
-      pos.coordinates.y = static_cast<float>(world_.height_) - cell->GetRadius();
+    if (pos.y < 0.0 + cell->GetRadius()) {
+      pos.y = cell->GetRadius();
+    } else if (pos.y > static_cast<float>(world_.height_) - cell->GetRadius()) {
+      pos.y = static_cast<float>(world_.height_) - cell->GetRadius();
     }
   }
 }
@@ -112,7 +112,7 @@ std::shared_ptr<core::Cell> Logic::DivideCell(core::Cell &cell) {
   auto new_cell = std::make_shared<core::Cell>(
       cell.energy_ / 2,
       cell.type_,
-      core::Position(cell.GetPosition().X(), cell.GetPosition().Y()),
+      core::Position(cell.GetPosition().x, cell.GetPosition().y),
       genetic_engineer_.CopyGenes(cell.genes_)
   );
   return std::move(new_cell);
@@ -181,11 +181,8 @@ std::shared_ptr<core::Cell> &Logic::ExtractPrey(collisions::CellPtrPair &cell_pa
     return cell_pair.second;
 }
 
-void Move(core::Cell &cell, core::Vector2<float> &direction, float speed) {
-  auto position = cell.GetPosition();
-  // todo implement vector addition and multiplication
-  auto new_pos = core::Position(position.X() + (direction.x * speed), position.Y() + (direction.y * speed));
-  cell.SetPosition(new_pos);
+void Move(core::Cell &cell, core::Vector2<float> const &direction, float speed) {
+  cell.GetPosition() += direction * speed;
   cell.ConsumeMovementEnergy();
 }
 
