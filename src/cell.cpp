@@ -2,7 +2,7 @@
 
 namespace cells_evo::core {
 Cell::Cell(
-    Type type,
+    CellType type,
     Position position,
     std::vector<genetics::Gene> const &genes
 )
@@ -19,20 +19,20 @@ Position &Cell::GetPosition() {
   return position_;
 }
 
-float Cell::GetRadius() const {
+float Cell::GetSize() const {
   return genes_.at(genetics::GeneType::SIZE).value;
 }
 
 float Cell::GetSpeed() const {
-  return genes_.at(genetics::GeneType::SPEED).value * k_speed_size_coefficient_ * GetRadius();
+  return genes_.at(genetics::GeneType::SPEED).value * k_speed_size_coefficient_ * GetSize();
 }
 
 bool Cell::IsHunter() const {
-  return type_ == core::Type::K_HUNTER;
+  return type_ == core::CellType::K_HUNTER;
 }
 
 bool Cell::IsNonHunter() const {
-  return type_ == core::Type::K_NONHUNTER;
+  return type_ == core::CellType::K_NONHUNTER;
 }
 
 float Cell::GetMaxFoodDetectionDistance() const {
@@ -84,7 +84,7 @@ void Cell::SetPosition(Position pos) {
 }
 
 void Cell::ConsumeMovementEnergy() {
-  energy_ -= GetRadius() * GetSpeed() * k_energy_consumption_coefficient_;
+  energy_ -= GetSize() * GetSpeed() * k_energy_consumption_coefficient_;
 }
 
 void Cell::ConsumeDivisionEnergy() {
@@ -97,11 +97,11 @@ bool Cell::HasEnergy() const {
 
 void Cell::AddEnergy(float energy) {
   energy_ += energy;
-  if (energy_ > GetMaxEnergy()) energy_ = GetRadius() * 2.f;
+  if (energy_ > GetMaxEnergy()) energy_ = GetSize() * 2.f;
 }
 
 float Cell::GetMaxEnergy() const {
-  return GetRadius() * 2.f;
+  return GetSize() * 2.f;
 }
 
 float Cell::GetNutritionValue() const {
@@ -109,7 +109,7 @@ float Cell::GetNutritionValue() const {
 }
 
 float Cell::GetBaseNutritionValue() const {
-  return GetRadius() * 0.5f;
+  return GetSize() * 0.5f;
 }
 
 //bool Cell::CanConsume(float energy) const {
@@ -121,7 +121,7 @@ bool Cell::IsHungry() const {
 }
 
 float Cell::GetDivisionEnergy() const {
-  return k_division_energy_size_coefficient_ * GetRadius();
+  return k_division_energy_size_coefficient_ * GetSize();
 }
 
 bool Cell::HasEnergyToDivide() const {
@@ -147,14 +147,14 @@ void Cell::Tick() {
     lifetime_++;
   if (division_cooldown_ > 0)
     division_cooldown_--;
-  energy_ -= k_vital_functions_energy_consumption_ * GetRadius();
+  energy_ -= k_vital_functions_energy_consumption_ * GetSize();
 }
 
 // todo every cell move to the same point when copy constructor is implemented
 //Cell::Cell(const Cell &cell) {
 //  position_ = Position(cell.position_.x, cell.position_.y);
 //  energy_ = cell.energy_ / 2;
-//  size_ = cell.GetRadius();
+//  radius_ = cell.GetSize();
 //  speed_ = cell.GetSpeed();
 //  type_ = cell.type_;
 //}

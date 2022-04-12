@@ -11,6 +11,7 @@ void App::Run() {
   long long time_diff;
   auto background_color = sf::Color(15, 24, 41);
   auto cell_drawer = graphics::CellDrawer();
+  auto food_drawer = graphics::FoodDrawer();
 
   while (window_->isOpen()) {
     start = std::chrono::steady_clock::now();
@@ -26,7 +27,7 @@ void App::Run() {
       window_->draw(cell_drawer.Get(cell));
     }
     for (auto&[_, food] : world_->food_) {
-      window_->draw(graphics::FoodDrawer::Get(food));
+      window_->draw(food_drawer.Get(food));
     }
     window_->display();
 

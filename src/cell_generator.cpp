@@ -5,7 +5,7 @@ std::vector<std::shared_ptr<core::Cell>> CellGenerator::Generate(
     int field_width,
     int field_height,
     int generation_size,
-    core::Type cell_type
+    core::CellType cell_type
 ) {
   std::vector<std::shared_ptr<core::Cell>> cells;
   cells.reserve(generation_size);

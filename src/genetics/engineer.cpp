@@ -25,7 +25,7 @@ bool Engineer::ShouldMutate() const {
   return cells_evo::core::GetRandomInts(0, 100 / mutation_chance_, 1)[0] == 1;
 }
 
-std::vector<Gene> Engineer::GenerateBaseGenes(const core::Type &cell_type) {
+std::vector<Gene> Engineer::GenerateBaseGenes(const core::CellType &cell_type) {
 //  switch (cell_type) {
 //    case core::K_HUNTER:
   return std::vector<Gene>{

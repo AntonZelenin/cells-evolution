@@ -22,7 +22,7 @@ void World::AddCell(std::shared_ptr<Cell> cell) {
 }
 
 void World::GenerateFood(int number) {
-  AddFood(food_generator_.Generate(
+  AddFood(food_generator_.CreateFloralGeneration(
       width_,
       height_,
       number
@@ -34,7 +34,7 @@ void World::GenerateCells(int number) {
       width_,
       height_,
       number,
-      core::Type::K_NONHUNTER
+      core::CellType::K_NONHUNTER
   ));
 }
 
@@ -43,7 +43,7 @@ void World::GenerateHunterCells(int number) {
       width_,
       height_,
       number,
-      core::Type::K_HUNTER
+      core::CellType::K_HUNTER
   ));
 }
 

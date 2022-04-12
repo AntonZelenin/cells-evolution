@@ -2,11 +2,11 @@
 
 namespace cells_evo::collisions {
 static float LeftEdgeX(const std::shared_ptr<core::Cell> &cell_ptr) {
-  return (*cell_ptr).GetPosition().x - (*cell_ptr).GetRadius();
+  return (*cell_ptr).GetPosition().x - (*cell_ptr).GetSize();
 }
 
 static float RightEdgeX(const std::shared_ptr<core::Cell> &cell_ptr) {
-  return (*cell_ptr).GetPosition().x + (*cell_ptr).GetRadius();
+  return (*cell_ptr).GetPosition().x + (*cell_ptr).GetSize();
 }
 
 static bool CellsOverlapByX(const std::shared_ptr<core::Cell> &cell_1, const std::shared_ptr<core::Cell> &cell_2) {
@@ -14,7 +14,7 @@ static bool CellsOverlapByX(const std::shared_ptr<core::Cell> &cell_1, const std
 }
 
 static bool CellsCollide(const std::shared_ptr<core::Cell> &cell_1, const std::shared_ptr<core::Cell> &cell_2) {
-  return (cell_1->GetPosition() - cell_2->GetPosition()).Magnitude() < (cell_1->GetRadius() + cell_2->GetRadius());
+  return (cell_1->GetPosition() - cell_2->GetPosition()).Magnitude() < (cell_1->GetSize() + cell_2->GetSize());
 }
 
 cells_evo::collisions::CellPtrPairs cells_evo::collisions::CollisionDetector::Detect(cells_evo::core::CellStorage &cells) {
@@ -44,15 +44,15 @@ void CollisionResolver::ResolveCollisions(CellPtrPairs &colliding_cells) {
   for (auto &pair : colliding_cells) {
     // todo does & make difference?
     auto &[cell_1, cell_2] = pair;
-    auto radius_sum = cell_1->GetRadius() + cell_2->GetRadius();
+    auto radius_sum = cell_1->GetSize() + cell_2->GetSize();
     auto diff_vector = cell_1->GetPosition() - cell_2->GetPosition();
     auto distance_to_move =
         radius_sum - diff_vector.Magnitude() + CollisionResolver::k_collision_distance_dont_remember_;
     auto direction = diff_vector;
     direction.Normalize();
 
-    cell_1->GetPosition() += direction * (distance_to_move * -1.0f * (cell_1->GetRadius() / radius_sum));
-    cell_2->GetPosition() += direction * (distance_to_move * (cell_2->GetRadius() / radius_sum));
+    cell_1->GetPosition() += direction * (distance_to_move * -1.0f * (cell_1->GetSize() / radius_sum));
+    cell_2->GetPosition() += direction * (distance_to_move * (cell_2->GetSize() / radius_sum));
   }
 }
 }

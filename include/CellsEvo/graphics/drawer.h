@@ -8,18 +8,18 @@
 
 namespace cells_evo::graphics {
 class CellColorProvider {
-  std::unordered_map<core::Type, sf::Color> mapping_{
-      {core::Type::K_HUNTER, sf::Color::Red},
-      {core::Type::K_NONHUNTER, sf::Color::Green},
+  std::unordered_map<core::CellType, sf::Color> mapping_{
+      {core::CellType::K_HUNTER, sf::Color::Red},
+      {core::CellType::K_NONHUNTER, sf::Color::Green},
   };
  public:
-  sf::Color Get(const core::Type &type);
+  sf::Color Get(const core::CellType &type);
 };
 
 class CellDrawer {
   const float k_thickness_coefficient_ = 4.f;
 
-  CellColorProvider color_provider_ = CellColorProvider();
+  CellColorProvider color_provider_ {};
 
   [[nodiscard]] float GetThickness(float size) const;
 
@@ -27,10 +27,20 @@ class CellDrawer {
   sf::CircleShape Get(const std::shared_ptr<core::Cell> &cell);
 };
 
+class FoodColorProvider {
+  std::unordered_map<core::FoodType, sf::Color> mapping_{
+      {core::FoodType::K_FLORAL, sf::Color::Cyan},
+      {core::FoodType::K_ANIMAL, sf::Color::Red},
+  };
+ public:
+  sf::Color Get(const core::FoodType &type);
+};
+
 // todo make interface for drawers
 class FoodDrawer {
+  FoodColorProvider color_provider_{};
  public:
-  static sf::RectangleShape Get(const std::shared_ptr<core::Food> &food);
+  sf::RectangleShape Get(const std::shared_ptr<core::Food> &food);
 };
 }
 

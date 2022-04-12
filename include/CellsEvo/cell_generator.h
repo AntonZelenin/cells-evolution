@@ -14,7 +14,7 @@ class CellGenerator {
       int field_width,
       int field_height,
       int generation_size,
-      core::Type cell_type
+      core::CellType cell_type
   );
   std::shared_ptr<core::Cell> DivideCell(core::Cell &cell);
 };

@@ -21,7 +21,6 @@ class World {
   FoodGenerator food_generator_{};
   core::CellGenerator cell_generator_{};
 
-  void AddFood(std::shared_ptr<Food> food);
   void AddFood(std::vector<std::shared_ptr<Food>> foods);
   void AddCells(std::vector<std::shared_ptr<Cell>> new_cells);
 
@@ -37,6 +36,7 @@ class World {
   void GenerateCells(int number);
   void GenerateHunterCells(int number);
 
+  void AddFood(std::shared_ptr<Food> food);
   void AddCell(std::shared_ptr<Cell> cell);
 };
 }

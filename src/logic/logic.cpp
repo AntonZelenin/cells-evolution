@@ -65,19 +65,19 @@ void Logic::CheckCrossedBoundaries() {
     auto &pos = cell->GetPosition();
     bool hit_the_wall = false;
 
-    if (pos.x < 0.0 + cell->GetRadius()) {
-      pos.x = cell->GetRadius();
+    if (pos.x < 0.0 + cell->GetSize()) {
+      pos.x = cell->GetSize();
       hit_the_wall = true;
-    } else if (pos.x > static_cast<float>(world_.width_) - cell->GetRadius()) {
-      pos.x = static_cast<float>(world_.width_) - cell->GetRadius();
+    } else if (pos.x > static_cast<float>(world_.width_) - cell->GetSize()) {
+      pos.x = static_cast<float>(world_.width_) - cell->GetSize();
       hit_the_wall = true;
     }
 
-    if (pos.y < 0.0 + cell->GetRadius()) {
-      pos.y = cell->GetRadius();
+    if (pos.y < 0.0 + cell->GetSize()) {
+      pos.y = cell->GetSize();
       hit_the_wall = true;
-    } else if (pos.y > static_cast<float>(world_.height_) - cell->GetRadius()) {
-      pos.y = static_cast<float>(world_.height_) - cell->GetRadius();
+    } else if (pos.y > static_cast<float>(world_.height_) - cell->GetSize()) {
+      pos.y = static_cast<float>(world_.height_) - cell->GetSize();
       hit_the_wall = true;
     }
 
@@ -97,10 +97,18 @@ void Logic::GenerateFood() {
 
 void Logic::CheckCellsEnergy() {
   for (auto it = world_.cells_.begin(); it != world_.cells_.end();) {
-    if (!it->second->HasEnergy())
+    if (!it->second->HasEnergy()) {
+      world_.AddFood(
+          std::make_shared<core::Food>(
+              core::FoodType::K_ANIMAL,
+              it->second->GetPosition(),
+              it->second->GetBaseNutritionValue()
+          )
+      );
       world_.cells_.erase((it++)->second->GetId());
-    else
+    } else {
       it++;
+    }
   }
 }
 
@@ -109,7 +117,7 @@ void Logic::DivideCells() {
   for (auto &[_, cell] : world_.cells_) {
     if (cell->HasEnergyToDivide() && cell->DivisionCooldownPassed()) {
       auto new_cell = DivideCell(*cell);
-      new_cell->MoveX(cell->GetRadius() * 2);
+      new_cell->MoveX(cell->GetSize() * 2);
       new_cells.push_back(new_cell);
       cell->ConsumeDivisionEnergy();
     }
@@ -133,7 +141,7 @@ std::shared_ptr<core::Cell> Logic::DivideCell(core::Cell &cell) {
 }
 
 bool CanKill(std::shared_ptr<core::Cell> &hunter_cell, std::shared_ptr<core::Cell> &prey_cell) {
-  return prey_cell->GetRadius() < hunter_cell->GetRadius() * 1.5;
+  return prey_cell->GetSize() < hunter_cell->GetSize() * 1.5;
 }
 
 // todo refactor

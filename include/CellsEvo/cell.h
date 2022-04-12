@@ -8,7 +8,7 @@
 #include "base.h"
 
 namespace cells_evo::core {
-enum Type {
+enum CellType {
   K_HUNTER,
   K_NONHUNTER,
 };
@@ -33,11 +33,11 @@ class Cell : public EdibleEntity {
   // todo everything is public =*(
   float energy_{};
   unsigned int id_{};
-  Type type_;
+  CellType type_;
   std::unordered_map<genetics::GeneType, genetics::Gene> genes_{};
 
   Cell(
-      Type type,
+      CellType type,
       Position position,
       std::vector<genetics::Gene> const &genes
   );
@@ -59,13 +59,13 @@ class Cell : public EdibleEntity {
 
   unsigned int GetId() override;
   Position &GetPosition() override;
-  [[nodiscard]] float GetRadius() const override;
+  [[nodiscard]] float GetSize() const override;
   [[nodiscard]] float GetMaxFoodDetectionDistance() const;
   [[nodiscard]] float GetSpeed() const;
   [[nodiscard]] std::optional<unsigned int> GetFoodTargetId() const;
   [[nodiscard]] int GetDirectionChangeFactor() const;
   [[nodiscard]] float GetMaxEnergy() const;
-  [[nodiscard]] inline float GetNutritionValue() const override;
+  [[nodiscard]] float GetNutritionValue() const override;
   [[nodiscard]] float GetBaseNutritionValue() const;
   [[nodiscard]] bool HasEnergy() const;
   [[nodiscard]] bool HasEnergyToDivide() const;

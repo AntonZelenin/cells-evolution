@@ -29,7 +29,7 @@ class Engineer {
   Gene CreateGene(GeneType gene_type);
   Gene CopyGene(Gene const &gene);
   std::vector<Gene> CopyGenes(std::unordered_map<GeneType, Gene> const &gene);
-  std::vector<Gene> GenerateBaseGenes(core::Type const &cell_type);
+  std::vector<Gene> GenerateBaseGenes(core::CellType const &cell_type);
 };
 }
 
