@@ -20,11 +20,11 @@ Position &Cell::GetPosition() {
 }
 
 float Cell::GetRadius() const {
-  return genes_.find(genetics::GeneType::SIZE)->second.value;
+  return genes_.at(genetics::GeneType::SIZE).value;
 }
 
 float Cell::GetSpeed() const {
-  return genes_.find(genetics::GeneType::SPEED)->second.value * k_speed_size_coefficient_ * GetRadius();
+  return genes_.at(genetics::GeneType::SPEED).value * k_speed_size_coefficient_ * GetRadius();
 }
 
 bool Cell::IsHunter() const {
@@ -125,11 +125,11 @@ bool Cell::DivisionCooldownPassed() const {
 }
 
 void Cell::StartDivisionCooldown() {
-  division_cooldown_ = static_cast<unsigned int>(genes_.find(genetics::GeneType::DIVISION_COOLDOWN)->second.value);
+  division_cooldown_ = static_cast<unsigned int>(genes_.at(genetics::GeneType::DIVISION_COOLDOWN).value);
 }
 
 int Cell::GetDirectionChangeFactor() const {
-  return static_cast<int>(genes_.find(genetics::GeneType::DIRECTION_CHANGE_FACTOR)->second.value);
+  return static_cast<int>(genes_.at(genetics::GeneType::DIRECTION_CHANGE_FACTOR).value);
 }
 
 void Cell::Tick() {

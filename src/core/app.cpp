@@ -9,6 +9,8 @@ namespace cells_evo {
 void App::Run() {
   std::chrono::time_point<std::chrono::steady_clock> start;
   long long time_diff;
+  auto background_color = sf::Color(15, 24, 41);
+  auto cell_drawer = graphics::CellDrawer();
 
   while (window_->isOpen()) {
     start = std::chrono::steady_clock::now();
@@ -19,9 +21,9 @@ void App::Run() {
         window_->close();
     }
     logic_->WorldTick();
-    window_->clear(sf::Color::Black);
+    window_->clear(background_color);
     for (auto&[_, cell] : world_->cells_) {
-      window_->draw(graphics::CellDrawer().Get(cell));
+      window_->draw(cell_drawer.Get(cell));
     }
     for (auto&[_, food] : world_->food_) {
       window_->draw(graphics::FoodDrawer::Get(food));

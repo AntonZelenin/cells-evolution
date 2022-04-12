@@ -130,7 +130,7 @@ std::shared_ptr<core::Cell> Logic::DivideCell(core::Cell &cell) {
   new_cell->AddEnergy(cell.energy_ / 2);
   new_cell->StartDivisionCooldown();
   cell.StartDivisionCooldown();
-  return std::move(new_cell);
+  return new_cell;
 }
 
 bool CanKill(std::shared_ptr<core::Cell> &hunter_cell, std::shared_ptr<core::Cell> &prey_cell) {

@@ -1,23 +1,22 @@
 #include "CellsEvo/core/app.h"
 
+// food on place of a dead cell
 // refactoring
+// large cells should repel smaller cells
 // larger field
 // optimizations, especially collision detection, food detection
-// food on place of a dead cell
 // export/import world state
 // implement genes that are not active yet
-// food seasonality
+// seasonality
 // runtime configuration
 // charts of number of cells, and gene values
+// fps is not working
 
 int main() {
   cells_evo::App(
       20,
       5,
       25,
-//      1,
-//      0,
-//      35,
       3000,
       1900,
       60,

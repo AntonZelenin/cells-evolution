@@ -5,6 +5,7 @@ bool NonHunterCellLogic::CellGotFood(core::Cell &cell, core::Entity &food_entity
   return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() < (cell.GetRadius() + food_entity.GetRadius());
 }
 
+// todo use const here and wherever you can
 core::Vector2<float> NonHunterCellLogic::GetRandomDirection(core::Cell &cell) {
   if (!cell.GetDirection() || cell.lifetime_ % cell.GetDirectionChangeFactor() == 0) {
     auto coords = core::GetRandomFloats(-1, 1, 2);
@@ -74,7 +75,7 @@ std::shared_ptr<core::EdibleEntity> NonHunterCellLogic::FindClosestFood(
   }
 
   cell.SetFoodTargetId(closest_food_idx);
-  return foods.find(closest_food_idx)->second;
+  return foods.at(closest_food_idx);
 }
 
 std::shared_ptr<core::EdibleEntity> HunterCellLogic::FindClosestFood(
@@ -102,6 +103,6 @@ std::shared_ptr<core::EdibleEntity> HunterCellLogic::FindClosestFood(
   }
   if (closest_food_idx == 0) return {};
   cell.SetFoodTargetId(closest_food_idx);
-  return cells.find(closest_food_idx)->second;
+  return cells.at(closest_food_idx);
 }
 }
