@@ -10,7 +10,7 @@ class Food : public EdibleEntity {
  public:
   unsigned int id_;
 
-  explicit Food(Position position);
+  explicit Food(unsigned int id, Position position);
   Position &GetPosition() override;
   [[nodiscard]] float GetRadius() const override;
   void SetPosition(Position) override;
@@ -20,10 +20,11 @@ class Food : public EdibleEntity {
 };
 
 class FoodGenerator {
+  IndexDriver index_driver_{};
   const int k_min_distance_between_items_ = 1;
 
  public:
-  [[nodiscard]] std::vector<std::shared_ptr<Food>> Generate(int field_width, int field_height, int size) const;
+  [[nodiscard]] std::vector<std::shared_ptr<Food>> Generate(int field_width, int field_height, int size);
 };
 }
 

@@ -6,21 +6,21 @@ std::vector<std::shared_ptr<Food>> FoodGenerator::Generate(
     int field_width,
     int field_height,
     int size
-) const {
+) {
   std::vector<std::shared_ptr<Food>> foods;
   foods.reserve(size);
   auto positions = cells_evo::core::GenerateRandomPositions(
       field_width, field_height, size, k_min_distance_between_items_
   );
   for (auto &position : positions) {
-    auto food = std::make_shared<Food>(position);
+    auto food = std::make_shared<Food>(index_driver_.GetNextId(), position);
     foods.push_back(food);
   }
   return foods;
 }
 
-Food::Food(Position position) : position_(position) {
-  id_ = 0;
+Food::Food(unsigned int id, Position position) : position_(position) {
+  id_ = id;
 }
 
 Position &Food::GetPosition() {

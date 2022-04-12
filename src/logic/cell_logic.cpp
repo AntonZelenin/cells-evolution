@@ -5,7 +5,6 @@ bool NonHunterCellLogic::CellGotFood(core::Cell &cell, core::Entity &food_entity
   return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() < (cell.GetRadius() + food_entity.GetRadius());
 }
 
-// todo use const here and wherever you can
 core::Vector2<float> NonHunterCellLogic::GetRandomDirection(core::Cell &cell) {
   if (!cell.GetDirection() || cell.lifetime_ % cell.GetDirectionChangeFactor() == 0) {
     auto coords = core::GetRandomFloats(-1, 1, 2);
@@ -16,13 +15,10 @@ core::Vector2<float> NonHunterCellLogic::GetRandomDirection(core::Cell &cell) {
   }
   return cell.GetDirection().value();
 }
+
 void NonHunterCellLogic::MoveCell(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
   // check for new food every N frames
   if (cell.lifetime_ % 15 == 0) cell.ClearFoodTarget();
-  ChangeDirection(cell, food_entities);
-}
-
-void NonHunterCellLogic::ChangeDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
   Move(cell, ChooseDirection(cell, food_entities));
 }
 
@@ -57,9 +53,9 @@ std::shared_ptr<core::EdibleEntity> NonHunterCellLogic::FindClosestFood(
 ) {
   if (foods.empty())
     return nullptr;
-  auto cached_closest_food = cell.GetFoodTargetId();
-  if (cached_closest_food) {
-    auto food = foods.find(cached_closest_food.value());
+  auto cached_closest_food_id = cell.GetFoodTargetId();
+  if (cached_closest_food_id) {
+    auto food = foods.find(cached_closest_food_id.value());
     if (food != foods.end())
       return food->second;
   }

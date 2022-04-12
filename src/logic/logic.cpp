@@ -96,12 +96,11 @@ void Logic::GenerateFood() {
 }
 
 void Logic::CheckCellsEnergy() {
-  std::vector<unsigned int> cells_to_kill{};
-  for (auto &[_, cell] : world_.cells_) {
-    if (!cell->HasEnergy()) cells_to_kill.push_back(cell->id_);
-  }
-  for (auto cell_id : cells_to_kill) {
-    world_.cells_.erase(cell_id);
+  for (auto it = world_.cells_.begin(); it != world_.cells_.end();) {
+    if (!it->second->HasEnergy())
+      world_.cells_.erase((it++)->second->GetId());
+    else
+      it++;
   }
 }
 
@@ -156,7 +155,7 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
       ) {
     if (HunterGotPrey(*colliding_cell_pair)) {
       auto prey_cell = ExtractPrey(*colliding_cell_pair);
-      auto hunter_cell =ExtractHunter(*colliding_cell_pair);
+      auto hunter_cell = ExtractHunter(*colliding_cell_pair);
       if (std::find(eaten_cell_ids.begin(), eaten_cell_ids.end(), prey_cell->GetId()) != eaten_cell_ids.end())
         continue;
       if (!hunter_cell->IsHungry() || !CanKill(hunter_cell, prey_cell)) continue;

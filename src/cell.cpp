@@ -9,10 +9,10 @@ Cell::Cell(
     : position_(position) {
   id_ = 0;
   type_ = type;
-  energy_ = 0;
   for (auto gene : genes) {
     genes_.insert({gene.type, gene});
   }
+  energy_ = GetDivisionEnergy();
 }
 
 Position &Cell::GetPosition() {
@@ -102,6 +102,14 @@ void Cell::AddEnergy(float energy) {
 
 float Cell::GetMaxEnergy() const {
   return GetRadius() * 2.f;
+}
+
+float Cell::GetNutritionValue() const {
+  return energy_ + GetBaseNutritionValue();
+}
+
+float Cell::GetBaseNutritionValue() const {
+  return GetRadius() * 0.5f;
 }
 
 //bool Cell::CanConsume(float energy) const {

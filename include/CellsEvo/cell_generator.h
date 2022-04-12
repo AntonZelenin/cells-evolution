@@ -16,6 +16,7 @@ class CellGenerator {
       int generation_size,
       core::Type cell_type
   );
+  std::shared_ptr<core::Cell> DivideCell(core::Cell &cell);
 };
 }
 
