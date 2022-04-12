@@ -36,10 +36,11 @@ bool Cell::IsNonHunter() const {
 }
 
 float Cell::GetMaxFoodDetectionDistance() const {
-  if (IsNonHunter())
-    return k_max_distance_food_detection_ * 0.9;
-  else
-    return k_max_distance_food_detection_ * 1.2;
+  return k_max_distance_food_detection_;
+//  if (IsNonHunter())
+//    return k_max_distance_food_detection_ * 0.9;
+//  else
+//    return k_max_distance_food_detection_ * 1.2;
 }
 
 std::optional<unsigned int> Cell::GetFoodTargetId() const {
@@ -91,8 +92,8 @@ void Cell::ConsumeDivisionEnergy() {
   energy_ /= 2;
 }
 
-bool Cell::HasEnergy() const {
-  return energy_ > 0;
+bool Cell::IsDead() const {
+  return energy_ <= 0;
 }
 
 void Cell::AddEnergy(float energy) {
@@ -109,7 +110,7 @@ float Cell::GetNutritionValue() const {
 }
 
 float Cell::GetBaseNutritionValue() const {
-  return GetSize() * 0.5f;
+  return GetSize() * 0.4f;
 }
 
 //bool Cell::CanConsume(float energy) const {

@@ -7,15 +7,19 @@ float CellDrawer::GetThickness(float size) const {
 
 sf::CircleShape CellDrawer::Get(const std::shared_ptr<core::Cell> &cell) {
   sf::CircleShape shape(cell->GetSize());
-  shape.setFillColor(sf::Color(194, 255, 254));
-  shape.setOutlineThickness(GetThickness(cell->GetSize()));
-  shape.setOutlineColor(color_provider_.Get(cell->type_));
+  if (cell->IsDead()) {
+    shape.setFillColor(sf::Color(130, 130, 130));
+  } else {
+    shape.setOutlineThickness(GetThickness(cell->GetSize()));
+    shape.setOutlineColor(color_provider_.GetOutlineColor(cell));
+    shape.setFillColor(sf::Color(194, 255, 254));
+  }
   shape.setPosition(cell->GetPosition().x - cell->GetSize(), cell->GetPosition().y - cell->GetSize());
   return shape;
 }
 
-sf::Color CellColorProvider::Get(const core::CellType &type) {
-  return mapping_[type];
+sf::Color CellColorProvider::GetOutlineColor(const std::shared_ptr<core::Cell> &cell) {
+  return mapping_[cell->type_];
 }
 
 sf::Color FoodColorProvider::Get(const core::FoodType &type) {

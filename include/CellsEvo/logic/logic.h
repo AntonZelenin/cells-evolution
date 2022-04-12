@@ -23,12 +23,11 @@ class Logic {
   void GenerateFood();
   void DivideCells();
   std::shared_ptr<core::Cell> DivideCell(core::Cell &cell);
-  void CheckCellsEnergy();
   void TeleportCrossedBoundaries();
   void CheckCrossedBoundaries();
   void MoveCells();
   void MoveCell(std::shared_ptr<core::Cell> &cell);
-  static bool HunterGotPrey(collisions::CellPtrPair &cell_pair);
+  static bool CanEat(collisions::CellPtrPair &cell_pair);
   static std::shared_ptr<core::Cell> &ExtractHunter(collisions::CellPtrPair &cell_pair);
   static std::shared_ptr<core::Cell> &ExtractPrey(collisions::CellPtrPair &cell_pair);
 

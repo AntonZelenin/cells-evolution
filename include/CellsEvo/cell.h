@@ -14,7 +14,7 @@ enum CellType {
 };
 
 class Cell : public EdibleEntity {
-  const float k_energy_consumption_coefficient_ = 0.00035;
+  const float k_energy_consumption_coefficient_ = 0.0005;
   const float k_division_energy_size_coefficient_ = 1.0;
   const float k_hunger_coefficient_ = 0.7;
   const float k_speed_size_coefficient_ = 0.27;
@@ -67,7 +67,7 @@ class Cell : public EdibleEntity {
   [[nodiscard]] float GetMaxEnergy() const;
   [[nodiscard]] float GetNutritionValue() const override;
   [[nodiscard]] float GetBaseNutritionValue() const;
-  [[nodiscard]] bool HasEnergy() const;
+  [[nodiscard]] bool IsDead() const;
   [[nodiscard]] bool HasEnergyToDivide() const;
   [[nodiscard]] bool DivisionCooldownPassed() const;
   [[nodiscard]] std::optional<core::Vector2<float>> GetDirection() const;

@@ -17,14 +17,13 @@ void Logic::WorldTick() {
   collisions::CollisionResolver::ResolveCollisions(colliding_cells);
   CheckCrossedBoundaries();
 //  TeleportCrossedBoundaries();
-  CheckCellsEnergy();
   GenerateFood();
   DivideCells();
 }
 
 void Logic::MoveCells() {
   for (auto &[_, cell] : world_.cells_) {
-    MoveCell(cell);
+    if (!cell->IsDead()) MoveCell(cell);
   }
 }
 
@@ -90,23 +89,6 @@ void Logic::GenerateFood() {
   }
 }
 
-void Logic::CheckCellsEnergy() {
-  for (auto it = world_.cells_.begin(); it != world_.cells_.end();) {
-    if (!it->second->HasEnergy()) {
-      world_.AddFood(
-          std::make_shared<core::Food>(
-              core::FoodType::K_ANIMAL,
-              it->second->GetPosition(),
-              it->second->GetBaseNutritionValue()
-          )
-      );
-      world_.cells_.erase((it++)->second->GetId());
-    } else {
-      it++;
-    }
-  }
-}
-
 void Logic::DivideCells() {
   std::vector<std::shared_ptr<core::Cell>> new_cells;
   for (auto &[_, cell] : world_.cells_) {
@@ -156,12 +138,12 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
       colliding_cell_pair != colliding_cells.end();
       colliding_cell_pair++
       ) {
-    if (HunterGotPrey(*colliding_cell_pair)) {
+    if (CanEat(*colliding_cell_pair)) {
       auto prey_cell = ExtractPrey(*colliding_cell_pair);
       auto hunter_cell = ExtractHunter(*colliding_cell_pair);
       if (std::find(eaten_cell_ids.begin(), eaten_cell_ids.end(), prey_cell->GetId()) != eaten_cell_ids.end())
         continue;
-      if (!hunter_cell->IsHungry() || !CanKill(hunter_cell, prey_cell)) continue;
+      if (!hunter_cell->IsHungry() || (!CanKill(hunter_cell, prey_cell) && !prey_cell->IsDead())) continue;
       // todo it's duplicate
       hunter_cell->AddEnergy(prey_cell->GetNutritionValue());
       eaten_cell_ids.push_back(prey_cell->GetId());
@@ -184,21 +166,27 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
   return colliding_without_eaten;
 }
 
-bool Logic::HunterGotPrey(collisions::CellPtrPair &cell_pair) {
-  // todo make method is hunter
-  return (cell_pair.first->IsHunter() && cell_pair.second->IsNonHunter())
-      || (cell_pair.first->IsNonHunter() && cell_pair.second->IsHunter());
+bool Logic::CanEat(collisions::CellPtrPair &cell_pair) {
+  auto first = cell_pair.first, second = cell_pair.second;
+  bool at_least_one_alive_hunter = (first->IsHunter() && !first->IsDead()) || (second->IsHunter() && !second->IsDead());
+  bool one_dead = first->IsDead() || second->IsDead();
+
+  if (at_least_one_alive_hunter && one_dead)
+    return true;
+
+  return (first->IsHunter() && second->IsNonHunter())
+      || (first->IsNonHunter() && second->IsHunter());
 }
 
 std::shared_ptr<core::Cell> &Logic::ExtractHunter(collisions::CellPtrPair &cell_pair) {
-  if (cell_pair.first->IsHunter())
+  if (cell_pair.first->IsHunter() && !cell_pair.first->IsDead())
     return cell_pair.first;
   else
     return cell_pair.second;
 }
 
 std::shared_ptr<core::Cell> &Logic::ExtractPrey(collisions::CellPtrPair &cell_pair) {
-  if (cell_pair.first->IsNonHunter())
+  if (cell_pair.first->IsNonHunter() || cell_pair.first->IsDead())
     return cell_pair.first;
   else
     return cell_pair.second;

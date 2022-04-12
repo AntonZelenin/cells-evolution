@@ -13,7 +13,7 @@ class CellColorProvider {
       {core::CellType::K_NONHUNTER, sf::Color::Green},
   };
  public:
-  sf::Color Get(const core::CellType &type);
+  sf::Color GetOutlineColor(const std::shared_ptr<core::Cell> &cell);
 };
 
 class CellDrawer {
@@ -30,8 +30,7 @@ class CellDrawer {
 class FoodColorProvider {
   std::unordered_map<core::FoodType, sf::Color> mapping_{
       {core::FoodType::K_FLORAL, sf::Color::Cyan},
-      {core::FoodType::K_ANIMAL, sf::Color::Cyan},
-//      {core::FoodType::K_ANIMAL, sf::Color::Red},
+      {core::FoodType::K_ANIMAL, sf::Color::Red},
   };
  public:
   sf::Color Get(const core::FoodType &type);

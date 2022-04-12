@@ -2,7 +2,6 @@
 
 // food on place of a dead cell
 // refactoring
-// large cells should repel smaller cells
 // larger field
 // optimizations, especially collision detection, food detection
 // export/import world state
@@ -14,13 +13,13 @@
 
 int main() {
   cells_evo::App(
-      20,
+      15,
       5,
-      5,
+      15,
       3000,
       1900,
       60,
-      1.0
+      0.8
   ).Run();
   return 0;
 }

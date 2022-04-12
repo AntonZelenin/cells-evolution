@@ -90,7 +90,7 @@ std::shared_ptr<core::EdibleEntity> HunterCellLogic::FindClosestFood(
   unsigned int closest_food_idx = 0;
   float min_distance = std::numeric_limits<float>::max();
   for (auto&[idx, prey_cell] : reinterpret_cast<core::CellStorage &>(cells)) {
-    if (prey_cell->IsHunter()) continue;
+    if (prey_cell->IsHunter() && !prey_cell->IsDead()) continue;
     auto dist = (cell.GetPosition() - prey_cell->GetPosition()).Magnitude();
     if (dist < min_distance) {
       min_distance = dist;
