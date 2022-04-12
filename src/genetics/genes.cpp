@@ -14,21 +14,21 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
     case SIZE:
       return {
           5,
-          0.5,
+          0.4,
           4,
           100
       };
     case SPEED:
       return {
-          0.34,
-          0.4,
+          0.5,
+          0.2,
           0.05,
           6
       };
     case ENERGY:
       return {
           10,
-          0.4,
+          0.3,
           5,
           50
       };

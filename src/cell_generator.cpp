@@ -18,6 +18,7 @@ std::vector<std::shared_ptr<core::Cell>> CellGenerator::Generate(
         position,
         genetic_engineer_.GenerateBaseGenes(cell_type)
     );
+    cell->AddEnergy(cell->GetDivisionEnergy());
     cells.push_back(cell);
   }
   return cells;

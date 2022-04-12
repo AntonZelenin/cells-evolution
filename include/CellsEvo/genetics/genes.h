@@ -26,7 +26,7 @@ struct Gene {
 
 struct GeneConfig {
   float base_value;
-  float base_deviation;
+  float deviation;
   float min;
   float max;
 };

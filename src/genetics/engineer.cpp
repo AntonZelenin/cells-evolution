@@ -4,21 +4,17 @@ namespace cells_evo::genetics {
 Gene Engineer::CopyGene(const Gene &gene) {
   Gene new_gene = gene;
   if (ShouldMutate()) {
-    auto rands = cells_evo::core::GetRandomNormalFloats(1, 0.25, 1);
-    new_gene.value *= rands[0];
-    new_gene.value = std::min(new_gene.value, gene_config_cacher_.GetGeneConfig(new_gene.type).max);
-    new_gene.value = std::max(new_gene.value, gene_config_cacher_.GetGeneConfig(new_gene.type).min);
+    auto gene_conf = gene_config_cacher_.GetGeneConfig(new_gene.type);
+    new_gene.value *= cells_evo::core::GetRandomNormalFloats(1, 0.25, 1)[0];
+    new_gene.value = std::min(new_gene.value, gene_conf.max);
+    new_gene.value = std::max(new_gene.value, gene_conf.min);
   }
   return new_gene;
 }
 
 Gene Engineer::CreateGene(GeneType gene_type) {
   auto conf = gene_config_cacher_.GetGeneConfig(gene_type);
-  float gene_value = cells_evo::core::GetRandomFloats(
-      conf.base_value - conf.base_deviation,
-      conf.base_value + conf.base_deviation,
-      1
-  )[0];
+  float gene_value = cells_evo::core::GetRandomNormalFloats(conf.base_value, conf.deviation, 1)[0];
   return {
       gene_value,
       gene_type

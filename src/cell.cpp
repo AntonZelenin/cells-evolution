@@ -12,7 +12,7 @@ Cell::Cell(
   for (auto gene : genes) {
     genes_.insert({gene.type, gene});
   }
-  energy_ = GetDivisionEnergy();
+  energy_ = 0;
 }
 
 Position &Cell::GetPosition() {

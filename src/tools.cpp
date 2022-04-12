@@ -8,8 +8,9 @@ unsigned int IndexDriver::GetNextId() {
 
 std::vector<int> GetRandomInts(int from, int  to, unsigned int number) {
   std::vector<int> numbers{};
-  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine generator(seed);
+
+  std::random_device dev;
+  std::mt19937 generator(dev());
   std::uniform_int_distribution<int> distribution(from, to);
 
   for (; number > 0; number--) {
@@ -21,8 +22,9 @@ std::vector<int> GetRandomInts(int from, int  to, unsigned int number) {
 
 std::vector<float> GetRandomFloats(float from, float  to, unsigned int number) {
   std::vector<float> numbers{};
-  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine generator(seed);
+
+  std::random_device dev;
+  std::mt19937 generator(dev());
   std::uniform_real_distribution<float> distribution(from, to);
 
   for (; number > 0; number--) {
@@ -34,9 +36,11 @@ std::vector<float> GetRandomFloats(float from, float  to, unsigned int number) {
 
 std::vector<float> GetRandomNormalFloats(float mean, float deviation, unsigned int number) {
   std::vector<float> numbers{};
-  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine generator(seed);
+
+  std::random_device dev;
+  std::mt19937 generator(dev());
   std::normal_distribution<float> distribution(mean, deviation);
+
   for (; number > 0; number--) {
     numbers.push_back(distribution(generator));
   }
@@ -53,10 +57,12 @@ static Position GenerateRandomPosition(
   auto min_dist_between_cells = static_cast<float>(min_distance_between_cells);
   Vector2<float> pos{};
   bool is_ok = false;
-  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine generator(seed);
+
+  std::random_device dev;
+  std::mt19937 generator(dev());
   std::uniform_int_distribution<int> x_distribution(0, width);
   std::uniform_int_distribution<int> y_distribution(0, height);
+
   while (not is_ok) {
     is_ok = true;
     pos = Vector2<float>(
