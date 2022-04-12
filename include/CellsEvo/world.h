@@ -3,8 +3,8 @@
 
 #include <vector>
 #include <unordered_map>
-#include "CellsEvo/core/cell.h"
-#include "CellsEvo/core/food.h"
+#include "cell.h"
+#include "food.h"
 #include "tools.h"
 #include "cell_generator.h"
 

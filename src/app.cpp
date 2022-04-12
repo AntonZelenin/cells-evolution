@@ -1,7 +1,7 @@
 #include <chrono>
 #include <thread>
-#include "CellsEvo/core/logic/logic.h"
-#include "CellsEvo/core/app.h"
+#include "CellsEvo//logic/logic.h"
+#include "CellsEvo/app.h"
 #include "CellsEvo/graphics.h"
 #include "SFML/Graphics.hpp"
 

@@ -1,4 +1,4 @@
-#include "CellsEvo/core/genetics/genes.h"
+#include "CellsEvo//genetics/genes.h"
 
 namespace cells_evo::genetics {
 GeneConfig BuildGeneConfig(GeneType gene_type) {

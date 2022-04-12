@@ -1,9 +1,9 @@
 #include <vector>
 #include <random>
-#include "CellsEvo/core/logic/logic.h"
-#include "CellsEvo/core/geometry.h"
-#include "CellsEvo/core/collision_resolution.h"
-#include "CellsEvo/core/logic/cell_logic.h"
+#include "CellsEvo//logic/logic.h"
+#include "CellsEvo/geometry.h"
+#include "CellsEvo/collision_resolution.h"
+#include "CellsEvo//logic/cell_logic.h"
 
 namespace cells_evo::logic {
 Logic::Logic(core::World &world, unsigned int food_production_rate) : world_(world) {

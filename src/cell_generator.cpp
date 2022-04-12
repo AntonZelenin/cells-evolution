@@ -1,4 +1,4 @@
-#include "CellsEvo/core/cell_generator.h"
+#include "CellsEvo/cell_generator.h"
 
 namespace cells_evo::core {
 std::vector<std::shared_ptr<core::Cell>> CellGenerator::Generate(

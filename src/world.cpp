@@ -1,4 +1,4 @@
-#include "CellsEvo/core/world.h"
+#include "CellsEvo/world.h"
 
 namespace cells_evo::core {
 World::World(int cells_generation_size, int hunter_generation_size, int food_generation_size, int width, int height) {

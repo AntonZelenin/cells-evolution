@@ -1,4 +1,4 @@
-#include "CellsEvo/core/logic/cell_logic.h"
+#include "CellsEvo//logic/cell_logic.h"
 
 namespace cells_evo::logic {
 bool NonHunterCellLogic::CellGotFood(core::Cell &cell, core::Entity &food_entity) {

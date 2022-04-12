@@ -1,11 +1,11 @@
 #ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_LOGIC_H_
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_LOGIC_H_
 
-#include "CellsEvo/core/cell.h"
-#include "CellsEvo/core/genetics/engineer.h"
+#include "CellsEvo/cell.h"
+#include "CellsEvo/genetics/engineer.h"
 #include "cell_logic.h"
-#include "CellsEvo/core/world.h"
-#include "CellsEvo/core/collision_resolution.h"
+#include "CellsEvo/world.h"
+#include "CellsEvo/collision_resolution.h"
 
 namespace cells_evo::logic {
 class Logic {

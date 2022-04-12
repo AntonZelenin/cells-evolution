@@ -1,8 +1,8 @@
 #ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_CELL_LOGIC_H_
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_CELL_LOGIC_H_
 
-#include "CellsEvo/core/cell.h"
-#include "CellsEvo/core/world.h"
+#include "CellsEvo/cell.h"
+#include "CellsEvo/world.h"
 
 namespace cells_evo::logic {
 // todo remove, it's temporary

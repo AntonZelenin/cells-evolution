@@ -1,4 +1,4 @@
-#include "CellsEvo/core/app.h"
+#include "CellsEvo/app.h"
 
 // food on place of a dead cell
 // refactoring

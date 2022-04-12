@@ -1,4 +1,4 @@
-#include "CellsEvo/core/collision_resolution.h"
+#include "CellsEvo/collision_resolution.h"
 
 namespace cells_evo::collisions {
 static float LeftEdgeX(const std::shared_ptr<core::Cell> &cell_ptr) {

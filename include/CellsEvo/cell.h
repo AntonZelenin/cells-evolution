@@ -4,7 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include "geometry.h"
-#include "genetics/genes.h"
+#include "CellsEvo/genetics/genes.h"
 #include "base.h"
 
 namespace cells_evo::core {

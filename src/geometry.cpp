@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "CellsEvo/core/geometry.h"
+#include "CellsEvo/geometry.h"
 
 namespace cells_evo::core {
 template<typename T>

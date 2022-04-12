@@ -1,4 +1,4 @@
-#include "CellsEvo/core/genetics/engineer.h"
+#include "CellsEvo//genetics/engineer.h"
 
 namespace cells_evo::genetics {
 Gene Engineer::CopyGene(const Gene &gene) {

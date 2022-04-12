@@ -2,7 +2,7 @@
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GENETICS_GENES_H_
 
 #include <unordered_map>
-#include "CellsEvo/core/tools.h"
+#include "CellsEvo/tools.h"
 
 namespace cells_evo::genetics {
 enum GeneType {

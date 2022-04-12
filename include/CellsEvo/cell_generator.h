@@ -1,7 +1,7 @@
 #ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_GENERATOR_H_
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_GENERATOR_H_
 
-#include "genetics/engineer.h"
+#include "CellsEvo/genetics/engineer.h"
 
 namespace cells_evo::core {
 class CellGenerator {

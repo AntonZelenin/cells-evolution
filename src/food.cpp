@@ -1,5 +1,5 @@
-#include "CellsEvo/core/tools.h"
-#include "CellsEvo/core/food.h"
+#include "CellsEvo/tools.h"
+#include "CellsEvo/food.h"
 
 namespace cells_evo::core {
 std::vector<std::shared_ptr<Food>> FoodGenerator::Generate(

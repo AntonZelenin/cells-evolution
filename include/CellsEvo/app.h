@@ -3,7 +3,7 @@
 
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "world.h"
-#include "logic/logic.h"
+#include "CellsEvo/logic/logic.h"
 
 namespace cells_evo {
 class App {

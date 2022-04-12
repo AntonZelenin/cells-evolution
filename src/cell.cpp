@@ -1,4 +1,4 @@
-#include "CellsEvo/core/cell.h"
+#include "CellsEvo/cell.h"
 
 namespace cells_evo::core {
 Cell::Cell(
