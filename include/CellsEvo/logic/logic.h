@@ -10,11 +10,11 @@
 namespace cells_evo::logic {
 class Logic {
   cells_evo::core::World &world_;
-  unsigned int food_production_rate_reverse_;
 
   HunterCellLogic hunter_cell_logic_{};
   NonHunterCellLogic non_hunter_cell_logic_{};
   genetics::Engineer genetic_engineer_{};
+  core::RandomGenerator random_generator_;
 //  collisions::CollisionDetector collision_detector_{};
 //  collisions::CollisionResolver collision_resolver_{};
 
@@ -33,7 +33,7 @@ class Logic {
   static std::shared_ptr<core::Cell> &ExtractPrey(collisions::CellPtrPair &cell_pair);
 
  public:
-  explicit Logic(core::World &world, unsigned int food_production_rate);
+  explicit Logic(core::World &world, core::RandomGenerator random_generator);
 
   void WorldTick();
 };

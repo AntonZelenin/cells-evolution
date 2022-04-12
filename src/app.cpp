@@ -46,7 +46,7 @@ App::App(
     int window_width,
     int window_height,
     int fps,
-    float food_production_rate
+    float food_production_rate_secs
 ) {
   window_ = new sf::RenderWindow(sf::VideoMode(window_width, window_height), "Cells");
   window_->setVerticalSyncEnabled(true);
@@ -60,10 +60,10 @@ App::App(
   );
   fps_ = fps;
   k_frame_micro_sec_ = 1000000 / fps;
-  auto food_prod_rate = food_production_rate != 0.0 ?
-      static_cast<unsigned int>(static_cast<float>(fps_) / food_production_rate)
-      : 0;
-  logic_ = new logic::Logic(*world_, food_prod_rate);
+  logic_ = new logic::Logic(
+      *world_,
+      core::RandomGenerator(0, static_cast<float>(fps_) * food_production_rate_secs)
+  );
 }
 
 App::~App() {

@@ -30,7 +30,8 @@ class CellDrawer {
 class FoodColorProvider {
   std::unordered_map<core::FoodType, sf::Color> mapping_{
       {core::FoodType::K_FLORAL, sf::Color::Cyan},
-      {core::FoodType::K_ANIMAL, sf::Color::Red},
+      {core::FoodType::K_ANIMAL, sf::Color::Cyan},
+//      {core::FoodType::K_ANIMAL, sf::Color::Red},
   };
  public:
   sf::Color Get(const core::FoodType &type);

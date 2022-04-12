@@ -12,8 +12,24 @@ class IndexDriver {
   unsigned int GetNextId();
 };
 
-std::vector<int> GetRandomInts(int from, int  to, unsigned int number);
-std::vector<float> GetRandomFloats(float from, float  to, unsigned int number);
+class RandomGenerator {
+  std::mt19937 generator_;
+  std::uniform_real_distribution<float> distribution_;
+
+ public:
+  RandomGenerator(float from, float to) {
+    std::random_device dev;
+    generator_ = std::mt19937(dev());
+    distribution_ = std::uniform_real_distribution<float>(from, to);
+  }
+
+  float Get() {
+    return distribution_(generator_);
+  }
+};
+
+std::vector<int> GetRandomInts(int from, int to, unsigned int number);
+std::vector<float> GetRandomFloats(float from, float to, unsigned int number);
 std::vector<float> GetRandomNormalFloats(float mean, float deviation, unsigned int number);
 
 std::vector<Position> GenerateRandomPositions(

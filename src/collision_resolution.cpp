@@ -18,6 +18,9 @@ static bool CellsCollide(const std::shared_ptr<core::Cell> &cell_1, const std::s
 }
 
 cells_evo::collisions::CellPtrPairs cells_evo::collisions::CollisionDetector::Detect(cells_evo::core::CellStorage &cells) {
+  if (cells.size() < 2)
+    return {};
+
   std::vector<std::shared_ptr<core::Cell>> v_cells;
   for (auto &[_, cell] : cells) {
     v_cells.push_back(cell);
