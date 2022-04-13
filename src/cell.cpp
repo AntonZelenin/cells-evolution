@@ -11,6 +11,7 @@ Cell::Cell(
   type_ = type;
   for (auto gene : genes) {
     genes_.insert({gene.type, gene});
+    if (gene.type == genetics::GeneType::HARD_SHELL) shell_ = gene.value;
   }
   energy_ = 0;
 }
@@ -24,7 +25,10 @@ float Cell::GetSize() const {
 }
 
 float Cell::GetSpeed() const {
-  return genes_.at(genetics::GeneType::SPEED).value * k_speed_size_coefficient_ * GetSize();
+  auto speed = genes_.at(genetics::GeneType::SPEED).value * k_speed_size_coefficient_ * GetSize();
+  if (HasShell())
+    speed /= GetShell();
+  return speed;
 }
 
 bool Cell::IsHunter() const {
@@ -85,7 +89,10 @@ void Cell::SetPosition(Position pos) {
 }
 
 void Cell::ConsumeMovementEnergy() {
-  energy_ -= GetSize() * GetSpeed() * k_energy_consumption_coefficient_;
+  auto energy = GetSize() * GetSpeed() * k_energy_consumption_coefficient_;
+  if (HasShell())
+    energy += GetShell() * k_energy_consumption_coefficient_;
+  energy_ -= energy;
 }
 
 void Cell::ConsumeDivisionEnergy() {
@@ -121,6 +128,10 @@ bool Cell::IsHungry() const {
   return energy_ < GetMaxEnergy() * k_hunger_coefficient_;
 }
 
+float Cell::GetPunchStrength() const {
+  return GetSize() * k_punch_coefficient_;
+}
+
 float Cell::GetDivisionEnergy() const {
   return k_division_energy_size_coefficient_ * GetSize();
 }
@@ -139,6 +150,19 @@ void Cell::StartDivisionCooldown() {
 
 int Cell::GetDirectionChangeFactor() const {
   return static_cast<int>(genes_.at(genetics::GeneType::DIRECTION_CHANGE_FACTOR).value);
+}
+
+bool Cell::HasShell() const {
+  return GetShell() > 0.0;
+}
+
+void Cell::DamageShell(float value) {
+  shell_ -= value;
+}
+
+float Cell::GetShell() const {
+  if (shell_ < 1.0) return 0.0;
+  return shell_;
 }
 
 void Cell::Tick() {

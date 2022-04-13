@@ -17,12 +17,14 @@ class Cell : public EdibleEntity {
   const float k_energy_consumption_coefficient_ = 0.0005;
   const float k_division_energy_size_coefficient_ = 1.0;
   const float k_hunger_coefficient_ = 0.7;
+  const float k_punch_coefficient_ = 0.01;
   const float k_speed_size_coefficient_ = 0.27;
   const float k_vital_functions_energy_consumption_ = 0.00005;
   constexpr static const float k_max_distance_food_detection_ = 180;
 
   std::optional<unsigned int> food_target_id_{};
   std::optional<core::Vector2<float>> direction_{};
+  float shell_{};
 
   Position position_;
 
@@ -48,6 +50,7 @@ class Cell : public EdibleEntity {
   void ClearFoodTarget() { food_target_id_ = {}; }
   void ConsumeMovementEnergy();
   void ConsumeDivisionEnergy();
+  void DamageShell(float value);
   void SetDirection(core::Vector2<float> food_id);
   void SetFoodTargetId(unsigned int food_id);
   void SetId(unsigned int id);
@@ -65,6 +68,7 @@ class Cell : public EdibleEntity {
   [[nodiscard]] std::optional<unsigned int> GetFoodTargetId() const;
   [[nodiscard]] int GetDirectionChangeFactor() const;
   [[nodiscard]] float GetMaxEnergy() const;
+  [[nodiscard]] float GetShell() const;
   [[nodiscard]] float GetNutritionValue() const override;
   [[nodiscard]] float GetBaseNutritionValue() const;
   [[nodiscard]] bool IsDead() const;
@@ -76,6 +80,8 @@ class Cell : public EdibleEntity {
   [[nodiscard]] float GetDivisionEnergy() const;
   [[nodiscard]] bool IsHunter() const;
   [[nodiscard]] bool IsNonHunter() const;
+  [[nodiscard]] bool HasShell() const;
+  [[nodiscard]] float GetPunchStrength() const;
 };
 }
 

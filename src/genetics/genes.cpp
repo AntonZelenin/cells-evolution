@@ -20,7 +20,7 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
       };
     case SPEED:
       return {
-          0.5,
+          0.4,
           0.2,
           0.05,
           6
@@ -34,8 +34,8 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
       };
     case HARD_SHELL:
       return {
-          0,
-          0.1,
+          0.5,
+          0.5,
           0,
           10
       };

@@ -145,10 +145,14 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
         continue;
       if (!hunter_cell->IsHungry() || (!CanKill(hunter_cell, prey_cell) && !prey_cell->IsDead())) continue;
       // todo it's duplicate
-      hunter_cell->AddEnergy(prey_cell->GetNutritionValue());
-      eaten_cell_ids.push_back(prey_cell->GetId());
-      not_existing_pairs.push_back(colliding_cell_pair);
-      world_.cells_.erase(prey_cell->GetId());
+      if (prey_cell->HasShell()) {
+        prey_cell->DamageShell(hunter_cell->GetPunchStrength());
+      } else {
+        hunter_cell->AddEnergy(prey_cell->GetNutritionValue());
+        eaten_cell_ids.push_back(prey_cell->GetId());
+        not_existing_pairs.push_back(colliding_cell_pair);
+        world_.cells_.erase(prey_cell->GetId());
+      }
     }
   }
 

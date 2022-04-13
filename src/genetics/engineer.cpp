@@ -26,17 +26,25 @@ bool Engineer::ShouldMutate() const {
 }
 
 std::vector<Gene> Engineer::GenerateBaseGenes(const core::CellType &cell_type) {
-//  switch (cell_type) {
-//    case core::K_HUNTER:
-  return std::vector<Gene>{
-      CreateGene(GeneType::ENERGY_TO_DIVIDE),
-      CreateGene(GeneType::DIRECTION_CHANGE_FACTOR),
-      CreateGene(GeneType::DIVISION_COOLDOWN),
-      CreateGene(GeneType::SIZE),
-      CreateGene(GeneType::SPEED)
-  };
-//    case core::K_NONHUNTER:break;
-//  }
+  switch (cell_type) {
+    case core::K_HUNTER:
+      return std::vector<Gene>{
+          CreateGene(GeneType::ENERGY_TO_DIVIDE),
+          CreateGene(GeneType::DIRECTION_CHANGE_FACTOR),
+          CreateGene(GeneType::DIVISION_COOLDOWN),
+          CreateGene(GeneType::SIZE),
+          CreateGene(GeneType::SPEED),
+      };
+    case core::K_NONHUNTER:
+      return std::vector<Gene>{
+          CreateGene(GeneType::ENERGY_TO_DIVIDE),
+          CreateGene(GeneType::DIRECTION_CHANGE_FACTOR),
+          CreateGene(GeneType::DIVISION_COOLDOWN),
+          CreateGene(GeneType::SIZE),
+          CreateGene(GeneType::SPEED),
+          CreateGene(GeneType::HARD_SHELL),
+      };
+  }
 }
 
 std::vector<Gene> Engineer::CopyGenes(std::unordered_map<GeneType, Gene> const &genes) {

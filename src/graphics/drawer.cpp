@@ -1,8 +1,11 @@
 #include "CellsEvo/graphics.h"
 
 namespace cells_evo::graphics {
-float CellDrawer::GetThickness(float size) const {
-  return size / k_thickness_coefficient_;
+float CellDrawer::GetThickness(const std::shared_ptr<core::Cell> &cell) const {
+  auto thickness = cell->GetSize() / k_thickness_coefficient_;
+  if (cell->HasShell())
+    thickness += cell->GetShell() * k_shell_thickness_coefficient_;
+  return thickness;
 }
 
 sf::CircleShape CellDrawer::Get(const std::shared_ptr<core::Cell> &cell) {
@@ -10,7 +13,7 @@ sf::CircleShape CellDrawer::Get(const std::shared_ptr<core::Cell> &cell) {
   if (cell->IsDead()) {
     shape.setFillColor(sf::Color(130, 130, 130));
   } else {
-    shape.setOutlineThickness(GetThickness(cell->GetSize()));
+    shape.setOutlineThickness(GetThickness(cell));
     shape.setOutlineColor(color_provider_.GetOutlineColor(cell));
     shape.setFillColor(sf::Color(194, 255, 254));
   }
@@ -19,6 +22,7 @@ sf::CircleShape CellDrawer::Get(const std::shared_ptr<core::Cell> &cell) {
 }
 
 sf::Color CellColorProvider::GetOutlineColor(const std::shared_ptr<core::Cell> &cell) {
+  if (cell->HasShell()) return {179, 179, 179};
   return mapping_[cell->type_];
 }
 
