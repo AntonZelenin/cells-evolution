@@ -49,7 +49,7 @@ App::App(
     float food_production_rate_secs
 ) {
   window_ = new sf::RenderWindow(sf::VideoMode(window_width, window_height), "Cells");
-  window_->setVerticalSyncEnabled(true);
+//  window_->setVerticalSyncEnabled(true);
 
   world_ = new core::World(
       cells_generation_size,

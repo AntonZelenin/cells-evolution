@@ -14,7 +14,7 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
     case SIZE:
       return {
           5,
-          0.3,
+          0.6,
           3,
           50
       };
@@ -35,7 +35,7 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
     case ENERGY:
       return {
           10,
-          0.7,
+          1.0,
           5,
           50
       };

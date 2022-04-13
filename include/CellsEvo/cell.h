@@ -14,8 +14,8 @@ enum CellType {
 };
 
 class Cell : public EdibleEntity {
-  const float k_energy_consumption_coefficient_ = 0.0007;
-  const float k_division_energy_size_coefficient_ = 1.7;
+  const float k_energy_consumption_coefficient_ = 0.0012;
+  const float k_division_energy_size_coefficient_ = 1.0;
   const float k_hunger_coefficient_ = 0.7;
   const float k_punch_coefficient_ = 0.0012;
   const float k_speed_size_coefficient_ = 0.027;
