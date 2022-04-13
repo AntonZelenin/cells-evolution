@@ -6,6 +6,8 @@
 
 namespace cells_evo::logic {
 class NonHunterCellLogic {
+  core::RandomEngine random_engine_{};
+
   virtual std::shared_ptr<core::EdibleEntity> FindClosestFood(
       core::Cell &cell,
       core::EdibleEntityStorage &foods
@@ -18,7 +20,7 @@ class NonHunterCellLogic {
   static bool CellGotFood(core::Cell &cell, core::Entity &food_entity);
   static bool CouldSensedFood(core::Cell &cell, core::Entity &food_entity);
   core::Vector2<float> ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities);
-  static core::Vector2<float> GetRandomDirection(core::Cell &cell);
+  core::Vector2<float> GetRandomDirection(core::Cell &cell);
 };
 
 class HunterCellLogic : public NonHunterCellLogic {

@@ -1,11 +1,13 @@
+#include <utility>
 #include <vector>
-#include "CellsEvo//logic/logic.h"
+#include "CellsEvo/logic/logic.h"
 #include "CellsEvo/geometry.h"
 #include "CellsEvo/collision_resolution.h"
 
 namespace cells_evo::logic {
-Logic::Logic(core::World &world, core::RandomGenerator random_generator)
-    : world_(world), random_generator_(random_generator) {
+Logic::Logic(core::World &world, float food_production_rate)
+    : world_(world) {
+  food_production_rate_ = food_production_rate;
 }
 
 void Logic::WorldTick() {
@@ -84,7 +86,7 @@ void Logic::CheckCrossedBoundaries() {
 
 void Logic::GenerateFood() {
   // generates food only once in N secs on average
-  if (random_generator_.Get() <= 1) {
+  if (random_generator_.GetUniformReal(0, food_production_rate_) <= 1) {
     world_.GenerateFood(1);
   }
 }

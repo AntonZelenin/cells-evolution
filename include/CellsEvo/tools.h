@@ -12,25 +12,53 @@ class IndexDriver {
   unsigned int GetNextId();
 };
 
-class RandomGenerator {
+class RandomEngine {
   std::mt19937 generator_;
-  std::uniform_real_distribution<float> distribution_;
+  std::uniform_real_distribution<float> uniform_real_distribution_;
 
  public:
-  RandomGenerator(float from, float to) {
+  RandomEngine() {
     std::random_device dev;
     generator_ = std::mt19937(dev());
-    distribution_ = std::uniform_real_distribution<float>(from, to);
   }
 
-  float Get() {
-    return distribution_(generator_);
+  float GetUniformReal(float from, float to) {
+    return std::uniform_real_distribution<float>(from, to)(generator_);
+  }
+
+  std::vector<int> GetRandomInts(int from, int  to, unsigned int number) {
+    std::vector<int> numbers{};
+    std::uniform_int_distribution<int> distribution(from, to);
+
+    for (; number > 0; number--) {
+      numbers.push_back(distribution(generator_));
+    }
+
+    return numbers;
+  }
+
+  std::vector<float> GetRandomNormalFloats(float mean, float deviation, unsigned int number) {
+    std::vector<float> numbers{};
+    std::normal_distribution<float> distribution(mean, deviation);
+
+    for (; number > 0; number--) {
+      numbers.push_back(distribution(generator_));
+    }
+
+    return numbers;
+  }
+
+  std::vector<float> GetRandomFloats(float from, float  to, unsigned int number) {
+    std::vector<float> numbers{};
+    std::uniform_real_distribution<float> distribution(from, to);
+
+    for (; number > 0; number--) {
+      numbers.push_back(distribution(generator_));
+    }
+
+    return numbers;
   }
 };
-
-std::vector<int> GetRandomInts(int from, int to, unsigned int number);
-std::vector<float> GetRandomFloats(float from, float to, unsigned int number);
-std::vector<float> GetRandomNormalFloats(float mean, float deviation, unsigned int number);
 
 std::vector<Position> GenerateRandomPositions(
     int field_width,

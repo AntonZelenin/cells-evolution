@@ -1,14 +1,11 @@
-#include "CellsEvo//genetics/engineer.h"
+#include "CellsEvo/genetics/engineer.h"
 
 namespace cells_evo::genetics {
 Gene Engineer::CopyGene(const Gene &gene) {
   Gene new_gene = gene;
   if (ShouldMutate()) {
-    if (gene.type == GeneType::HARD_SHELL) {
-      int t = 1;
-    }
     auto gene_conf = gene_config_cacher_.GetGeneConfig(new_gene.type);
-    new_gene.value += cells_evo::core::GetRandomNormalFloats(0, gene_conf.deviation, 1)[0];
+    new_gene.value += random_engine_.GetRandomNormalFloats(0, gene_conf.deviation, 1)[0];
     new_gene.value = std::min(new_gene.value, gene_conf.max);
     new_gene.value = std::max(new_gene.value, gene_conf.min);
   }
@@ -17,7 +14,7 @@ Gene Engineer::CopyGene(const Gene &gene) {
 
 Gene Engineer::CreateGene(GeneType gene_type) {
   auto gene_conf = gene_config_cacher_.GetGeneConfig(gene_type);
-  float gene_value = cells_evo::core::GetRandomNormalFloats(gene_conf.base_value, gene_conf.deviation, 1)[0];
+  float gene_value = random_engine_.GetRandomNormalFloats(gene_conf.base_value, gene_conf.deviation, 1)[0];
   gene_value = std::min(gene_value, gene_conf.max);
   gene_value = std::max(gene_value, gene_conf.min);
   return {
@@ -26,8 +23,8 @@ Gene Engineer::CreateGene(GeneType gene_type) {
   };
 }
 
-bool Engineer::ShouldMutate() const {
-  return cells_evo::core::GetRandomInts(0, 100 / mutation_chance_, 1)[0] == 1;
+bool Engineer::ShouldMutate() {
+  return random_engine_.GetRandomInts(0, 100 / mutation_chance_, 1)[0] == 1;
 }
 
 std::vector<Gene> Engineer::GenerateBaseGenes(const core::CellType &cell_type) {

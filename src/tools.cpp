@@ -6,48 +6,6 @@ unsigned int IndexDriver::GetNextId() {
   return idx_++;
 }
 
-std::vector<int> GetRandomInts(int from, int  to, unsigned int number) {
-  std::vector<int> numbers{};
-
-  std::random_device dev;
-  std::mt19937 generator(dev());
-  std::uniform_int_distribution<int> distribution(from, to);
-
-  for (; number > 0; number--) {
-    numbers.push_back(distribution(generator));
-  }
-
-  return numbers;
-}
-
-std::vector<float> GetRandomFloats(float from, float  to, unsigned int number) {
-  std::vector<float> numbers{};
-
-  std::random_device dev;
-  std::mt19937 generator(dev());
-  std::uniform_real_distribution<float> distribution(from, to);
-
-  for (; number > 0; number--) {
-    numbers.push_back(distribution(generator));
-  }
-
-  return numbers;
-}
-
-std::vector<float> GetRandomNormalFloats(float mean, float deviation, unsigned int number) {
-  std::vector<float> numbers{};
-
-  std::random_device dev;
-  std::mt19937 generator(dev());
-  std::normal_distribution<float> distribution(mean, deviation);
-
-  for (; number > 0; number--) {
-    numbers.push_back(distribution(generator));
-  }
-
-  return numbers;
-}
-
 static Position GenerateRandomPosition(
     int width,
     int height,

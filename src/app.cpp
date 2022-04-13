@@ -1,6 +1,6 @@
 #include <chrono>
 #include <thread>
-#include "CellsEvo//logic/logic.h"
+#include "CellsEvo/logic/logic.h"
 #include "CellsEvo/app.h"
 #include "CellsEvo/graphics.h"
 #include "SFML/Graphics.hpp"
@@ -60,10 +60,7 @@ App::App(
   );
   fps_ = fps;
   k_frame_micro_sec_ = 1000000 / fps;
-  logic_ = new logic::Logic(
-      *world_,
-      core::RandomGenerator(0, static_cast<float>(fps_) * food_production_rate_secs)
-  );
+  logic_ = new logic::Logic(*world_, static_cast<float>(fps_) * food_production_rate_secs);
 }
 
 App::~App() {

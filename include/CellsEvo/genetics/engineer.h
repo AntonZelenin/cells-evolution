@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GENETICS_ENGINEER_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GENETICS_ENGINEER_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_GENETICS_ENGINEER_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_GENETICS_ENGINEER_H_
 
 #include <vector>
 #include <unordered_map>
@@ -23,8 +23,9 @@ class Engineer {
   const int mutation_chance_ = 20;
   // todo it should explicitly use cacher, is it ok?
   GeneConfigCacher gene_config_cacher_{};
+  core::RandomEngine random_engine_ {};
 
-  [[nodiscard]] inline bool ShouldMutate() const;
+  [[nodiscard]] inline bool ShouldMutate();
  public:
   Gene CreateGene(GeneType gene_type);
   Gene CopyGene(Gene const &gene);
@@ -33,4 +34,4 @@ class Engineer {
 };
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GENETICS_ENGINEER_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_GENETICS_ENGINEER_H_

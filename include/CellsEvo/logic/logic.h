@@ -10,11 +10,12 @@
 namespace cells_evo::logic {
 class Logic {
   cells_evo::core::World &world_;
-
   HunterCellLogic hunter_cell_logic_{};
   NonHunterCellLogic non_hunter_cell_logic_{};
+  // todo maybe only cell generator should own genetics engineer?
   genetics::Engineer genetic_engineer_{};
-  core::RandomGenerator random_generator_;
+  core::RandomEngine random_generator_{};
+  float food_production_rate_;
 //  collisions::CollisionDetector collision_detector_{};
 //  collisions::CollisionResolver collision_resolver_{};
 
@@ -32,7 +33,7 @@ class Logic {
   static std::shared_ptr<core::Cell> &ExtractPrey(collisions::CellPtrPair &cell_pair);
 
  public:
-  explicit Logic(core::World &world, core::RandomGenerator random_generator);
+  explicit Logic(core::World &world, float food_production_rate);
 
   void WorldTick();
 };

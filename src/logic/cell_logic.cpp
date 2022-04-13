@@ -1,4 +1,4 @@
-#include "CellsEvo//logic/cell_logic.h"
+#include "CellsEvo/logic/cell_logic.h"
 
 namespace cells_evo::logic {
 bool NonHunterCellLogic::CellGotFood(core::Cell &cell, core::Entity &food_entity) {
@@ -6,7 +6,7 @@ bool NonHunterCellLogic::CellGotFood(core::Cell &cell, core::Entity &food_entity
 }
 
 core::Vector2<float> NonHunterCellLogic::GetRandomDirection(core::Cell &cell) {
-  auto coords = core::GetRandomFloats(-1, 1, 2);
+  auto coords = random_engine_.GetRandomFloats(-1, 1, 2);
   auto direction = core::Vector2<float>(coords[0], coords[1]);
   direction.Normalize();
   cell.SetDirection(direction);
