@@ -183,8 +183,12 @@ float Cell::GetShell() const {
   return shell_;
 }
 
+bool Cell::HasDecayed() const {
+  return IsDead() && time_to_decay_ == 0;
+}
+
 void Cell::Tick() {
-  if (energy_ > 0) {
+  if (!IsDead()) {
     if (lifetime_ == std::numeric_limits<unsigned int>::max())
       lifetime_ = 0;
     else
@@ -194,6 +198,8 @@ void Cell::Tick() {
     energy_ -= k_vital_functions_energy_consumption_ * GetSize();
     if (energy_ <= 0)
       shell_ /= 2.0;
+  } else {
+    if (time_to_decay_ > 0) time_to_decay_ -= 1;
   }
 }
 

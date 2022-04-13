@@ -41,7 +41,7 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
       };
     case HARD_SHELL:
       return {
-          0.6,
+          0.7,
           0.8,
           0,
           5

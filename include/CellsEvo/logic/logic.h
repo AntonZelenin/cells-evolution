@@ -21,7 +21,7 @@ class Logic {
   void CountTick();
   collisions::CellPtrPairs Eat(collisions::CellPtrPairs &colliding_cells);
   void GenerateFood();
-  void DivideCells();
+  void UpdateCellsState();
   std::shared_ptr<core::Cell> DivideCell(core::Cell &cell);
   void TeleportCrossedBoundaries();
   void CheckCrossedBoundaries();

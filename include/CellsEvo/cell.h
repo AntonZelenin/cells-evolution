@@ -25,7 +25,8 @@ class Cell : public EdibleEntity {
   std::optional<unsigned int> food_target_id_{};
   std::optional<core::Vector2<float>> direction_{};
   float shell_{};
-
+  // 30 seconds until dead cell turns into food
+  unsigned int time_to_decay_ = 30 * 60;
   Position position_;
 
   void ConsumeMovementEnergy(float speed);
@@ -86,6 +87,7 @@ class Cell : public EdibleEntity {
   [[nodiscard]] bool HasShell() const;
   [[nodiscard]] float GetPunchStrength() const;
   [[nodiscard]] bool HasTargetFood() const;
+  bool HasDecayed() const;
 };
 }
 

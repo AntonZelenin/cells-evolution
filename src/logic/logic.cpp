@@ -18,7 +18,7 @@ void Logic::WorldTick() {
   CheckCrossedBoundaries();
 //  TeleportCrossedBoundaries();
   GenerateFood();
-  DivideCells();
+  UpdateCellsState();
 }
 
 void Logic::MoveCells() {
@@ -89,11 +89,24 @@ void Logic::GenerateFood() {
   }
 }
 
-void Logic::DivideCells() {
+void Logic::UpdateCellsState() {
   std::vector<std::shared_ptr<core::Cell>> new_cells;
-  for (auto &[_, cell] : world_.cells_) {
+  for (auto pair = world_.cells_.begin(); pair != world_.cells_.end();) {
+    auto &cell = pair->second;
     if (cell->HasEnergyToDivide() && cell->DivisionCooldownPassed()) {
       new_cells.push_back(DivideCell(*cell));
+      pair++;
+    } else if (cell->HasDecayed()) {
+      world_.AddFood(
+          std::make_shared<core::Food>(core::Food(
+              core::FoodType::K_FLORAL,
+              cell->GetPosition(),
+              cell->GetBaseNutritionValue()
+          ))
+      );
+      world_.cells_.erase(pair++);
+    } else {
+      pair++;
     }
   }
   for (auto &cell : new_cells) {
