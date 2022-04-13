@@ -25,7 +25,11 @@ float Cell::GetSize() const {
 }
 
 float Cell::GetSpeed() const {
-  auto speed = genes_.at(genetics::GeneType::SPEED).value * k_speed_size_coefficient_ * GetSize();
+  float speed = 0;
+  if (HasTargetFood())
+    speed = genes_.at(genetics::GeneType::HUNTING_SPEED).value * k_speed_size_coefficient_ * GetSize();
+  else
+    speed = genes_.at(genetics::GeneType::IDLE_SPEED).value * k_speed_size_coefficient_ * GetSize();
   if (HasShell())
     speed /= GetShell();
   return speed;
@@ -88,10 +92,16 @@ void Cell::SetPosition(Position pos) {
   position_ = pos;
 }
 
-void Cell::ConsumeMovementEnergy() {
-  auto energy = GetSize() * GetSpeed() * k_energy_consumption_coefficient_;
-  if (HasShell())
-    energy += GetShell() * k_energy_consumption_coefficient_;
+void Cell::Move(core::Vector2<float> const &direction) {
+  auto speed = GetSpeed();
+  GetPosition() += direction * speed;
+  ConsumeMovementEnergy(speed);
+}
+
+void Cell::ConsumeMovementEnergy(float speed) {
+  auto energy = GetSize() * speed * k_energy_consumption_coefficient_;
+//  if (HasShell())
+//    energy += GetShell() * k_energy_consumption_coefficient_;
   energy_ -= energy;
 }
 
@@ -105,11 +115,11 @@ bool Cell::IsDead() const {
 
 void Cell::AddEnergy(float energy) {
   energy_ += energy;
-  if (energy_ > GetMaxEnergy()) energy_ = GetSize() * 2.f;
+  energy_ = std::min(energy_, GetMaxEnergy());
 }
 
 float Cell::GetMaxEnergy() const {
-  return GetSize() * 2.f;
+  return GetSize() * 3.f;
 }
 
 float Cell::GetNutritionValue() const {
@@ -117,7 +127,7 @@ float Cell::GetNutritionValue() const {
 }
 
 float Cell::GetBaseNutritionValue() const {
-  return GetSize() * 0.4f;
+  return GetSize() * 0.5f;
 }
 
 //bool Cell::CanConsume(float energy) const {
@@ -130,6 +140,10 @@ bool Cell::IsHungry() const {
 
 float Cell::GetPunchStrength() const {
   return GetSize() * k_punch_coefficient_;
+}
+
+void Cell::ConsumePunchEnergy() {
+  energy_ -= GetSize() * k_energy_consumption_coefficient_;
 }
 
 float Cell::GetDivisionEnergy() const {
@@ -156,6 +170,10 @@ bool Cell::HasShell() const {
   return GetShell() > 0.0;
 }
 
+bool Cell::HasTargetFood() const {
+  return static_cast<bool>(food_target_id_);
+}
+
 void Cell::DamageShell(float value) {
   shell_ -= value;
 }
@@ -166,13 +184,17 @@ float Cell::GetShell() const {
 }
 
 void Cell::Tick() {
-  if (lifetime_ == std::numeric_limits<unsigned int>::max())
-    lifetime_ = 0;
-  else
-    lifetime_++;
-  if (division_cooldown_ > 0)
-    division_cooldown_--;
-  energy_ -= k_vital_functions_energy_consumption_ * GetSize();
+  if (energy_ > 0) {
+    if (lifetime_ == std::numeric_limits<unsigned int>::max())
+      lifetime_ = 0;
+    else
+      lifetime_++;
+    if (division_cooldown_ > 0)
+      division_cooldown_--;
+    energy_ -= k_vital_functions_energy_consumption_ * GetSize();
+    if (energy_ <= 0)
+      shell_ /= 2.0;
+  }
 }
 
 // todo every cell move to the same point when copy constructor is implemented

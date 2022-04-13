@@ -93,10 +93,7 @@ void Logic::DivideCells() {
   std::vector<std::shared_ptr<core::Cell>> new_cells;
   for (auto &[_, cell] : world_.cells_) {
     if (cell->HasEnergyToDivide() && cell->DivisionCooldownPassed()) {
-      auto new_cell = DivideCell(*cell);
-      new_cell->MoveX(cell->GetSize() * 2);
-      new_cells.push_back(new_cell);
-      cell->ConsumeDivisionEnergy();
+      new_cells.push_back(DivideCell(*cell));
     }
   }
   for (auto &cell : new_cells) {
@@ -113,7 +110,9 @@ std::shared_ptr<core::Cell> Logic::DivideCell(core::Cell &cell) {
   );
   new_cell->AddEnergy(cell.energy_ / 2);
   new_cell->StartDivisionCooldown();
+  new_cell->MoveX(cell.GetSize() * 2);
   cell.StartDivisionCooldown();
+  cell.ConsumeDivisionEnergy();
   return new_cell;
 }
 
@@ -147,8 +146,10 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
       // todo it's duplicate
       if (prey_cell->HasShell()) {
         prey_cell->DamageShell(hunter_cell->GetPunchStrength());
+        hunter_cell->ConsumePunchEnergy();
       } else {
         hunter_cell->AddEnergy(prey_cell->GetNutritionValue());
+        hunter_cell->ClearFoodTarget();
         eaten_cell_ids.push_back(prey_cell->GetId());
         not_existing_pairs.push_back(colliding_cell_pair);
         world_.cells_.erase(prey_cell->GetId());
@@ -173,9 +174,11 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
 bool Logic::CanEat(collisions::CellPtrPair &cell_pair) {
   auto first = cell_pair.first, second = cell_pair.second;
   bool at_least_one_alive_hunter = (first->IsHunter() && !first->IsDead()) || (second->IsHunter() && !second->IsDead());
-  bool one_dead = first->IsDead() || second->IsDead();
 
-  if (at_least_one_alive_hunter && one_dead)
+  if (!at_least_one_alive_hunter)
+    return false;
+
+  if (first->IsDead() || second->IsDead())
     return true;
 
   return (first->IsHunter() && second->IsNonHunter())
@@ -194,11 +197,6 @@ std::shared_ptr<core::Cell> &Logic::ExtractPrey(collisions::CellPtrPair &cell_pa
     return cell_pair.first;
   else
     return cell_pair.second;
-}
-
-void Move(core::Cell &cell, core::Vector2<float> const &direction) {
-  cell.GetPosition() += direction * cell.GetSpeed();
-  cell.ConsumeMovementEnergy();
 }
 
 void Logic::CountTick() {

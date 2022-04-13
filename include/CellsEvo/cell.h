@@ -14,12 +14,12 @@ enum CellType {
 };
 
 class Cell : public EdibleEntity {
-  const float k_energy_consumption_coefficient_ = 0.0005;
-  const float k_division_energy_size_coefficient_ = 1.0;
+  const float k_energy_consumption_coefficient_ = 0.0007;
+  const float k_division_energy_size_coefficient_ = 1.7;
   const float k_hunger_coefficient_ = 0.7;
-  const float k_punch_coefficient_ = 0.01;
-  const float k_speed_size_coefficient_ = 0.27;
-  const float k_vital_functions_energy_consumption_ = 0.00005;
+  const float k_punch_coefficient_ = 0.0012;
+  const float k_speed_size_coefficient_ = 0.027;
+  const float k_vital_functions_energy_consumption_ = 0.00015;
   constexpr static const float k_max_distance_food_detection_ = 180;
 
   std::optional<unsigned int> food_target_id_{};
@@ -27,6 +27,8 @@ class Cell : public EdibleEntity {
   float shell_{};
 
   Position position_;
+
+  void ConsumeMovementEnergy(float speed);
 
  public:
   unsigned int lifetime_ = 0;
@@ -48,7 +50,6 @@ class Cell : public EdibleEntity {
   void AddEnergy(float energy);
   void ClearDirection();
   void ClearFoodTarget() { food_target_id_ = {}; }
-  void ConsumeMovementEnergy();
   void ConsumeDivisionEnergy();
   void DamageShell(float value);
   void SetDirection(core::Vector2<float> food_id);
@@ -59,6 +60,8 @@ class Cell : public EdibleEntity {
   void MoveY(float val);
   void StartDivisionCooldown();
   void Tick();
+  void ConsumePunchEnergy();
+  void Move(Vector2<float> const &direction);
 
   unsigned int GetId() override;
   Position &GetPosition() override;
@@ -82,6 +85,7 @@ class Cell : public EdibleEntity {
   [[nodiscard]] bool IsNonHunter() const;
   [[nodiscard]] bool HasShell() const;
   [[nodiscard]] float GetPunchStrength() const;
+  [[nodiscard]] bool HasTargetFood() const;
 };
 }
 

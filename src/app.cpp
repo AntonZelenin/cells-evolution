@@ -7,6 +7,7 @@
 
 namespace cells_evo {
 void App::Run() {
+  // todo does it run at most 60 fps?
   std::chrono::time_point<std::chrono::steady_clock> start;
   long long time_diff;
   auto background_color = sf::Color(15, 24, 41);
@@ -34,7 +35,7 @@ void App::Run() {
     time_diff = std::chrono::duration_cast<std::chrono::microseconds>(
         std::chrono::steady_clock::now() - start).count();
     if (time_diff < k_frame_micro_sec_) {
-      std::this_thread::sleep_for(std::chrono::nanoseconds(k_frame_micro_sec_ - time_diff));
+      std::this_thread::sleep_for(std::chrono::microseconds (k_frame_micro_sec_ - time_diff));
     }
   }
 }

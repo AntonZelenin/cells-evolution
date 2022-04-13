@@ -1,6 +1,10 @@
 #include "CellsEvo/app.h"
 
-// food on place of a dead cell
+// dead cells should turn into food with time
+// check that when multiple cells attack one they all hit
+// depend on time, not on fps?
+// store rand generators
+// photosynthetic cells
 // refactoring
 // larger field
 // optimizations, especially collision detection, food detection
@@ -13,13 +17,13 @@
 
 int main() {
   cells_evo::App(
-      15,
-      5,
-      15,
+      25,
+      8,
+      35,
       3000,
       1900,
       60,
-      0.5
+      0.3
   ).Run();
   return 0;
 }

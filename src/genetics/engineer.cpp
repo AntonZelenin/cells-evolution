@@ -4,8 +4,11 @@ namespace cells_evo::genetics {
 Gene Engineer::CopyGene(const Gene &gene) {
   Gene new_gene = gene;
   if (ShouldMutate()) {
+    if (gene.type == GeneType::HARD_SHELL) {
+      int t = 1;
+    }
     auto gene_conf = gene_config_cacher_.GetGeneConfig(new_gene.type);
-    new_gene.value *= cells_evo::core::GetRandomNormalFloats(1, 0.25, 1)[0];
+    new_gene.value += cells_evo::core::GetRandomNormalFloats(0, gene_conf.deviation, 1)[0];
     new_gene.value = std::min(new_gene.value, gene_conf.max);
     new_gene.value = std::max(new_gene.value, gene_conf.min);
   }
@@ -13,8 +16,10 @@ Gene Engineer::CopyGene(const Gene &gene) {
 }
 
 Gene Engineer::CreateGene(GeneType gene_type) {
-  auto conf = gene_config_cacher_.GetGeneConfig(gene_type);
-  float gene_value = cells_evo::core::GetRandomNormalFloats(conf.base_value, conf.deviation, 1)[0];
+  auto gene_conf = gene_config_cacher_.GetGeneConfig(gene_type);
+  float gene_value = cells_evo::core::GetRandomNormalFloats(gene_conf.base_value, gene_conf.deviation, 1)[0];
+  gene_value = std::min(gene_value, gene_conf.max);
+  gene_value = std::max(gene_value, gene_conf.min);
   return {
       gene_value,
       gene_type
@@ -33,7 +38,8 @@ std::vector<Gene> Engineer::GenerateBaseGenes(const core::CellType &cell_type) {
           CreateGene(GeneType::DIRECTION_CHANGE_FACTOR),
           CreateGene(GeneType::DIVISION_COOLDOWN),
           CreateGene(GeneType::SIZE),
-          CreateGene(GeneType::SPEED),
+          CreateGene(GeneType::HUNTING_SPEED),
+          CreateGene(GeneType:: IDLE_SPEED),
       };
     case core::K_NONHUNTER:
       return std::vector<Gene>{
@@ -41,7 +47,8 @@ std::vector<Gene> Engineer::GenerateBaseGenes(const core::CellType &cell_type) {
           CreateGene(GeneType::DIRECTION_CHANGE_FACTOR),
           CreateGene(GeneType::DIVISION_COOLDOWN),
           CreateGene(GeneType::SIZE),
-          CreateGene(GeneType::SPEED),
+          CreateGene(GeneType::HUNTING_SPEED),
+          CreateGene(GeneType::IDLE_SPEED),
           CreateGene(GeneType::HARD_SHELL),
       };
   }

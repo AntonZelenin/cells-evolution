@@ -5,9 +5,6 @@
 #include "CellsEvo/world.h"
 
 namespace cells_evo::logic {
-// todo remove, it's temporary
-void Move(core::Cell &cell, core::Vector2<float> const &direction);
-
 class NonHunterCellLogic {
   virtual std::shared_ptr<core::EdibleEntity> FindClosestFood(
       core::Cell &cell,
@@ -22,7 +19,6 @@ class NonHunterCellLogic {
   static bool CouldSensedFood(core::Cell &cell, core::Entity &food_entity);
   core::Vector2<float> ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities);
   static core::Vector2<float> GetRandomDirection(core::Cell &cell);
-  void ChangeDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities);
 };
 
 class HunterCellLogic : public NonHunterCellLogic {

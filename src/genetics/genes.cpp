@@ -8,41 +8,48 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
       return {
           200,
           20,
-          0.1,
+          1,
           1000
       };
     case SIZE:
       return {
           5,
-          0.4,
-          4,
-          100
+          0.3,
+          3,
+          50
       };
-    case SPEED:
+    case HUNTING_SPEED:
       return {
-          0.4,
-          0.2,
-          0.05,
-          6
+          6.0,
+          1.5,
+          0.1,
+          30
+      };
+    case IDLE_SPEED:
+      return {
+          3.0,
+          1.5,
+          0.1,
+          30
       };
     case ENERGY:
       return {
           10,
-          0.3,
+          0.7,
           5,
           50
       };
     case HARD_SHELL:
       return {
-          0.5,
-          0.5,
+          0.6,
+          0.8,
           0,
-          10
+          5
       };
     case ENERGY_TO_DIVIDE:
       return {
-          10,
-          0.3,
+          15,
+          0.5,
           5,
           100
       };

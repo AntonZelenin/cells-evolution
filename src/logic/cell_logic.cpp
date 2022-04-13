@@ -6,26 +6,29 @@ bool NonHunterCellLogic::CellGotFood(core::Cell &cell, core::Entity &food_entity
 }
 
 core::Vector2<float> NonHunterCellLogic::GetRandomDirection(core::Cell &cell) {
-  if (!cell.GetDirection() || cell.lifetime_ % cell.GetDirectionChangeFactor() == 0) {
-    auto coords = core::GetRandomFloats(-1, 1, 2);
-    auto direction = core::Vector2<float>(coords[0], coords[1]);
-    direction.Normalize();
-    cell.SetDirection(direction);
-    return direction;
-  }
-  return cell.GetDirection().value();
+  auto coords = core::GetRandomFloats(-1, 1, 2);
+  auto direction = core::Vector2<float>(coords[0], coords[1]);
+  direction.Normalize();
+  cell.SetDirection(direction);
+  return direction;
 }
 
 void NonHunterCellLogic::MoveCell(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
   // check for new food every N frames
-  if (cell.lifetime_ % 15 == 0) cell.ClearFoodTarget();
-  Move(cell, ChooseDirection(cell, food_entities));
+  if (!cell.GetDirection() || cell.lifetime_ % 20 == 0) {
+    cell.ClearFoodTarget();
+    cell.SetDirection(ChooseDirection(cell, food_entities));
+  } else if (cell.lifetime_ % cell.GetDirectionChangeFactor() == 0) {
+    cell.SetDirection(GetRandomDirection(cell));
+  }
+  cell.Move(cell.GetDirection().value());
 }
 
 void NonHunterCellLogic::ProcessEatFood(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
   auto food = FindClosestFood(cell, food_entities);
   if (food != nullptr && CellGotFood(cell, *food) && cell.IsHungry()) {
     cell.AddEnergy(food->GetNutritionValue());
+    cell.ClearFoodTarget();
     // todo this is not good
     food_entities.erase(food->GetId());
   }
@@ -36,15 +39,15 @@ bool NonHunterCellLogic::CouldSensedFood(core::Cell &cell, core::Entity &food_en
 }
 
 core::Vector2<float> NonHunterCellLogic::ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
-  // todo probably it should be generic, use for all types of cell
-  core::Vector2<float> direction{};
+  // todo they dont choose new food if there's a closer one and if it's too far
+  std::optional<core::Vector2<float>> direction = cell.GetDirection();
   auto closest_food = FindClosestFood(cell, food_entities);
-  if (!closest_food || !CouldSensedFood(cell, *closest_food)) {
+  if (!closest_food && !direction) {
     direction = GetRandomDirection(cell);
-  } else {
+  } else if (closest_food) {
     direction = core::GetDirectionVector(cell.GetPosition(), closest_food->GetPosition());
   }
-  return direction;
+  return direction.value();
 }
 
 std::shared_ptr<core::EdibleEntity> NonHunterCellLogic::FindClosestFood(
@@ -69,6 +72,8 @@ std::shared_ptr<core::EdibleEntity> NonHunterCellLogic::FindClosestFood(
       closest_food_idx = idx;
     }
   }
+  if (!CouldSensedFood(cell, *foods.at(closest_food_idx)))
+    return {};
 
   cell.SetFoodTargetId(closest_food_idx);
   return foods.at(closest_food_idx);
@@ -98,6 +103,10 @@ std::shared_ptr<core::EdibleEntity> HunterCellLogic::FindClosestFood(
     }
   }
   if (closest_food_idx == 0) return {};
+
+  if (!CouldSensedFood(cell, *cells.at(closest_food_idx)))
+    return {};
+
   cell.SetFoodTargetId(closest_food_idx);
   return cells.at(closest_food_idx);
 }

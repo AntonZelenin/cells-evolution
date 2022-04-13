@@ -17,7 +17,7 @@ class CellColorProvider {
 };
 
 class CellDrawer {
-  const float k_thickness_coefficient_ = 4.0;
+  const float k_thickness_coefficient_ = 3.0;
   const float k_shell_thickness_coefficient_ = 0.1;
 
   CellColorProvider color_provider_ {};
