@@ -6,7 +6,7 @@ std::vector<std::shared_ptr<Food>> FoodGenerator::CreateFloralGeneration(
     int field_width,
     int field_height,
     int size
-) {
+) const {
   std::vector<std::shared_ptr<Food>> foods;
   foods.reserve(size);
   auto positions = cells_evo::core::GenerateRandomPositions(
@@ -39,7 +39,7 @@ Position &Food::GetPosition() {
   return position_;
 }
 
-unsigned int Food::GetId() {
+unsigned int Food::GetId() const {
   return id_;
 }
 

@@ -1,6 +1,12 @@
 #include "CellsEvo/collision_resolution.h"
 
 namespace cells_evo::collisions {
+struct less_by_x {
+  inline bool operator()(const std::shared_ptr<core::Entity> &entity_1, const std::shared_ptr<core::Entity> &entity_2) {
+    return entity_1->GetPosition().x < entity_2->GetPosition().x;
+  }
+};
+
 static float LeftEdgeX(const std::shared_ptr<core::Cell> &cell_ptr) {
   return (*cell_ptr).GetPosition().x - (*cell_ptr).GetSize();
 }

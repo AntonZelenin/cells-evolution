@@ -12,7 +12,7 @@ enum FoodType {
 
 class Food : public EdibleEntity {
   Position position_;
-  unsigned int id_ {};
+  unsigned int id_{};
   float radius_;
   float nutrition_value_;
 
@@ -20,21 +20,27 @@ class Food : public EdibleEntity {
 
  public:
   FoodType type_;
+
   explicit Food(FoodType type, Position position);
   Food(FoodType type, Position position, float nutrition_value);
+
   Position &GetPosition() override;
   [[nodiscard]] float GetSize() const override;
-  void SetPosition(Position) override;
-  unsigned int GetId() override;
-  void SetId(unsigned int id);
+  [[nodiscard]]unsigned int GetId() const override;
   [[nodiscard]] inline float GetNutritionValue() const override;
+  void SetPosition(Position) override;
+  void SetId(unsigned int id);
 };
 
 class FoodGenerator {
   const int k_min_distance_between_items_ = 1;
 
  public:
-  [[nodiscard]] std::vector<std::shared_ptr<Food>> CreateFloralGeneration(int field_width, int field_height, int size);
+  [[nodiscard]] std::vector<std::shared_ptr<Food>> CreateFloralGeneration(
+      int field_width,
+      int field_height,
+      int size
+  ) const;
 };
 }
 

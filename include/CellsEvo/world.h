@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_WORLD_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_WORLD_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_WORLD_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_WORLD_H_
 
 #include <vector>
 #include <unordered_map>
@@ -9,12 +9,11 @@
 #include "cell_generator.h"
 
 namespace cells_evo::core {
-// todo
-typedef unsigned int ID;
+typedef unsigned int Id;
 // todo move to appropriate files?
-typedef std::unordered_map<ID, std::shared_ptr<core::EdibleEntity>> EdibleEntityStorage;
-typedef std::unordered_map<ID, std::shared_ptr<core::Cell>> CellStorage;
-typedef std::unordered_map<ID, std::shared_ptr<core::Food>> FoodStorage;
+typedef std::unordered_map<Id, std::shared_ptr<core::EdibleEntity>> EdibleEntityStorage;
+typedef std::unordered_map<Id, std::shared_ptr<core::Cell>> CellStorage;
+typedef std::unordered_map<Id, std::shared_ptr<core::Food>> FoodStorage;
 
 class World {
   IndexDriver index_driver_{};
@@ -41,4 +40,4 @@ class World {
 };
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_WORLD_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_WORLD_H_

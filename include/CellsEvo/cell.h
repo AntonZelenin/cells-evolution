@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CELL_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CELL_H_
 
 #include <vector>
 #include <unordered_map>
@@ -20,7 +20,7 @@ class Cell : public EdibleEntity {
   const float k_punch_coefficient_ = 0.0012;
   const float k_speed_size_coefficient_ = 0.027;
   const float k_vital_functions_energy_consumption_ = 0.00015;
-  constexpr static const float k_max_distance_food_detection_ = 180;
+  const float k_max_distance_food_detection_ = 180;
 
   std::optional<unsigned int> food_target_id_{};
   std::optional<core::Vector2<float>> direction_{};
@@ -64,8 +64,8 @@ class Cell : public EdibleEntity {
   void ConsumePunchEnergy();
   void Move(Vector2<float> const &direction);
 
-  unsigned int GetId() override;
   Position &GetPosition() override;
+  [[nodiscard]] unsigned int GetId() const override;
   [[nodiscard]] float GetSize() const override;
   [[nodiscard]] float GetMaxFoodDetectionDistance() const;
   [[nodiscard]] float GetSpeed() const;
@@ -87,8 +87,8 @@ class Cell : public EdibleEntity {
   [[nodiscard]] bool HasShell() const;
   [[nodiscard]] float GetPunchStrength() const;
   [[nodiscard]] bool HasTargetFood() const;
-  bool HasDecayed() const;
+  [[nodiscard]] bool HasDecayed() const;
 };
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CELL_H_

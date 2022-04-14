@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_BASE_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_BASE_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_BASE_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_BASE_H_
 
 #include "geometry.h"
 
@@ -8,7 +8,7 @@ class Entity {
  public:
   virtual Position &GetPosition() = 0;
   virtual void SetPosition(Position) = 0;
-  virtual unsigned int GetId() = 0;
+  [[nodiscard]] virtual unsigned int GetId() const = 0;
   [[nodiscard]] virtual float GetSize() const = 0;
 };
 
@@ -18,4 +18,4 @@ class EdibleEntity : public Entity {
 };
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_BASE_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_BASE_H_

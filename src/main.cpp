@@ -9,6 +9,8 @@
 // export/import world state
 // runtime configuration
 // charts of number of cells, and gene values
+// as an option you can add a specific place where the food is produced constantly
+// there will be a colony of cells and different species can fight for it
 
 int main() {
   cells_evo::App(

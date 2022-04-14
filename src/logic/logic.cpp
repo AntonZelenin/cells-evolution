@@ -24,6 +24,7 @@ void Logic::WorldTick() {
 }
 
 void Logic::MoveCells() {
+  // todo I can do this operation and other similar in one loop, it will save lots of operations
   for (auto &[_, cell] : world_.cells_) {
     if (!cell->IsDead()) MoveCell(cell);
   }
@@ -86,9 +87,13 @@ void Logic::CheckCrossedBoundaries() {
 
 void Logic::GenerateFood() {
   // generates food only once in N secs on average
-  if (random_generator_.GetUniformReal(0, food_production_rate_) <= 1) {
+  if (ShouldGenerateFood()) {
     world_.GenerateFood(1);
   }
+}
+
+bool Logic::ShouldGenerateFood() {
+  return random_generator_.GetUniformReal(0, food_production_rate_) <= 1;
 }
 
 void Logic::UpdateCellsState() {

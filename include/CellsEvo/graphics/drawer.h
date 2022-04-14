@@ -12,6 +12,7 @@ class CellColorProvider {
       {core::CellType::K_HUNTER, sf::Color::Red},
       {core::CellType::K_NONHUNTER, sf::Color::Green},
   };
+
  public:
   sf::Color GetOutlineColor(const std::shared_ptr<core::Cell> &cell);
 };
@@ -19,8 +20,7 @@ class CellColorProvider {
 class CellDrawer {
   const float k_thickness_coefficient_ = 3.0;
   const float k_shell_thickness_coefficient_ = 0.1;
-
-  CellColorProvider color_provider_ {};
+  CellColorProvider color_provider_{};
 
   [[nodiscard]] float GetThickness(const std::shared_ptr<core::Cell> &cell) const;
 
@@ -33,6 +33,7 @@ class FoodColorProvider {
       {core::FoodType::K_FLORAL, sf::Color::Cyan},
       {core::FoodType::K_ANIMAL, sf::Color::Red},
   };
+
  public:
   sf::Color Get(const core::FoodType &type);
 };
@@ -40,6 +41,7 @@ class FoodColorProvider {
 // todo make interface for drawers
 class FoodDrawer {
   FoodColorProvider color_provider_{};
+
  public:
   sf::RectangleShape Get(const std::shared_ptr<core::Food> &food);
 };

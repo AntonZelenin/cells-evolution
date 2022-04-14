@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GEOMETRY_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GEOMETRY_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_GEOMETRY_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_GEOMETRY_H_
 
 namespace cells_evo::core {
 template<typename T>
@@ -26,4 +26,4 @@ struct Vector2 {
 Vector2<float> GetDirectionVector(Position &origin, Position &destination);
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GEOMETRY_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_GEOMETRY_H_

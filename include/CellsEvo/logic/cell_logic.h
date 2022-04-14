@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_CELL_LOGIC_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_CELL_LOGIC_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_LOGIC_CELL_LOGIC_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_LOGIC_CELL_LOGIC_H_
 
 #include "CellsEvo/cell.h"
 #include "CellsEvo/world.h"
@@ -10,13 +10,13 @@ class NonHunterCellLogic {
 
   virtual std::shared_ptr<core::EdibleEntity> FindClosestFood(
       core::Cell &cell,
+      // todo cell depends on world, is it ok? Where to put type definitions?
       core::EdibleEntityStorage &foods
   );
 
  public:
   virtual void MoveCell(core::Cell &cell, core::EdibleEntityStorage &food_entities);
   void ProcessEatFood(core::Cell &cell, core::EdibleEntityStorage &food_entities);
-  // todo not duplicate?
   static bool CellGotFood(core::Cell &cell, core::Entity &food_entity);
   static bool CouldSensedFood(core::Cell &cell, core::Entity &food_entity);
   core::Vector2<float> ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities);
@@ -30,4 +30,4 @@ class HunterCellLogic : public NonHunterCellLogic {
   ) override;
 };
 }
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_LOGIC_CELL_LOGIC_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_LOGIC_CELL_LOGIC_H_

@@ -5,25 +5,21 @@
 #include <unordered_map>
 #include "genes.h"
 #include "CellsEvo/cell.h"
+#include "CellsEvo/tools.h"
 
 namespace cells_evo::genetics {
 class GeneConfigCacher {
   std::unordered_map<GeneType, GeneConfig> gene_config_cache_;
+
  public:
-  GeneConfig &GetGeneConfig(GeneType gene_type) {
-    if (gene_config_cache_.find(gene_type) != gene_config_cache_.end())
-      // todo does it return a copy?
-      return gene_config_cache_.find(gene_type)->second;
-    gene_config_cache_.insert({gene_type, BuildGeneConfig(gene_type)});
-    return gene_config_cache_.find(gene_type)->second;
-  }
+  GeneConfig &GetGeneConfig(GeneType gene_type);
 };
 
 class Engineer {
   const int mutation_chance_ = 20;
   // todo it should explicitly use cacher, is it ok?
   GeneConfigCacher gene_config_cacher_{};
-  core::RandomEngine random_engine_ {};
+  core::RandomEngine random_engine_{};
 
   [[nodiscard]] inline bool ShouldMutate();
  public:

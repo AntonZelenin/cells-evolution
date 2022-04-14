@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_TOOLS_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_TOOLS_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_TOOLS_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_TOOLS_H_
 
 #include <vector>
 #include <random>
@@ -14,7 +14,6 @@ class IndexDriver {
 
 class RandomEngine {
   std::mt19937 generator_;
-  std::uniform_real_distribution<float> uniform_real_distribution_;
 
  public:
   RandomEngine() {
@@ -68,4 +67,4 @@ std::vector<Position> GenerateRandomPositions(
 );
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_TOOLS_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_TOOLS_H_

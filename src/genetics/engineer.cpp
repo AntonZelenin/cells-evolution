@@ -36,7 +36,7 @@ std::vector<Gene> Engineer::GenerateBaseGenes(const core::CellType &cell_type) {
           CreateGene(GeneType::DIVISION_COOLDOWN),
           CreateGene(GeneType::SIZE),
           CreateGene(GeneType::HUNTING_SPEED),
-          CreateGene(GeneType:: IDLE_SPEED),
+          CreateGene(GeneType::IDLE_SPEED),
       };
     case core::K_NONHUNTER:
       return std::vector<Gene>{
@@ -58,5 +58,13 @@ std::vector<Gene> Engineer::CopyGenes(std::unordered_map<GeneType, Gene> const &
     new_genes.push_back(CopyGene(gene));
   }
   return new_genes;
+}
+
+GeneConfig &GeneConfigCacher::GetGeneConfig(GeneType gene_type) {
+  if (gene_config_cache_.find(gene_type) != gene_config_cache_.end())
+    // todo does it return a copy?
+    return gene_config_cache_.find(gene_type)->second;
+  gene_config_cache_.insert({gene_type, BuildGeneConfig(gene_type)});
+  return gene_config_cache_.find(gene_type)->second;
 }
 }

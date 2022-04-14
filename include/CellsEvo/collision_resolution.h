@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_COLLISION_RESOLUTION_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_COLLISION_RESOLUTION_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_COLLISION_RESOLUTION_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_COLLISION_RESOLUTION_H_
 
 #include <vector>
 #include <algorithm>
@@ -8,12 +8,6 @@
 namespace cells_evo::collisions {
 typedef std::pair<std::shared_ptr<core::Cell>, std::shared_ptr<core::Cell>> CellPtrPair;
 typedef std::vector<CellPtrPair> CellPtrPairs;
-
-struct less_by_x {
-  inline bool operator()(const std::shared_ptr<core::Entity> &entity_1, const std::shared_ptr<core::Entity> &entity_2) {
-    return entity_1->GetPosition().x < entity_2->GetPosition().x;
-  }
-};
 
 // todo implement more advanced collision resolver in future
 class CollisionDetector {
@@ -29,4 +23,4 @@ class CollisionResolver {
 };
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_COLLISION_RESOLUTION_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_COLLISION_RESOLUTION_H_

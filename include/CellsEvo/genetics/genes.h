@@ -1,8 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GENETICS_GENES_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GENETICS_GENES_H_
-
-#include <unordered_map>
-#include "CellsEvo/tools.h"
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_GENETICS_GENES_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_GENETICS_GENES_H_
 
 namespace cells_evo::genetics {
 enum GeneType {
@@ -35,4 +32,4 @@ struct GeneConfig {
 GeneConfig BuildGeneConfig(GeneType gene_type);
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_GENETICS_GENES_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_GENETICS_GENES_H_

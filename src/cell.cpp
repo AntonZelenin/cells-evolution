@@ -71,7 +71,7 @@ void Cell::ClearDirection() {
   direction_ = {};
 }
 
-unsigned int Cell::GetId() {
+unsigned int Cell::GetId() const {
   return id_;
 }
 

@@ -1,11 +1,12 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_GENERATOR_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_GENERATOR_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CELL_GENERATOR_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CELL_GENERATOR_H_
 
 #include "CellsEvo/genetics/engineer.h"
 
 namespace cells_evo::core {
 class CellGenerator {
   const int k_min_distance_between_cells_ = 10;
+
   // todo two classes have genetics engineers, that's bad
   genetics::Engineer genetic_engineer_{};
 
@@ -16,8 +17,7 @@ class CellGenerator {
       int generation_size,
       core::CellType cell_type
   );
-  std::shared_ptr<core::Cell> DivideCell(core::Cell &cell);
 };
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_GENERATOR_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CELL_GENERATOR_H_
