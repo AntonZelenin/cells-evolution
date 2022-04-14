@@ -2,5 +2,6 @@
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_GRAPHICS_H_
 
 #include "graphics/drawer.h"
+#include "graphics/camera.h"
 
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_GRAPHICS_H_

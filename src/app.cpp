@@ -22,13 +22,50 @@ void App::Run() {
         window_->close();
       if (event.type == sf::Event::Resized) {
         auto new_size = sf::Vector2f(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
-        auto new_top_left = window_->getView().getCenter() - (new_size / 2.f);
-        sf::FloatRect visible_area(new_top_left, new_size);
-        window_->setView(sf::View(visible_area));
+        window_->setView(graphics::Camera::CalculateNewView(new_size, window_->getView().getCenter()));
+      }
+      if (event.type == sf::Event::MouseWheelScrolled) {
+        auto view = window_->getView();
+        view.zoom(1 + 0.01f * event.mouseWheelScroll.delta);
+        window_->setView(view);
       }
     }
+
+    // todo move to a separate class and calculate move distance
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+      auto view = window_->getView();
+      view.move(0.0, -5.0);
+      window_->setView(view);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+      auto view = window_->getView();
+      view.move(-5.0, 0);
+      window_->setView(view);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+      auto view = window_->getView();
+      view.move(0.0, 5.0);
+      window_->setView(view);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+      auto view = window_->getView();
+      view.move(5.0, 0.0);
+      window_->setView(view);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+      auto view = window_->getView();
+      view.zoom(1 + 0.01f);
+      window_->setView(view);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::V)) {
+      auto view = window_->getView();
+      view.zoom(1 - 0.01f);
+      window_->setView(view);
+    }
+
     logic_->WorldTick();
     window_->clear(background_color);
+    // todo should I filter items out of the view or sfml does it for me?
     for (auto&[_, cell] : world_->cells_) {
       window_->draw(cell_drawer.Get(cell));
     }
