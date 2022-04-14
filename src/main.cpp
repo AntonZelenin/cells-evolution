@@ -1,5 +1,6 @@
 #include "CellsEvo/app.h"
 
+// todo you can use sf::Vector2f -_-
 // check that when multiple cells attack one they all hit
 // depend on time, not on fps?
 // photosynthetic cells
@@ -17,8 +18,8 @@ int main() {
       25,
       8,
       35,
-      3000,
-      1900,
+      2000,
+      1000,
       60,
       0.3
   ).Run();

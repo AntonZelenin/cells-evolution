@@ -7,10 +7,11 @@
 
 namespace cells_evo {
 class App {
-  sf::RenderWindow *window_;
+  // todo it might be better to use unique ptr, not sure now
+  std::shared_ptr<sf::RenderWindow> window_;
 
-  core::World *world_;
-  logic::Logic *logic_;
+  std::shared_ptr<core::World> world_;
+  std::shared_ptr<logic::Logic> logic_;
 
   int k_frame_micro_sec_;
   int fps_;
@@ -24,7 +25,6 @@ class App {
       int fps,
       float food_production_rate_secs
   );
-  ~App();
 
   void Run();
 };

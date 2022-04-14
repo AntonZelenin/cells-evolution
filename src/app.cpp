@@ -20,6 +20,12 @@ void App::Run() {
     while (window_->pollEvent(event)) {
       if (event.type == sf::Event::Closed)
         window_->close();
+      if (event.type == sf::Event::Resized) {
+        auto new_size = sf::Vector2f(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
+        auto new_top_left = window_->getView().getCenter() - (new_size / 2.f);
+        sf::FloatRect visible_area(new_top_left, new_size);
+        window_->setView(sf::View(visible_area));
+      }
     }
     logic_->WorldTick();
     window_->clear(background_color);
@@ -34,7 +40,7 @@ void App::Run() {
     time_diff = std::chrono::duration_cast<std::chrono::microseconds>(
         std::chrono::steady_clock::now() - start).count();
     if (time_diff < k_frame_micro_sec_) {
-      std::this_thread::sleep_for(std::chrono::microseconds (k_frame_micro_sec_ - time_diff));
+      std::this_thread::sleep_for(std::chrono::microseconds(k_frame_micro_sec_ - time_diff));
     }
   }
 }
@@ -48,10 +54,10 @@ App::App(
     int fps,
     float food_production_rate_secs
 ) {
-  window_ = new sf::RenderWindow(sf::VideoMode(window_width, window_height), "Cells");
+  window_ = std::make_shared<sf::RenderWindow>(sf::VideoMode(window_width, window_height), "Cells");
 //  window_->setVerticalSyncEnabled(true);
 
-  world_ = new core::World(
+  world_ = std::make_shared<core::World>(
       cells_generation_size,
       hunter_generation_size,
       food_generation_size,
@@ -60,12 +66,9 @@ App::App(
   );
   fps_ = fps;
   k_frame_micro_sec_ = 1000000 / fps;
-  logic_ = new logic::Logic(*world_, static_cast<float>(fps_) * food_production_rate_secs);
-}
-
-App::~App() {
-  delete window_;
-  delete logic_;
-  delete world_;
+  logic_ = std::make_shared<logic::Logic>(
+      *world_,
+      static_cast<float>(fps_) * food_production_rate_secs
+  );
 }
 }
