@@ -92,7 +92,7 @@ App::App(
     float food_production_rate_secs
 ) {
   const unsigned int kDefaultWidth = 1920;
-  const unsigned int kDefaultHeight = 1080;
+  const unsigned int kDefaultHeight = 1440;
   window_ = std::make_shared<sf::RenderWindow>(sf::VideoMode(kDefaultWidth, kDefaultHeight), "Cells");
 //  window_->setVerticalSyncEnabled(true);
 

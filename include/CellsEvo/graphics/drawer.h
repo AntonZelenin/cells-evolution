@@ -11,6 +11,7 @@ class CellColorProvider {
   std::unordered_map<core::CellType, sf::Color> mapping_{
       {core::CellType::K_HUNTER, sf::Color::Red},
       {core::CellType::K_NONHUNTER, sf::Color::Green},
+//      {core::CellType::K_NONHUNTER, sf::Color(17, 132, 194)},
   };
 
  public:
@@ -30,7 +31,7 @@ class CellDrawer {
 
 class FoodColorProvider {
   std::unordered_map<core::FoodType, sf::Color> mapping_{
-      {core::FoodType::K_FLORAL, sf::Color::Cyan},
+      {core::FoodType::K_FLORAL, sf::Color(13, 107, 38)},
       {core::FoodType::K_ANIMAL, sf::Color::Red},
   };
 
