@@ -86,20 +86,27 @@ App::App(
     int cells_generation_size,
     int hunter_generation_size,
     int food_generation_size,
-    int window_width,
-    int window_height,
+    unsigned int world_width,
+    unsigned int world_height,
     int fps,
     float food_production_rate_secs
 ) {
-  window_ = std::make_shared<sf::RenderWindow>(sf::VideoMode(window_width, window_height), "Cells");
+  const unsigned int kDefaultWidth = 1920;
+  const unsigned int kDefaultHeight = 1080;
+  window_ = std::make_shared<sf::RenderWindow>(sf::VideoMode(kDefaultWidth, kDefaultHeight), "Cells");
 //  window_->setVerticalSyncEnabled(true);
+
+  auto center = sf::Vector2f(static_cast<float>(world_width) / 2.f, static_cast<float>(world_height) / 2.f);
+  sf::Vector2f default_view_rect = sf::Vector2f(kDefaultWidth, kDefaultHeight);
+  auto top_left = center - (default_view_rect / 2.f);
+  window_->setView(sf::View(sf::FloatRect(top_left, default_view_rect)));
 
   world_ = std::make_shared<core::World>(
       cells_generation_size,
       hunter_generation_size,
       food_generation_size,
-      window_width,
-      window_height
+      world_width,
+      world_height
   );
   fps_ = fps;
   k_frame_micro_sec_ = 1000000 / fps;
