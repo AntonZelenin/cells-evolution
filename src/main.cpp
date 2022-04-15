@@ -1,12 +1,10 @@
 #include "CellsEvo/app.h"
 
-// todo you can use sf::Vector2f -_-
 // check that when multiple cells attack one they all hit
 // depend on time, not on fps?
 // photosynthetic cells
 // refactoring
-// larger field
-// optimizations, especially collision detection, food detection
+// optimizations, especially collision and food detection
 // export/import world state
 // runtime configuration
 // charts of number of cells, and gene values

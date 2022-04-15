@@ -4,6 +4,7 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "world.h"
 #include "CellsEvo/logic/logic.h"
+#include "CellsEvo/graphics/drawer.h"
 
 namespace cells_evo {
 class App {
@@ -12,6 +13,11 @@ class App {
 
   std::shared_ptr<core::World> world_;
   std::shared_ptr<logic::Logic> logic_;
+
+  graphics::CellDrawer cell_drawer_{};
+  graphics::FoodDrawer food_drawer_{};
+
+  sf::Color background_color_ = sf::Color(15, 24, 41);
 
   int k_frame_micro_sec_;
   int fps_;
@@ -25,8 +31,13 @@ class App {
       int fps,
       float food_production_rate_secs
   );
+  ~App();
 
   void Run();
+  void ProcessEvents();
+  void ProcessInput();
+  void Draw();
+  void ProcessGui(sf::Clock &delta_clock);
 };
 }
 
