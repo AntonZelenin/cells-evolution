@@ -1,4 +1,3 @@
-#include <chrono>
 #include <thread>
 #include "CellsEvo/logic/logic.h"
 #include "CellsEvo/app.h"
@@ -10,29 +9,24 @@
 namespace cells_evo {
 // todo you can use sf::Vector2f and delta_clock -_-
 void App::Run() {
-  std::chrono::time_point<std::chrono::steady_clock> start;
-  long long time_diff;
-
   sf::Clock delta_clock;
   while (window_->isOpen()) {
-    start = std::chrono::steady_clock::now();
-
     ProcessEvents();
     ProcessInput();
     ProcessGui(delta_clock);
     logic_->WorldTick();
     Draw();
 
-    time_diff = std::chrono::duration_cast<std::chrono::microseconds>(
-        std::chrono::steady_clock::now() - start).count();
+    auto time_diff = delta_clock.getElapsedTime().asMicroseconds();
     if (time_diff < k_frame_micro_sec_) {
       std::this_thread::sleep_for(std::chrono::microseconds(k_frame_micro_sec_ - time_diff));
     }
+    delta_clock.restart();
   }
 }
 
 void App::ProcessGui(sf::Clock &delta_clock) {
-  ImGui::SFML::Update(*window_, delta_clock.restart());
+  ImGui::SFML::Update(*window_, delta_clock.getElapsedTime());
   ImGui::Begin("Sample window");
   if (ImGui::Button("Update window title")) {
     window_->setTitle("Bla bla bla");
