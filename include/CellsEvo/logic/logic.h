@@ -16,14 +16,12 @@ class Logic {
   genetics::Engineer genetic_engineer_{};
   core::RandomEngine random_generator_{};
   float food_production_rate_;
-//  collisions::CollisionDetector collision_detector_{};
-//  collisions::CollisionResolver collision_resolver_{};
 
   void CountTick();
   void GenerateFood();
   void UpdateCellsState();
-  void TeleportCrossedBoundaries();
-  void CheckCrossedBoundaries();
+  [[maybe_unused]] void TeleportCrossedBoundaries(std::shared_ptr<core::Cell> &cell) const;
+  void CheckCrossedBoundaries(std::shared_ptr<core::Cell> &cell) const;
   void MoveCells();
   void MoveCell(std::shared_ptr<core::Cell> &cell);
   bool ShouldGenerateFood();

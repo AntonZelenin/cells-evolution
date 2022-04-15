@@ -25,7 +25,7 @@ float Cell::GetSize() const {
 }
 
 float Cell::GetSpeed() const {
-  float speed = 0;
+  float speed;
   if (HasTargetFood())
     speed = genes_.at(genetics::GeneType::HUNTING_SPEED).value * k_speed_size_coefficient_ * GetSize();
   else
@@ -83,10 +83,6 @@ void Cell::MoveX(float val) {
   position_.x += val;
 }
 
-void Cell::MoveY(float val) {
-  position_.y += val;
-}
-
 // todo maybe update? do I need it?
 void Cell::SetPosition(Position pos) {
   position_ = pos;
@@ -129,10 +125,6 @@ float Cell::GetNutritionValue() const {
 float Cell::GetBaseNutritionValue() const {
   return GetSize() * 0.5f;
 }
-
-//bool Cell::CanConsume(float energy) const {
-//  return energy_ + energy < GetMaxEnergy();
-//}
 
 bool Cell::IsHungry() const {
   return energy_ < GetMaxEnergy() * k_hunger_coefficient_;
@@ -202,13 +194,4 @@ void Cell::Tick() {
     if (time_to_decay_ > 0) time_to_decay_ -= 1;
   }
 }
-
-// todo every cell move to the same point when copy constructor is implemented
-//Cell::Cell(const Cell &cell) {
-//  position_ = Position(cell.position_.x, cell.position_.y);
-//  energy_ = cell.energy_ / 2;
-//  radius_ = cell.GetSize();
-//  speed_ = cell.GetSpeed();
-//  type_ = cell.type_;
-//}
 }

@@ -46,7 +46,6 @@ class Cell : public EdibleEntity {
       Position position,
       std::vector<genetics::Gene> const &genes
   );
-//  Cell(const Cell &cell);
 
   void AddEnergy(float energy);
   void ClearDirection();
@@ -58,7 +57,6 @@ class Cell : public EdibleEntity {
   void SetId(unsigned int id);
   void SetPosition(Position pos) override;
   void MoveX(float val);
-  void MoveY(float val);
   void StartDivisionCooldown();
   void Tick();
   void ConsumePunchEnergy();
@@ -79,7 +77,6 @@ class Cell : public EdibleEntity {
   [[nodiscard]] bool HasEnergyToDivide() const;
   [[nodiscard]] bool DivisionCooldownPassed() const;
   [[nodiscard]] std::optional<core::Vector2<float>> GetDirection() const;
-//  [[nodiscard]] bool CanConsume(float energy) const;
   [[nodiscard]] bool IsHungry() const;
   [[nodiscard]] float GetDivisionEnergy() const;
   [[nodiscard]] bool IsHunter() const;

@@ -1,7 +1,6 @@
 #include <utility>
 #include <vector>
 #include "CellsEvo/logic/logic.h"
-#include "CellsEvo/geometry.h"
 #include "CellsEvo/collision_resolution.h"
 
 namespace cells_evo::logic {
@@ -17,16 +16,17 @@ void Logic::WorldTick() {
   auto colliding_cells = collisions::CollisionDetector::Detect(world_.cells_);
   colliding_cells = Eat(colliding_cells);
   collisions::CollisionResolver::ResolveCollisions(colliding_cells);
-  CheckCrossedBoundaries();
 //  TeleportCrossedBoundaries();
   GenerateFood();
   UpdateCellsState();
 }
 
 void Logic::MoveCells() {
-  // todo I can do this operation and other similar in one loop, it will save lots of operations
   for (auto &[_, cell] : world_.cells_) {
-    if (!cell->IsDead()) MoveCell(cell);
+    if (!cell->IsDead()) {
+      MoveCell(cell);
+      CheckCrossedBoundaries(cell);
+    }
   }
 }
 
@@ -43,56 +43,52 @@ void Logic::MoveCell(std::shared_ptr<core::Cell> &cell) {
     );
 }
 
-void Logic::TeleportCrossedBoundaries() {
-  for (auto &[_, cell] : world_.cells_) {
-    auto &pos = cell->GetPosition();
-    if (pos.x < 0.0) {
-      pos.x = static_cast<float>(world_.width_);
-    } else if (pos.x > static_cast<float>(world_.width_)) {
-      pos.x = 0.0;
-    }
-    if (pos.y < 0.0) {
-      pos.y = static_cast<float>(world_.height_);
-    } else if (pos.y > static_cast<float>(world_.height_)) {
-      pos.y = 0.0;
-    }
+[[maybe_unused]] void Logic::TeleportCrossedBoundaries(std::shared_ptr<core::Cell> &cell) const {
+  auto &pos = cell->GetPosition();
+  if (pos.x < 0.0) {
+    pos.x = static_cast<float>(world_.width_);
+  } else if (pos.x > static_cast<float>(world_.width_)) {
+    pos.x = 0.0;
+  }
+  if (pos.y < 0.0) {
+    pos.y = static_cast<float>(world_.height_);
+  } else if (pos.y > static_cast<float>(world_.height_)) {
+    pos.y = 0.0;
   }
 }
 
 // todo what if I make some static methods functions and remove them from headers?
-void Logic::CheckCrossedBoundaries() {
-  for (auto &[_, cell] : world_.cells_) {
-    auto &pos = cell->GetPosition();
-    bool hit_the_wall = false;
+void Logic::CheckCrossedBoundaries(std::shared_ptr<core::Cell> &cell) const {
+  auto &pos = cell->GetPosition();
+  bool hit_the_wall = false;
 
-    if (pos.x < 0.0 + cell->GetSize()) {
-      pos.x = cell->GetSize();
-      hit_the_wall = true;
-    } else if (pos.x > static_cast<float>(world_.width_) - cell->GetSize()) {
-      pos.x = static_cast<float>(world_.width_) - cell->GetSize();
-      hit_the_wall = true;
-    }
-
-    if (pos.y < 0.0 + cell->GetSize()) {
-      pos.y = cell->GetSize();
-      hit_the_wall = true;
-    } else if (pos.y > static_cast<float>(world_.height_) - cell->GetSize()) {
-      pos.y = static_cast<float>(world_.height_) - cell->GetSize();
-      hit_the_wall = true;
-    }
-
-    if (hit_the_wall) cell->ClearDirection();
+  if (pos.x < 0.0 + cell->GetSize()) {
+    pos.x = cell->GetSize();
+    hit_the_wall = true;
+  } else if (pos.x > static_cast<float>(world_.width_) - cell->GetSize()) {
+    pos.x = static_cast<float>(world_.width_) - cell->GetSize();
+    hit_the_wall = true;
   }
+
+  if (pos.y < 0.0 + cell->GetSize()) {
+    pos.y = cell->GetSize();
+    hit_the_wall = true;
+  } else if (pos.y > static_cast<float>(world_.height_) - cell->GetSize()) {
+    pos.y = static_cast<float>(world_.height_) - cell->GetSize();
+    hit_the_wall = true;
+  }
+
+  if (hit_the_wall) cell->ClearDirection();
 }
 
 void Logic::GenerateFood() {
-  // generates food only once in N secs on average
   if (ShouldGenerateFood()) {
     world_.GenerateFood(1);
   }
 }
 
 bool Logic::ShouldGenerateFood() {
+  // generates food only once in N secs on average
   return random_generator_.GetUniformReal(0, food_production_rate_) <= 1;
 }
 
@@ -121,11 +117,10 @@ void Logic::UpdateCellsState() {
   }
 }
 
-// todo copy constructor?
 std::shared_ptr<core::Cell> Logic::DivideCell(core::Cell &cell) {
   auto new_cell = std::make_shared<core::Cell>(
       cell.type_,
-      core::Position(cell.GetPosition().x, cell.GetPosition().y),
+      cell.GetPosition(),
       genetic_engineer_.CopyGenes(cell.genes_)
   );
   new_cell->AddEnergy(cell.energy_ / 2);

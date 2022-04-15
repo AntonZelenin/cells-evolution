@@ -23,7 +23,7 @@ static bool CellsCollide(const std::shared_ptr<core::Cell> &cell_1, const std::s
   return (cell_1->GetPosition() - cell_2->GetPosition()).Magnitude() < (cell_1->GetSize() + cell_2->GetSize());
 }
 
-cells_evo::collisions::CellPtrPairs cells_evo::collisions::CollisionDetector::Detect(cells_evo::core::CellStorage &cells) {
+CellPtrPairs CollisionDetector::Detect(core::CellStorage &cells) {
   if (cells.size() < 2)
     return {};
 
@@ -48,6 +48,7 @@ cells_evo::collisions::CellPtrPairs cells_evo::collisions::CollisionDetector::De
   }
   return colliding_cells;
 }
+
 void CollisionResolver::ResolveCollisions(CellPtrPairs &colliding_cells) {
 // it assumes there are no pairs of hunter-nonhunter
   for (auto &pair : colliding_cells) {
