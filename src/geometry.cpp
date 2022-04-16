@@ -11,7 +11,15 @@ Vector2<T>::Vector2(T x, T y) {
 
 template<typename T>
 float Vector2<T>::Magnitude() {
-  return std::sqrt(x * x + y * y);
+//  if (!cached_sqrt_)
+//    cached_sqrt_ = std::sqrt(MagnitudeSquared());
+//  return cached_sqrt_.value();
+  return std::sqrt(MagnitudeSquared());
+}
+
+template<typename T>
+float Vector2<T>::MagnitudeSquared() {
+  return x * x + y * y;
 }
 
 template<typename T>

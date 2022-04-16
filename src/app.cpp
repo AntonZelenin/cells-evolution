@@ -37,11 +37,11 @@ void App::ProcessGui(sf::Clock &delta_clock) {
 void App::Draw() {
   window_->clear(background_color_);
   // todo should I filter items out of the view or sfml does it for me?
-  for (auto&[_, cell] : world_->cells_) {
-    window_->draw(cell_drawer_.Get(cell));
-  }
   for (auto&[_, food] : world_->food_) {
     window_->draw(food_drawer_.Get(food));
+  }
+  for (auto&[_, cell] : world_->cells_) {
+    window_->draw(cell_drawer_.Get(cell));
   }
 
   ImGui::SFML::Render(*window_);

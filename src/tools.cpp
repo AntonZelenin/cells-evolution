@@ -26,12 +26,12 @@ static Position GenerateRandomPosition(
         static_cast<float>(x_distribution(generator)),
         static_cast<float>( y_distribution(generator))
     );
-    for (auto &p : occupied_positions) {
-      if ((p - pos).Magnitude() <= min_dist_between_cells) {
-        is_ok = false;
-        break;
-      }
-    }
+//    for (auto &p : occupied_positions) {
+//      if ((p - pos).Magnitude() <= min_dist_between_cells) {
+//        is_ok = false;
+//        break;
+//      }
+//    }
   }
   return pos;
 }

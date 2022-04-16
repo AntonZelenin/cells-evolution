@@ -2,7 +2,7 @@
 
 namespace cells_evo::logic {
 bool NonHunterCellLogic::CellGotFood(core::Cell &cell, core::Entity &food_entity) {
-  return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() < (cell.GetSize() + food_entity.GetSize());
+  return (cell.GetPosition() - food_entity.GetPosition()).MagnitudeSquared() < pow((cell.GetSize() + food_entity.GetSize()), 2);
 }
 
 core::Vector2<float> NonHunterCellLogic::GetRandomDirection(core::Cell &cell) {
@@ -35,7 +35,7 @@ void NonHunterCellLogic::ProcessEatFood(core::Cell &cell, core::EdibleEntityStor
 }
 
 bool NonHunterCellLogic::CouldSensedFood(core::Cell &cell, core::Entity &food_entity) {
-  return (cell.GetPosition() - food_entity.GetPosition()).Magnitude() <= cell.GetMaxFoodDetectionDistance();
+  return (cell.GetPosition() - food_entity.GetPosition()).MagnitudeSquared() <= pow(cell.GetMaxFoodDetectionDistance(), 2);
 }
 
 core::Vector2<float> NonHunterCellLogic::ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
@@ -64,11 +64,11 @@ std::shared_ptr<core::EdibleEntity> NonHunterCellLogic::FindClosestFood(
   }
 
   unsigned int closest_food_idx;
-  float min_distance = std::numeric_limits<float>::max();
+  float min_distance_sqared = std::numeric_limits<float>::max();
   for (auto&[idx, food] : foods) {
-    auto dist = (cell.GetPosition() - food->GetPosition()).Magnitude();
-    if (dist < min_distance) {
-      min_distance = dist;
+    auto dist_squared = (cell.GetPosition() - food->GetPosition()).MagnitudeSquared();
+    if (dist_squared < min_distance_sqared) {
+      min_distance_sqared = dist_squared;
       closest_food_idx = idx;
     }
   }
@@ -93,12 +93,12 @@ std::shared_ptr<core::EdibleEntity> HunterCellLogic::FindClosestFood(
   }
 
   unsigned int closest_food_idx = 0;
-  float min_distance = std::numeric_limits<float>::max();
+  float min_distance_squared = std::numeric_limits<float>::max();
   for (auto&[idx, prey_cell] : reinterpret_cast<core::CellStorage &>(cells)) {
     if (prey_cell->IsHunter() && !prey_cell->IsDead()) continue;
-    auto dist = (cell.GetPosition() - prey_cell->GetPosition()).Magnitude();
-    if (dist < min_distance) {
-      min_distance = dist;
+    auto dist_squared = (cell.GetPosition() - prey_cell->GetPosition()).MagnitudeSquared();
+    if (dist_squared < min_distance_squared) {
+      min_distance_squared = dist_squared;
       closest_food_idx = idx;
     }
   }

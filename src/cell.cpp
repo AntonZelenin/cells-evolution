@@ -44,7 +44,7 @@ bool Cell::IsNonHunter() const {
 }
 
 float Cell::GetMaxFoodDetectionDistance() const {
-  return k_max_distance_food_detection_;
+  return k_max_distance_food_detection_ + GetSize() * 2;
 //  if (IsNonHunter())
 //    return k_max_distance_food_detection_ * 0.9;
 //  else
