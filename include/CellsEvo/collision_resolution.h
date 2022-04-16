@@ -17,7 +17,7 @@ class CollisionDetector {
 };
 
 class CollisionResolver {
-  constexpr static const float k_collision_distance_dont_remember_ = 0.3;
+  constexpr static const float k_collision_distance_padding_ = 0.1;
  public:
   static void ResolveCollisions(CellPtrPairs &colliding_cells);
 };

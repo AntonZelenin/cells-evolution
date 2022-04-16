@@ -21,7 +21,11 @@ Position &Cell::GetPosition() {
 }
 
 float Cell::GetSize() const {
-  return genes_.at(genetics::GeneType::SIZE).value;
+  return genes_.at(genetics::GeneType::SIZE).value + GetShellThickness();
+}
+
+float Cell::GetShellThickness() const {
+  return GetShell() * k_shell_thickness_coefficient_;
 }
 
 float Cell::GetSpeed() const {

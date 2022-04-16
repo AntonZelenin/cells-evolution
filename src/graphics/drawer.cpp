@@ -2,14 +2,19 @@
 
 namespace cells_evo::graphics {
 float CellDrawer::GetThickness(const std::shared_ptr<core::Cell> &cell) const {
-  auto thickness = cell->GetSize() / k_thickness_coefficient_;
-  if (cell->HasShell())
-    thickness += cell->GetShell() * k_shell_thickness_coefficient_;
-  return thickness;
+  return GetBaseThickness(cell) + cell->GetShellThickness();
+}
+
+float CellDrawer::GetBaseThickness(const std::shared_ptr<core::Cell> &cell) const {
+  return cell->GetSize() / k_thickness_coefficient_;
+}
+
+float CellDrawer::GetSize(const std::shared_ptr<core::Cell> &cell) const {
+  return cell->GetSize() - GetThickness(cell);
 }
 
 sf::CircleShape CellDrawer::Get(const std::shared_ptr<core::Cell> &cell) {
-  sf::CircleShape shape(cell->GetSize());
+  sf::CircleShape shape(GetSize(cell));
   if (cell->IsDead()) {
     shape.setFillColor(sf::Color(130, 130, 130));
   } else {

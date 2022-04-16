@@ -1,5 +1,7 @@
 #include "CellsEvo/app.h"
 
+// todo now the main goal it to find out the way to keep cells arrays sorted between calls
+
 // gui, number of cells, gene values
 // implement the rest of genes
 // large pieces of food, cells can stick to it while eating

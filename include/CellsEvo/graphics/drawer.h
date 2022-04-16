@@ -20,10 +20,11 @@ class CellColorProvider {
 
 class CellDrawer {
   const float k_thickness_coefficient_ = 3.0;
-  const float k_shell_thickness_coefficient_ = 0.1;
   CellColorProvider color_provider_{};
 
   [[nodiscard]] float GetThickness(const std::shared_ptr<core::Cell> &cell) const;
+  [[nodiscard]] float GetSize(const std::shared_ptr<core::Cell> &cell) const;
+  [[nodiscard]] float GetBaseThickness(const std::shared_ptr<core::Cell> &cell) const;
 
  public:
   sf::CircleShape Get(const std::shared_ptr<core::Cell> &cell);

@@ -29,7 +29,6 @@ void NonHunterCellLogic::ProcessEatFood(core::Cell &cell, core::EdibleEntityStor
   if (food != nullptr && CellGotFood(cell, *food) && cell.IsHungry()) {
     cell.AddEnergy(food->GetNutritionValue());
     cell.ClearFoodTarget();
-    // todo this is not good
     food_entities.erase(food->GetId());
   }
 }
@@ -39,7 +38,6 @@ bool NonHunterCellLogic::CouldSensedFood(core::Cell &cell, core::Entity &food_en
 }
 
 core::Vector2<float> NonHunterCellLogic::ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
-  // todo they dont choose new food if there's a closer one and if it's too far
   std::optional<core::Vector2<float>> direction = cell.GetDirection();
   auto closest_food = FindClosestFood(cell, food_entities);
   if (!closest_food && !direction) {

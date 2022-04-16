@@ -57,7 +57,7 @@ void CollisionResolver::ResolveCollisions(CellPtrPairs &colliding_cells) {
     auto radius_sum = cell_1->GetSize() + cell_2->GetSize();
     auto diff_vector = cell_1->GetPosition() - cell_2->GetPosition();
     auto distance_to_move =
-        radius_sum - diff_vector.Magnitude() + CollisionResolver::k_collision_distance_dont_remember_;
+        radius_sum - diff_vector.Magnitude() + CollisionResolver::k_collision_distance_padding_;
     auto direction = diff_vector;
     direction.Normalize();
 

@@ -21,6 +21,7 @@ class Cell : public EdibleEntity {
   const float k_speed_size_coefficient_ = 0.027;
   const float k_vital_functions_energy_consumption_ = 0.00015;
   const float k_max_distance_food_detection_ = 180;
+  const float k_shell_thickness_coefficient_ = 0.1;
 
   std::optional<unsigned int> food_target_id_{};
   std::optional<core::Vector2<float>> direction_{};
@@ -85,6 +86,7 @@ class Cell : public EdibleEntity {
   [[nodiscard]] float GetPunchStrength() const;
   [[nodiscard]] bool HasTargetFood() const;
   [[nodiscard]] bool HasDecayed() const;
+  [[nodiscard]] float GetShellThickness() const;
 };
 }
 
