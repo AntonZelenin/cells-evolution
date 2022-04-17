@@ -9,8 +9,10 @@ std::vector<std::shared_ptr<Food>> FoodGenerator::CreateFloralGeneration(
 ) const {
   std::vector<std::shared_ptr<Food>> foods;
   foods.reserve(size);
+  // -10 - don't put food too close to borders, cells get stuck
+  // todo but hunters still stuck
   auto positions = cells_evo::core::GenerateRandomPositions(
-      field_width, field_height, size, k_min_distance_between_items_
+      field_width - 10, field_height - 10, size, k_min_distance_between_items_
   );
   for (auto &position : positions) {
     auto food = std::make_shared<Food>(FoodType::K_FLORAL, position);

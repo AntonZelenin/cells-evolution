@@ -41,7 +41,7 @@ add_executable(
         include/imgui/imgui-SFML.cpp
         include/imgui/imgui_tables.cpp
         include/imgui/imgui_widgets.cpp
-        include/CellsEvo/gui.cpp include/CellsEvo/gui.h)
+        src/gui.cpp include/CellsEvo/gui.h)
 include_directories(include)
 link_directories(lib)
 

@@ -46,17 +46,18 @@ class CircularQueue {
 
 class CellsGuiState {
  public:
-  uint num_total_cells_{};
+  uint num_alive_cells_{};
   uint num_hunter_cells_{};
   uint num_nonhunter_cells_{};
   uint num_dead_cells_{};
 };
 
 class Gui {
-  const uint k_cells_history_graph_capacity_ = 50;
+  const uint k_cells_history_graph_capacity_ = 70;
   std::shared_ptr<sf::RenderWindow> window_;
   std::shared_ptr<core::World> world_;
   uint ticks_ = 0;
+  uint cells_graph_max_ = 100;
   CellsGuiState cells_gui_state_{};
 
   std::unique_ptr<CircularQueue<uint>> hunter_cells_number_history_;
