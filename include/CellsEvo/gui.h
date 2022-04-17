@@ -6,50 +6,15 @@
 #include "CellsEvo/world.h"
 
 namespace cells_evo::core {
-template<typename T>
-class CircularQueue {
-  uint curr_head_;
-  uint size_;
-  std::vector<T> vals_;
-
- public:
-  explicit CircularQueue(uint size) {
-    size_ = size;
-    vals_.reserve(size_);
-    curr_head_ = 0;
-    for (int i = 0; i < size_; i++) {
-      vals_[i] = 0;
-    }
-  }
-
-  uint Size() {
-    return size_;
-  }
-
-  T Get(uint i) {
-    return vals_[i];
-  }
-
-  void Push(T val) {
-    vals_[curr_head_++] = val;
-    if (curr_head_ > size_ - 1) curr_head_ = 0;
-  }
-
-  uint GetHead() {
-    return curr_head_;
-  }
-
-  uint NextIdx(uint idx) {
-    return idx == (size_ - 1) ? 0 : idx + 1;
-  }
-};
-
-class CellsGuiState {
- public:
-  uint num_alive_cells_{};
-  uint num_hunter_cells_{};
-  uint num_nonhunter_cells_{};
-  uint num_dead_cells_{};
+struct CellsGuiState {
+  uint num_alive_cells;
+  uint num_hunter_cells;
+  uint num_nonhunter_cells;
+  uint num_dead_cells;
+  float avg_hunter_size;
+  float avg_nonhunter_size;
+  float avg_hunter_speed;
+  float avg_nonhunter_speed;
 };
 
 class Gui {

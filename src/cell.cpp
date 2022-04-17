@@ -31,12 +31,20 @@ float Cell::GetShellThickness() const {
 float Cell::GetSpeed() const {
   float speed;
   if (HasTargetFood())
-    speed = genes_.at(genetics::GeneType::HUNTING_SPEED).value * k_speed_size_coefficient_ * GetSize();
+    speed = GetHuntingSpeed();
   else
-    speed = genes_.at(genetics::GeneType::IDLE_SPEED).value * k_speed_size_coefficient_ * GetSize();
+    speed = GetIdleSpeed();
   if (HasShell())
     speed /= GetShell();
   return speed;
+}
+
+float Cell::GetHuntingSpeed() const {
+  return genes_.at(genetics::GeneType::HUNTING_SPEED).value * k_speed_size_coefficient_ * GetSize();
+}
+
+float Cell::GetIdleSpeed() const {
+  return genes_.at(genetics::GeneType::IDLE_SPEED).value * k_speed_size_coefficient_ * GetSize();
 }
 
 bool Cell::IsHunter() const {

@@ -87,6 +87,8 @@ class Cell : public EdibleEntity {
   [[nodiscard]] bool HasTargetFood() const;
   [[nodiscard]] bool HasDecayed() const;
   [[nodiscard]] float GetShellThickness() const;
+  [[nodiscard]] float GetHuntingSpeed() const;
+  [[nodiscard]] float GetIdleSpeed() const;
 };
 }
 

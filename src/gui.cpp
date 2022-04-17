@@ -33,9 +33,9 @@ void Gui::ProcessGui(sf::Clock &delta_clock) {
   }
   if (ticks_ % 120 == 0) {
     ticks_ = 0;
-    hunter_cells_number_history_->Push(cells_gui_state_.num_hunter_cells_);
-    nonhunter_cells_number_history_->Push(cells_gui_state_.num_nonhunter_cells_);
-    cells_graph_max_ = cells_gui_state_.num_alive_cells_;
+    hunter_cells_number_history_->Push(cells_gui_state_.num_hunter_cells);
+    nonhunter_cells_number_history_->Push(cells_gui_state_.num_nonhunter_cells);
+    cells_graph_max_ = cells_gui_state_.num_alive_cells;
   }
 
   ImGui::SFML::Update(*window_, delta_clock.getElapsedTime());
@@ -54,7 +54,7 @@ void Gui::ProcessGui(sf::Clock &delta_clock) {
   }
 
   // todo graph size should be also dynamically calculated
-  ImGui::Text("Non-hunter cells: %u", cells_gui_state_.num_nonhunter_cells_);
+  ImGui::Text("Non-hunter cells: %u", cells_gui_state_.num_nonhunter_cells);
   ImGui::PlotHistogram(
       "",
       reinterpret_cast<const float *>(&nonhunter_cells_vals),
@@ -65,7 +65,7 @@ void Gui::ProcessGui(sf::Clock &delta_clock) {
       static_cast<float>(cells_graph_max_),
       ImVec2(400, 120.0f)
   );
-  ImGui::Text("Hunter cells: %u", cells_gui_state_.num_hunter_cells_);
+  ImGui::Text("Hunter cells: %u", cells_gui_state_.num_hunter_cells);
   ImGui::PlotHistogram(
       "",
       reinterpret_cast<const float *>(&hunter_cells_vals),
@@ -76,24 +76,48 @@ void Gui::ProcessGui(sf::Clock &delta_clock) {
       static_cast<float>(cells_graph_max_),
       ImVec2(400, 120.0f)
   );
-  ImGui::Text("Alive cells: %u", cells_gui_state_.num_alive_cells_);
-  ImGui::Text("Dead cells: %u", cells_gui_state_.num_dead_cells_);
+  ImGui::Text("Alive cells: %u", cells_gui_state_.num_alive_cells);
+  ImGui::Text("Dead cells: %u", cells_gui_state_.num_dead_cells);
+  ImGui::Text("");
+  ImGui::Text("Avg hunter speed: %.2f", cells_gui_state_.avg_hunter_speed);
+  ImGui::Text("Avg non-hunter speed: %.2f", cells_gui_state_.avg_nonhunter_speed);
+  ImGui::Text("Avg hunter size: %.2f", cells_gui_state_.avg_hunter_size);
+  ImGui::Text("Avg non-hunter size: %.2f", cells_gui_state_.avg_nonhunter_size);
   ImGui::End();
 }
 
 void Gui::UpdateCellsGuiState() {
   cells_gui_state_ = CellsGuiState();
+
+  std::vector<float> hunter_sizes;
+  std::vector<float> nonhunter_sizes;
+  std::vector<float> hunter_speeds;
+  std::vector<float> nonhunter_speeds;
+
   for (auto &[_, cell] : world_->cells_) {
     if (cell->IsDead())
-      cells_gui_state_.num_dead_cells_++;
+      cells_gui_state_.num_dead_cells++;
     else {
-      cells_gui_state_.num_alive_cells_++;
-      if (cell->IsHunter())
-        cells_gui_state_.num_hunter_cells_++;
-      else
-        cells_gui_state_.num_nonhunter_cells_++;
+      cells_gui_state_.num_alive_cells++;
+      if (cell->IsHunter()) {
+        cells_gui_state_.num_hunter_cells++;
+        hunter_sizes.push_back(cell->GetSize());
+        hunter_speeds.push_back(cell->GetHuntingSpeed());
+      } else {
+        cells_gui_state_.num_nonhunter_cells++;
+        nonhunter_sizes.push_back(cell->GetSize());
+        nonhunter_speeds.push_back(cell->GetHuntingSpeed());
+      }
     }
   }
+  cells_gui_state_.avg_hunter_size =
+      std::reduce(hunter_sizes.begin(), hunter_sizes.end()) / static_cast<float>(hunter_sizes.size());
+  cells_gui_state_.avg_nonhunter_size =
+      std::reduce(nonhunter_sizes.begin(), nonhunter_sizes.end()) / static_cast<float>(nonhunter_sizes.size());
+  cells_gui_state_.avg_hunter_speed =
+      std::reduce(hunter_speeds.begin(), hunter_speeds.end()) / static_cast<float>(hunter_speeds.size());
+  cells_gui_state_.avg_nonhunter_speed =
+      std::reduce(nonhunter_speeds.begin(), nonhunter_speeds.end()) / static_cast<float>(nonhunter_speeds.size());
 }
 
 void Gui::Draw() {
