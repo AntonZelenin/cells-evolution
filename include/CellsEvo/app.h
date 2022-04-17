@@ -5,11 +5,13 @@
 #include "world.h"
 #include "CellsEvo/logic/logic.h"
 #include "CellsEvo/graphics/drawer.h"
+#include "CellsEvo/gui.h"
 
 namespace cells_evo {
 class App {
   // todo it might be better to use unique ptr, not sure now
   std::shared_ptr<sf::RenderWindow> window_;
+  std::shared_ptr<core::Gui> gui_;
 
   std::shared_ptr<core::World> world_;
   std::shared_ptr<logic::Logic> logic_;
@@ -31,13 +33,11 @@ class App {
       int fps,
       float food_production_rate_secs
   );
-  ~App();
 
   void Run();
   void ProcessEvents();
   void ProcessInput();
   void Draw();
-  void ProcessGui(sf::Clock &delta_clock);
 };
 }
 

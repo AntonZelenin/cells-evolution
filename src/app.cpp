@@ -1,10 +1,7 @@
 #include <thread>
-#include "CellsEvo/logic/logic.h"
 #include "CellsEvo/app.h"
 #include "CellsEvo/graphics.h"
 #include "SFML/Graphics.hpp"
-#include "imgui/imgui.h"
-#include "imgui/imgui-SFML.h"
 
 namespace cells_evo {
 // todo you can use sf::Vector2f and delta_clock -_-
@@ -13,7 +10,7 @@ void App::Run() {
   while (window_->isOpen()) {
     ProcessEvents();
     ProcessInput();
-    ProcessGui(delta_clock);
+    gui_->ProcessGui(delta_clock);
     logic_->WorldTick();
     Draw();
 
@@ -25,15 +22,6 @@ void App::Run() {
   }
 }
 
-void App::ProcessGui(sf::Clock &delta_clock) {
-  ImGui::SFML::Update(*window_, delta_clock.getElapsedTime());
-  ImGui::Begin("Sample window");
-  if (ImGui::Button("Update window title")) {
-    window_->setTitle("Bla bla bla");
-  }
-  ImGui::End();
-}
-
 void App::Draw() {
   window_->clear(background_color_);
   // todo should I filter items out of the view or sfml does it for me?
@@ -43,8 +31,7 @@ void App::Draw() {
   for (auto&[_, cell] : world_->cells_) {
     window_->draw(cell_drawer_.Get(cell));
   }
-
-  ImGui::SFML::Render(*window_);
+  gui_->Draw();
   window_->display();
 }
 
@@ -85,7 +72,7 @@ void App::ProcessInput() {
 void App::ProcessEvents() {
   sf::Event event{};
   while (window_->pollEvent(event)) {
-    ImGui::SFML::ProcessEvent(event);
+    gui_->ProcessEvent(event);
 
     if (event.type == sf::Event::Closed)
       window_->close();
@@ -120,19 +107,6 @@ App::App(
   auto top_left = center - (default_view_rect / 2.f);
   window_->setView(sf::View(sf::FloatRect(top_left, default_view_rect)));
 
-  if (!ImGui::SFML::Init(*window_, false))
-    throw std::runtime_error("Failed to init ImGui SFML");
-
-  float scale = 2.0f;
-  ImGuiIO &io = ImGui::GetIO();
-  io.Fonts->Clear();
-  io.Fonts->AddFontFromFileTTF("include/imgui/misc/fonts/ProggyClean.ttf", scale * 16.0f);
-  io.Fonts->Build();
-  ImGui::GetStyle().ScaleAllSizes(scale);
-
-  if (!ImGui::SFML::UpdateFontTexture())
-    throw std::runtime_error("Failed to update ImGui::SFML font texture");
-
   world_ = std::make_shared<core::World>(
       cells_generation_size,
       hunter_generation_size,
@@ -140,16 +114,14 @@ App::App(
       world_width,
       world_height
   );
+
+  gui_ = std::make_shared<core::Gui>(window_, world_);
+
   fps_ = fps;
   k_frame_micro_sec_ = 1000000 / fps;
   logic_ = std::make_shared<logic::Logic>(
       *world_,
       static_cast<float>(fps_) * food_production_rate_secs
   );
-}
-
-App::~App() {
-  // todo what if exception?
-  ImGui::SFML::Shutdown();
 }
 }

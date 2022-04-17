@@ -62,19 +62,27 @@ void Logic::CheckCrossedBoundaries(std::shared_ptr<core::Cell> &cell) const {
   auto &pos = cell->GetPosition();
   bool hit_the_wall = false;
 
-  if (pos.x < 0.0 + cell->GetSize()) {
-    pos.x = cell->GetSize();
+//  if (pos.x < cell->GetSize()) {
+  if (pos.x < 0.1) {
+//    pos.x = cell->GetSize();
+    pos.x = 0.1;
     hit_the_wall = true;
-  } else if (pos.x > static_cast<float>(world_.width_) - cell->GetSize()) {
-    pos.x = static_cast<float>(world_.width_) - cell->GetSize();
+//  } else if (pos.x > static_cast<float>(world_.width_) - cell->GetSize()) {
+  } else if (pos.x > static_cast<float>(world_.width_) - 0.1) {
+//    pos.x = static_cast<float>(world_.width_) - cell->GetSize();
+    pos.x = static_cast<float>(world_.width_) - 0.1;
     hit_the_wall = true;
   }
 
-  if (pos.y < 0.0 + cell->GetSize()) {
-    pos.y = cell->GetSize();
+//  if (pos.y < cell->GetSize()) {
+  if (pos.y < 0.1) {
+//    pos.y = cell->GetSize();
+    pos.y = 0.1;
     hit_the_wall = true;
-  } else if (pos.y > static_cast<float>(world_.height_) - cell->GetSize()) {
-    pos.y = static_cast<float>(world_.height_) - cell->GetSize();
+//  } else if (pos.y > static_cast<float>(world_.height_) - cell->GetSize()) {
+  } else if (pos.y > static_cast<float>(world_.height_) - 0.1) {
+//    pos.y = static_cast<float>(world_.height_) - cell->GetSize();
+    pos.y = static_cast<float>(world_.height_) - 0.1;
     hit_the_wall = true;
   }
 
