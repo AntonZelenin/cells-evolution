@@ -36,9 +36,10 @@ sf::Color FoodColorProvider::Get(const core::FoodType &type) {
 }
 
 sf::RectangleShape FoodDrawer::Get(const std::shared_ptr<core::Food> &food) {
-  sf::RectangleShape shape(sf::Vector2f(10.f, 10.f));
+  auto size = food->GetSize();
+  sf::RectangleShape shape(sf::Vector2f(size, size));
   shape.setFillColor(color_provider_.Get(food->type_));
-  shape.setPosition(static_cast<float>(food->GetPosition().x), static_cast<float>(food->GetPosition().y));
+  shape.setPosition(food->GetPosition().x - size / 2, food->GetPosition().y - size / 2);
   return shape;
 }
 }

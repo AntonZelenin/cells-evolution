@@ -163,7 +163,9 @@ bool Cell::DivisionCooldownPassed() const {
 }
 
 void Cell::StartDivisionCooldown() {
-  division_cooldown_ = static_cast<unsigned int>(genes_.at(genetics::GeneType::DIVISION_COOLDOWN).value);
+  division_cooldown_ = static_cast<unsigned int>(
+      genes_.at(genetics::GeneType::DIVISION_COOLDOWN).value + 50.f * GetShell()
+  );
 }
 
 int Cell::GetDirectionChangeFactor() const {

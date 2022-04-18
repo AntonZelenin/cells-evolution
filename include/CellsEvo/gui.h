@@ -11,6 +11,7 @@ struct CellsGuiState {
   uint num_hunter_cells;
   uint num_nonhunter_cells;
   uint num_dead_cells;
+  float avg_frame_time_ms;
   float avg_hunter_size;
   float avg_nonhunter_size;
   float avg_hunter_speed;
@@ -25,6 +26,7 @@ class Gui {
   uint cells_graph_max_ = 100;
   CellsGuiState cells_gui_state_{};
 
+  std::unique_ptr<CircularQueue<uint>> frame_times_;
   std::unique_ptr<CircularQueue<uint>> hunter_cells_number_history_;
   std::unique_ptr<CircularQueue<uint>> nonhunter_cells_number_history_;
 
@@ -35,7 +37,7 @@ class Gui {
   explicit Gui(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<core::World> &world);
   ~Gui();
 
-  void ProcessGui(sf::Clock &delta_clock);
+  void ProcessGui(sf::Clock &delta_clock, uint frame_time_ms);
   void Draw();
   static void ProcessEvent(sf::Event &event);
 };

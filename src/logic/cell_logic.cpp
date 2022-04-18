@@ -2,7 +2,7 @@
 
 namespace cells_evo::logic {
 bool NonHunterCellLogic::CellGotFood(core::Cell &cell, core::Entity &food_entity) {
-  return (cell.GetPosition() - food_entity.GetPosition()).MagnitudeSquared() < pow((cell.GetSize() + food_entity.GetSize()), 2);
+  return (cell.GetPosition() - food_entity.GetPosition()).MagnitudeSquared() <= pow((cell.GetSize() + food_entity.GetSize()), 2);
 }
 
 core::Vector2<float> NonHunterCellLogic::GetRandomDirection(core::Cell &cell) {
@@ -15,7 +15,7 @@ core::Vector2<float> NonHunterCellLogic::GetRandomDirection(core::Cell &cell) {
 
 void NonHunterCellLogic::MoveCell(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
   // check for new food every N frames
-  if (!cell.GetDirection() || cell.lifetime_ % 20 == 0) {
+  if (!cell.GetDirection() || cell.lifetime_ % 15 == 0) {
     cell.ClearFoodTarget();
     cell.SetDirection(ChooseDirection(cell, food_entities));
   } else if (cell.lifetime_ % cell.GetDirectionChangeFactor() == 0) {
@@ -26,7 +26,7 @@ void NonHunterCellLogic::MoveCell(core::Cell &cell, core::EdibleEntityStorage &f
 
 void NonHunterCellLogic::ProcessEatFood(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
   auto food = FindClosestFood(cell, food_entities);
-  if (food != nullptr && CellGotFood(cell, *food) && cell.IsHungry()) {
+  if (food != nullptr && cell.IsHungry() && CellGotFood(cell, *food)) {
     cell.AddEnergy(food->GetNutritionValue());
     cell.ClearFoodTarget();
     food_entities.erase(food->GetId());

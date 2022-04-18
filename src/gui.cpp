@@ -8,6 +8,7 @@ namespace cells_evo::core {
 Gui::Gui(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<core::World> &world) : world_(world) {
   window_ = std::move(window);
   cells_gui_state_ = CellsGuiState();
+  frame_times_ = std::make_unique<CircularQueue<uint>>(180);
   hunter_cells_number_history_ = std::make_unique<CircularQueue<uint>>(Gui::k_cells_history_graph_capacity_);
   nonhunter_cells_number_history_ = std::make_unique<CircularQueue<uint>>(Gui::k_cells_history_graph_capacity_);
 
@@ -26,8 +27,9 @@ Gui::Gui(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<core::World> 
     throw std::runtime_error("Failed to update ImGui::SFML font texture");
 }
 
-void Gui::ProcessGui(sf::Clock &delta_clock) {
-  // todo, make it better
+void Gui::ProcessGui(sf::Clock &delta_clock, uint frame_time_ms) {
+  frame_times_->Push(frame_time_ms);
+  // todo, make it better?
   if (ticks_++ % 20 == 0) {
     UpdateCellsGuiState();
   }
@@ -53,6 +55,8 @@ void Gui::ProcessGui(sf::Clock &delta_clock) {
     idx2 = hunter_cells_number_history_->NextIdx(idx2);
   }
 
+  ImGui::Text("Avg fps: %.1f", 1.f / (cells_gui_state_.avg_frame_time_ms / 1000.f));
+  ImGui::Text("");
   // todo graph size should be also dynamically calculated
   ImGui::Text("Non-hunter cells: %u", cells_gui_state_.num_nonhunter_cells);
   ImGui::PlotHistogram(
@@ -88,6 +92,7 @@ void Gui::ProcessGui(sf::Clock &delta_clock) {
 
 void Gui::UpdateCellsGuiState() {
   cells_gui_state_ = CellsGuiState();
+  cells_gui_state_.avg_frame_time_ms = frame_times_->Avg();
 
   std::vector<float> hunter_sizes;
   std::vector<float> nonhunter_sizes;

@@ -6,18 +6,21 @@
 namespace cells_evo {
 // todo you can use sf::Vector2f and delta_clock -_-
 void App::Run() {
-  sf::Clock delta_clock;
+  uint last_frame_time = 1;
+  sf::Clock delta_clock, frame_clock;
+
   while (window_->isOpen()) {
+    frame_clock.restart();
     ProcessEvents();
     ProcessInput();
-    gui_->ProcessGui(delta_clock);
+    gui_->ProcessGui(delta_clock, last_frame_time);
     logic_->WorldTick();
     Draw();
 
     auto time_diff = delta_clock.getElapsedTime().asMicroseconds();
-    if (time_diff < k_frame_micro_sec_) {
+    last_frame_time = frame_clock.getElapsedTime().asMilliseconds();
+    if (time_diff < k_frame_micro_sec_)
       std::this_thread::sleep_for(std::chrono::microseconds(k_frame_micro_sec_ - time_diff));
-    }
     delta_clock.restart();
   }
 }
@@ -25,10 +28,10 @@ void App::Run() {
 void App::Draw() {
   window_->clear(background_color_);
   // todo should I filter items out of the view or sfml does it for me?
-  for (auto&[_, food] : world_->food_) {
+  for (auto &[_, food] : world_->food_) {
     window_->draw(food_drawer_.Get(food));
   }
-  for (auto&[_, cell] : world_->cells_) {
+  for (auto &[_, cell] : world_->cells_) {
     window_->draw(cell_drawer_.Get(cell));
   }
   gui_->Draw();

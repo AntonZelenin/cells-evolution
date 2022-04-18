@@ -38,6 +38,27 @@ class World {
   void AddFood(std::shared_ptr<Food> food);
   void AddCell(std::shared_ptr<Cell> cell);
 };
+
+// todo use weak ptrs in other places
+class Field {
+  const uint k_tile_size_ = 300;
+  std::unordered_map<uint, std::vector<uint>> tile_neighbours_cache_;
+  std::vector<
+      std::vector<std::weak_ptr<Entity>>
+  > tiles_;
+  uint num_of_tiles_;
+  uint num_of_tiles_x_;
+  uint num_of_tiles_y_;
+
+  [[nodiscard]] uint GetTileIdx(const std::weak_ptr<Entity>& entity) const;
+
+ public:
+  Field(uint width, uint height);
+
+  void AddEntity(const std::weak_ptr<core::Entity> &entity);
+  std::vector<uint> GetNeighbouringTileIndices(uint tile_idx);
+  std::vector<uint> GetNeighbouringTileIndices(std::weak_ptr<core::Entity> &entity);
+};
 }
 
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_WORLD_H_

@@ -95,6 +95,16 @@ class CircularQueue {
   uint NextIdx(uint idx) {
     return idx == (size_ - 1) ? 0 : idx + 1;
   }
+
+  float Avg() {
+    T sum = 0;
+    for (int i = 0; i < size_; i++) {
+      sum += vals_[i];
+    }
+    // todo why reduce returns 0???? because of t?
+//    auto t = std::reduce(vals_.begin(), vals_.end());
+    return sum / static_cast<float>(size_);
+  }
 };
 
 std::vector<Position> GenerateRandomPositions(

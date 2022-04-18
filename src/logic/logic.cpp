@@ -25,8 +25,8 @@ void Logic::MoveCells() {
   for (auto &[_, cell] : world_.cells_) {
     if (!cell->IsDead()) {
       MoveCell(cell);
-      CheckCrossedBoundaries(cell);
     }
+    CheckCrossedBoundaries(cell);
   }
 }
 
