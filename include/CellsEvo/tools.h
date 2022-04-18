@@ -7,9 +7,9 @@
 
 namespace cells_evo::core {
 class IndexDriver {
-  unsigned int idx_ = 1;
+  uint idx_ = 1;
  public:
-  unsigned int GetNextId();
+  uint GetNextId();
 };
 
 class RandomEngine {
@@ -25,7 +25,7 @@ class RandomEngine {
     return std::uniform_real_distribution<float>(from, to)(generator_);
   }
 
-  std::vector<int> GetRandomInts(int from, int  to, unsigned int number) {
+  std::vector<int> GetRandomInts(int from, int  to, uint number) {
     std::vector<int> numbers{};
     std::uniform_int_distribution<int> distribution(from, to);
 
@@ -36,7 +36,7 @@ class RandomEngine {
     return numbers;
   }
 
-  std::vector<float> GetRandomNormalFloats(float mean, float deviation, unsigned int number) {
+  std::vector<float> GetRandomNormalFloats(float mean, float deviation, uint number) {
     std::vector<float> numbers{};
     std::normal_distribution<float> distribution(mean, deviation);
 
@@ -47,7 +47,7 @@ class RandomEngine {
     return numbers;
   }
 
-  std::vector<float> GetRandomFloats(float from, float  to, unsigned int number) {
+  std::vector<float> GetRandomFloats(float from, float  to, uint number) {
     std::vector<float> numbers{};
     std::uniform_real_distribution<float> distribution(from, to);
 

@@ -145,7 +145,7 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
           reinterpret_cast<core::EdibleEntityStorage &>(world_.food_)
       );
   }
-  std::vector<unsigned int> eaten_cell_ids;
+  std::vector<uint> eaten_cell_ids;
   std::vector<std::vector<collisions::CellPtrPair>::iterator> not_existing_pairs;
   for (
       auto colliding_cell_pair = colliding_cells.begin();

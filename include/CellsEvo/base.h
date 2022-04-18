@@ -2,13 +2,14 @@
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_BASE_H_
 
 #include "geometry.h"
+#include "types.h"
 
 namespace cells_evo::core {
 class Entity {
  public:
   virtual Position &GetPosition() = 0;
   virtual void SetPosition(Position) = 0;
-  [[nodiscard]] virtual unsigned int GetId() const = 0;
+  [[nodiscard]] virtual uint GetId() const = 0;
   [[nodiscard]] virtual float GetSize() const = 0;
 };
 

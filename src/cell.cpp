@@ -63,11 +63,11 @@ float Cell::GetMaxFoodDetectionDistance() const {
 //    return k_max_distance_food_detection_ * 1.2;
 }
 
-std::optional<unsigned int> Cell::GetFoodTargetId() const {
+std::optional<uint> Cell::GetFoodTargetId() const {
   return food_target_id_;
 }
 
-void Cell::SetFoodTargetId(unsigned int food_id) {
+void Cell::SetFoodTargetId(uint food_id) {
   food_target_id_ = food_id;
 }
 
@@ -83,11 +83,11 @@ void Cell::ClearDirection() {
   direction_ = {};
 }
 
-unsigned int Cell::GetId() const {
+uint Cell::GetId() const {
   return id_;
 }
 
-void Cell::SetId(unsigned int id) {
+void Cell::SetId(uint id) {
   id_ = id;
 }
 
@@ -163,7 +163,7 @@ bool Cell::DivisionCooldownPassed() const {
 }
 
 void Cell::StartDivisionCooldown() {
-  division_cooldown_ = static_cast<unsigned int>(
+  division_cooldown_ = static_cast<uint>(
       genes_.at(genetics::GeneType::DIVISION_COOLDOWN).value + 50.f * GetShell()
   );
 }
@@ -195,7 +195,7 @@ bool Cell::HasDecayed() const {
 
 void Cell::Tick() {
   if (!IsDead()) {
-    if (lifetime_ == std::numeric_limits<unsigned int>::max())
+    if (lifetime_ == std::numeric_limits<uint>::max())
       lifetime_ = 0;
     else
       lifetime_++;

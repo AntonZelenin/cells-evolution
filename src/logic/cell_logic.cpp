@@ -61,7 +61,7 @@ std::shared_ptr<core::EdibleEntity> NonHunterCellLogic::FindClosestFood(
       return food->second;
   }
 
-  unsigned int closest_food_idx;
+  uint closest_food_idx;
   float min_distance_sqared = std::numeric_limits<float>::max();
   for (auto&[idx, food] : foods) {
     auto dist_squared = (cell.GetPosition() - food->GetPosition()).MagnitudeSquared();
@@ -90,7 +90,7 @@ std::shared_ptr<core::EdibleEntity> HunterCellLogic::FindClosestFood(
       return food->second;
   }
 
-  unsigned int closest_food_idx = 0;
+  uint closest_food_idx = 0;
   float min_distance_squared = std::numeric_limits<float>::max();
   for (auto&[idx, prey_cell] : reinterpret_cast<core::CellStorage &>(cells)) {
     if (prey_cell->IsHunter() && !prey_cell->IsDead()) continue;

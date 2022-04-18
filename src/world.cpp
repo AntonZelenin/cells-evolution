@@ -10,13 +10,13 @@ World::World(int cells_generation_size, int hunter_generation_size, int food_gen
 }
 
 void World::AddFood(std::shared_ptr<Food> new_food) {
-  unsigned int id = index_driver_.GetNextId();
+  uint id = index_driver_.GetNextId();
   new_food->SetId(id);
   food_.insert({id, std::move(new_food)});
 }
 
 void World::AddCell(std::shared_ptr<Cell> cell) {
-  unsigned int id = index_driver_.GetNextId();
+  uint id = index_driver_.GetNextId();
   cell->SetId(id);
   cells_.insert({id, std::move(cell)});
 }

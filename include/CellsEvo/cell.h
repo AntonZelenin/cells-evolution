@@ -23,22 +23,22 @@ class Cell : public EdibleEntity {
   const float k_max_distance_food_detection_ = 200;
   const float k_shell_thickness_coefficient_ = 0.1;
 
-  std::optional<unsigned int> food_target_id_{};
+  std::optional<uint> food_target_id_{};
   std::optional<core::Vector2<float>> direction_{};
   float shell_{};
   // 60 seconds until dead cell turns into food * 60 fps
-  unsigned int time_to_decay_ = 60 * 60;
+  uint time_to_decay_ = 60 * 60;
   Position position_;
 
   void ConsumeMovementEnergy(float speed);
 
  public:
-  unsigned int lifetime_ = 0;
-  unsigned int division_cooldown_ = 0;
+  uint lifetime_ = 0;
+  uint division_cooldown_ = 0;
 
   // todo everything is public =*(
   float energy_{};
-  unsigned int id_{};
+  uint id_{};
   CellType type_;
   std::unordered_map<genetics::GeneType, genetics::Gene> genes_{};
 
@@ -54,8 +54,8 @@ class Cell : public EdibleEntity {
   void ConsumeDivisionEnergy();
   void DamageShell(float value);
   void SetDirection(core::Vector2<float> food_id);
-  void SetFoodTargetId(unsigned int food_id);
-  void SetId(unsigned int id);
+  void SetFoodTargetId(uint food_id);
+  void SetId(uint id);
   void SetPosition(Position pos) override;
   void MoveX(float val);
   void StartDivisionCooldown();
@@ -64,11 +64,11 @@ class Cell : public EdibleEntity {
   void Move(Vector2<float> const &direction);
 
   Position &GetPosition() override;
-  [[nodiscard]] unsigned int GetId() const override;
+  [[nodiscard]] uint GetId() const override;
   [[nodiscard]] float GetSize() const override;
   [[nodiscard]] float GetMaxFoodDetectionDistance() const;
   [[nodiscard]] float GetSpeed() const;
-  [[nodiscard]] std::optional<unsigned int> GetFoodTargetId() const;
+  [[nodiscard]] std::optional<uint> GetFoodTargetId() const;
   [[nodiscard]] int GetDirectionChangeFactor() const;
   [[nodiscard]] float GetMaxEnergy() const;
   [[nodiscard]] float GetShell() const;

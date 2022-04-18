@@ -28,8 +28,8 @@ class App {
       int cells_generation_size,
       int hunter_generation_size,
       int food_generation_size,
-      unsigned int world_width,
-      unsigned int world_height,
+      uint world_width,
+      uint world_height,
       int fps,
       float food_production_rate_secs
   );

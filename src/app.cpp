@@ -95,13 +95,13 @@ App::App(
     int cells_generation_size,
     int hunter_generation_size,
     int food_generation_size,
-    unsigned int world_width,
-    unsigned int world_height,
+    uint world_width,
+    uint world_height,
     int fps,
     float food_production_rate_secs
 ) {
-  const unsigned int kDefaultWidth = 1920;
-  const unsigned int kDefaultHeight = 1440;
+  const uint kDefaultWidth = 1920;
+  const uint kDefaultHeight = 1440;
   window_ = std::make_shared<sf::RenderWindow>(sf::VideoMode(kDefaultWidth, kDefaultHeight), "Cells");
 //  window_->setVerticalSyncEnabled(true);
 

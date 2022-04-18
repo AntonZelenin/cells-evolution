@@ -39,11 +39,11 @@ Position &Food::GetPosition() {
   return position_;
 }
 
-unsigned int Food::GetId() const {
+uint Food::GetId() const {
   return id_;
 }
 
-void Food::SetId(unsigned int id) {
+void Food::SetId(uint id) {
   id_ = id;
 }
 

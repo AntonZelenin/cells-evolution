@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_FOOD_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_FOOD_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_FOOD_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_FOOD_H_
 
 #include <vector>
 #include "base.h"
@@ -12,7 +12,7 @@ enum FoodType {
 
 class Food : public EdibleEntity {
   Position position_;
-  unsigned int id_{};
+  uint id_{};
   float radius_;
   float nutrition_value_;
 
@@ -26,10 +26,10 @@ class Food : public EdibleEntity {
 
   Position &GetPosition() override;
   [[nodiscard]] float GetSize() const override;
-  [[nodiscard]]unsigned int GetId() const override;
+  [[nodiscard]] uint GetId() const override;
   [[nodiscard]] inline float GetNutritionValue() const override;
   void SetPosition(Position) override;
-  void SetId(unsigned int id);
+  void SetId(uint id);
 };
 
 class FoodGenerator {
@@ -44,4 +44,4 @@ class FoodGenerator {
 };
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_FOOD_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_FOOD_H_
