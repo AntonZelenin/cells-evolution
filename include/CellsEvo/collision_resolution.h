@@ -6,7 +6,7 @@
 #include "world.h"
 
 namespace cells_evo::collisions {
-typedef std::pair<std::shared_ptr<core::Cell>, std::shared_ptr<core::Cell>> CellPtrPair;
+typedef std::pair<std::weak_ptr<core::Cell>, std::weak_ptr<core::Cell>> CellPtrPair;
 typedef std::vector<CellPtrPair> CellPtrPairs;
 
 // todo implement more advanced collision resolver in future

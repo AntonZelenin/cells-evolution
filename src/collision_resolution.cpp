@@ -64,15 +64,15 @@ void CollisionResolver::ResolveCollisions(CellPtrPairs &colliding_cells) {
   for (auto &pair : colliding_cells) {
     // todo does & make difference?
     auto &[cell_1, cell_2] = pair;
-    auto radius_sum = cell_1->GetSize() + cell_2->GetSize();
-    auto diff_vector = cell_1->GetPosition() - cell_2->GetPosition();
+    auto radius_sum = cell_1.lock()->GetSize() + cell_2.lock()->GetSize();
+    auto diff_vector = cell_1.lock()->GetPosition() - cell_2.lock()->GetPosition();
     auto distance_to_move =
         radius_sum - diff_vector.Magnitude() + CollisionResolver::k_collision_distance_padding_;
     auto direction = diff_vector;
     direction.Normalize();
 
-    cell_1->GetPosition() += direction * (distance_to_move * -1.0f * (cell_1->GetSize() / radius_sum));
-    cell_2->GetPosition() += direction * (distance_to_move * (cell_2->GetSize() / radius_sum));
+    cell_1.lock()->GetPosition() += direction * (distance_to_move * -1.0f * (cell_1.lock()->GetSize() / radius_sum));
+    cell_2.lock()->GetPosition() += direction * (distance_to_move * (cell_2.lock()->GetSize() / radius_sum));
   }
 }
 }

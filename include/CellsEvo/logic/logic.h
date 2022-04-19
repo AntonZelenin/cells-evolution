@@ -28,8 +28,8 @@ class Logic {
   static bool CanEat(collisions::CellPtrPair &cell_pair);
   collisions::CellPtrPairs Eat(collisions::CellPtrPairs &colliding_cells);
   std::shared_ptr<core::Cell> DivideCell(core::Cell &cell);
-  static std::shared_ptr<core::Cell> &ExtractHunter(collisions::CellPtrPair &cell_pair);
-  static std::shared_ptr<core::Cell> &ExtractPrey(collisions::CellPtrPair &cell_pair);
+  static std::weak_ptr<core::Cell> &ExtractHunter(collisions::CellPtrPair &cell_pair);
+  static std::weak_ptr<core::Cell> &ExtractPrey(collisions::CellPtrPair &cell_pair);
 
  public:
   explicit Logic(core::World &world, float food_production_rate);
