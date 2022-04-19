@@ -66,6 +66,7 @@ class Cell : public EdibleEntity {
   Position &GetPosition() override;
   [[nodiscard]] uint GetId() const override;
   [[nodiscard]] float GetSize() const override;
+  [[nodiscard]] EntityType GetEntityType() const override;
   [[nodiscard]] float GetMaxFoodDetectionDistance() const;
   [[nodiscard]] float GetSpeed() const;
   [[nodiscard]] std::optional<uint> GetFoodTargetId() const;

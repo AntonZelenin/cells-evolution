@@ -18,6 +18,7 @@ void World::AddFood(std::shared_ptr<Food> new_food) {
 void World::AddCell(std::shared_ptr<Cell> cell) {
   uint id = index_driver_.GetNextId();
   cell->SetId(id);
+  tiled_field_.AddEntity(cell);
   cells_.insert({id, std::move(cell)});
 }
 
@@ -33,9 +34,9 @@ void World::GenerateFood(int number) {
 }
 
 void World::GenerateCells(int number) {
-//  AddEntity(std::make_shared<Cell>(
+//  AddCell(std::make_shared<Cell>(
 //      core::CellType::K_NONHUNTER,
-//      core::Position(0, 0),
+//      core::Position(2701, 1801),
 //      cell_generator_.genetic_engineer_.GenerateBaseGenes(core::CellType::K_NONHUNTER)
 //  ));
   AddCells(cell_generator_.Generate(
@@ -69,52 +70,171 @@ void World::AddCells(std::vector<std::shared_ptr<Cell>> new_cells) {
 }
 
 Field::Field(uint width, uint height) {
-  num_of_tiles_x_ = static_cast<uint>(ceil(width / k_tile_size_));
-  num_of_tiles_y_ = static_cast<uint>(ceil(height / k_tile_size_));
+  num_of_tiles_x_ = ceil(static_cast<float>(width) / k_tile_size_);
+  num_of_tiles_y_ = ceil(static_cast<float>(height) / k_tile_size_);
   num_of_tiles_ = num_of_tiles_x_ * num_of_tiles_y_;
   tiles_.reserve(num_of_tiles_);
   for (uint i = 0; i < num_of_tiles_; i++) {
+    tiles_.emplace_back();
     // warm up cache
     GetNeighbouringTileIndices(i);
   }
 }
 
-uint Field::GetTileIdx(const std::weak_ptr<core::Entity> &entity) const {
-  uint x_tile_num = static_cast<uint>(static_cast<uint>(entity.lock()->GetPosition().x) / num_of_tiles_x_);
-  uint y_tile_num = static_cast<uint>(static_cast<uint>(entity.lock()->GetPosition().y) / num_of_tiles_y_);
-  return y_tile_num * num_of_tiles_x_ - (num_of_tiles_x_ - x_tile_num);
+void Field::EntityMoved(const std::weak_ptr<core::Entity> &entity) {
+  auto
+      x = entity.lock()->GetPosition().x,
+      y = entity.lock()->GetPosition().y,
+      size = entity.lock()->GetSize();
+  if (
+      (ceil((x + size) / k_tile_size_) != ceil(((x - size) / k_tile_size_))
+          && (x - size) > 0 && (x + size) < num_of_tiles_x_ * k_tile_size_)
+          || (ceil((y + size) / k_tile_size_) != ceil((y - size) / k_tile_size_)
+              && (y - size) > 0 && (y + size) < num_of_tiles_y_ * k_tile_size_)
+      ) {
+    auto eid = entity.lock()->GetId();
+
+    auto old_tiles = entity_tiles_cache_.find(eid);
+    if (old_tiles != entity_tiles_cache_.end()) {
+      for (auto tile_idx : old_tiles->second) {
+        auto &tile = tiles_[tile_idx];
+        for (auto it = tile.begin(); it != tile.end();) {
+          // here something broke, bad access
+          if (it->expired()) tile.erase(it++);
+          else if (it->lock()->GetId() == eid) {
+            tile.erase(it);
+            break;
+          }
+          else {
+            it++;
+          }
+        }
+      }
+      entity_tiles_cache_.erase(eid);
+    }
+
+    AddEntity(entity);
+  }
+}
+
+std::vector<uint> Field::GetTileIndices(const std::weak_ptr<core::Entity> &entity) {
+  auto res = entity_tiles_cache_.find(entity.lock()->GetId());
+  if (res != entity_tiles_cache_.end()) return res->second;
+
+  std::vector<uint> indices;
+  // you can cache cell tile until it's changed
+  auto
+      x = entity.lock()->GetPosition().x,
+      y = entity.lock()->GetPosition().y,
+      size = entity.lock()->GetSize();
+  // for a cell size is radius, is it also half size for food?
+  // todo I can make an inline function
+  bool left_x_in_different_tile = ceil(x / k_tile_size_) != ceil(((x - size) / k_tile_size_))
+      && (x - size) > 0;
+  bool right_x_in_different_tile = x != 0 && ceil(x / k_tile_size_) != ceil((x + size) / k_tile_size_)
+      && (x + size) < num_of_tiles_x_ * k_tile_size_;
+  bool top_y_in_different_tile = ceil(y / k_tile_size_) != ceil((y - size) / k_tile_size_)
+      && (y - size) > 0;
+  bool bottom_y_in_different_tile = y != 0 && ceil(y / k_tile_size_) != ceil((y + size) / k_tile_size_)
+      && (y + size) < num_of_tiles_y_ * k_tile_size_;
+
+  auto base = GetCoordinatesTileIdx(x, y);
+  indices.push_back(base);
+  if (left_x_in_different_tile)
+    indices.push_back(base - 1);
+  if (right_x_in_different_tile)
+    indices.push_back(base + 1);
+  if (top_y_in_different_tile)
+    indices.push_back(base - num_of_tiles_x_);
+  if (top_y_in_different_tile && left_x_in_different_tile)
+    indices.push_back(base - num_of_tiles_x_ - 1);
+  if (top_y_in_different_tile && right_x_in_different_tile)
+    indices.push_back(base - num_of_tiles_x_ + 1);
+  if (bottom_y_in_different_tile)
+    indices.push_back(base + num_of_tiles_x_);
+  if (bottom_y_in_different_tile && left_x_in_different_tile)
+    indices.push_back(base + num_of_tiles_x_ - 1);
+  if (bottom_y_in_different_tile && right_x_in_different_tile)
+    indices.push_back(base + num_of_tiles_x_ + 1);
+
+  entity_tiles_cache_.insert({entity.lock()->GetId(), indices});
+
+  return indices;
+}
+
+uint Field::GetCoordinatesTileIdx(float x, float y) const {
+  uint x_row = x <= 0.f ? 1 : static_cast<uint>(ceil(x / k_tile_size_));
+  uint y_row = y <= 0.f ? 1 : static_cast<uint>(ceil(y / k_tile_size_));
+  return y_row * num_of_tiles_x_ - (num_of_tiles_x_ - x_row) - 1;
 }
 
 void Field::AddEntity(const std::weak_ptr<core::Entity> &entity) {
-  tiles_[GetTileIdx(entity)].push_back(std::weak_ptr<Entity>(entity));
+  auto new_tiles = GetTileIndices(entity);
+  entity_tiles_cache_.insert({entity.lock()->GetId(), new_tiles});
+  for (auto idx : new_tiles) {
+    if (idx > 69 || idx < 0) {
+      int t = 1;
+    }
+    // next line failed once
+    tiles_[idx].push_back(entity);
+  }
 }
 
 std::vector<uint> Field::GetNeighbouringTileIndices(std::weak_ptr<core::Entity> &entity) {
-  return GetNeighbouringTileIndices(GetTileIdx(entity));
+  return GetNeighbouringTileIndices(
+      GetCoordinatesTileIdx(entity.lock()->GetPosition().x, entity.lock()->GetPosition().y)
+  );
 }
 
 std::vector<uint> Field::GetNeighbouringTileIndices(uint tile_idx) {
-  if (tile_neighbours_cache_.find(tile_idx) != tile_neighbours_cache_.end()) return tile_neighbours_cache_.at(tile_idx);
+  // todo what if large cell sense and you need to search for more then one neighbouring tile?
+  // you can use max sense distance to calculate number of tiles to return
+  if (tile_neighbours_cache_.find(tile_idx) != tile_neighbours_cache_.end())
+    return tile_neighbours_cache_.at(tile_idx);
+  uint shifted_idx = tile_idx + 1;
 
   std::vector<uint> ids;
-  bool is_right_border = tile_idx == 0 || ((tile_idx - 1) % num_of_tiles_x_) == 0;
-  bool is_left_border = tile_idx % num_of_tiles_x_ == 0;
-  bool is_top_border = tile_idx < num_of_tiles_x_;
-  bool is_bottom_border = tile_idx >= num_of_tiles_ - num_of_tiles_x_;
+  bool is_right_border = shifted_idx % num_of_tiles_x_ == 0;
+  bool is_left_border = (shifted_idx - 1) % num_of_tiles_x_ == 0;
+  bool is_top_border = shifted_idx <= num_of_tiles_x_;
+  bool is_bottom_border = shifted_idx > num_of_tiles_ - num_of_tiles_x_;
 
-  if (!is_left_border && !is_top_border) ids.push_back(tile_idx + num_of_tiles_x_ - 1);
-  if (!is_top_border) ids.push_back(tile_idx + num_of_tiles_x_);
-  if (!is_right_border && !is_top_border) ids.push_back(tile_idx + num_of_tiles_x_ + 1);
-  if (!is_left_border) ids.push_back(tile_idx + 1);
+  if (!is_top_border) {
+    if (!is_left_border)
+      ids.push_back(tile_idx - num_of_tiles_x_ - 1);
+    ids.push_back(tile_idx - num_of_tiles_x_);
+    if (!is_right_border)
+      ids.push_back(tile_idx - num_of_tiles_x_ + 1);
+  }
+  if (!is_left_border)
+    ids.push_back(tile_idx - 1);
   ids.push_back(tile_idx);
-  if (!is_right_border) ids.push_back(tile_idx - 1);
-  if (!is_left_border && !is_bottom_border) ids.push_back(tile_idx - num_of_tiles_x_ - 1);
-  if (!is_bottom_border) ids.push_back(tile_idx - num_of_tiles_x_);
-  if (!is_right_border && !is_bottom_border) ids.push_back(tile_idx - num_of_tiles_x_ + 1);
+  if (!is_right_border)
+    ids.push_back(tile_idx + 1);
+  if (!is_bottom_border) {
+    if (!is_left_border)
+      ids.push_back(tile_idx + num_of_tiles_x_ - 1);
+    ids.push_back(tile_idx + num_of_tiles_x_);
+    if (!is_right_border)
+      ids.push_back(tile_idx + num_of_tiles_x_ + 1);
+  }
 
   tile_neighbours_cache_.insert({tile_idx, ids});
 
   return ids;
-  // todo test it
+}
+
+// todo this is a hack, improve
+void Field::Clean() {
+  for (auto &tile : tiles_) {
+    for (auto it = tile.begin(); it != tile.end(); ) {
+      if (it->expired()) {
+        // this thing fails sometimes
+        tile.erase(it++);
+      } else {
+        it++;
+      }
+    }
+  }
 }
 }

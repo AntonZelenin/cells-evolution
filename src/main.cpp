@@ -1,4 +1,5 @@
 #include "CellsEvo/app.h"
+#include "CellsEvo/world.h"
 
 // try to use unique ptr where possible and pass it to functions as a reference
 // optimizations for collision and food detection, keep cell arrays sorted between calls

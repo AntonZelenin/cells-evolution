@@ -13,18 +13,28 @@ void Logic::WorldTick() {
   CountTick();
 
   MoveCells();
-  auto colliding_cells = collisions::CollisionDetector::Detect(world_.cells_);
+  auto colliding_cells = collisions::CollisionDetector::Detect(world_.tiled_field_);
   colliding_cells = Eat(colliding_cells);
   collisions::CollisionResolver::ResolveCollisions(colliding_cells);
 //  TeleportCrossedBoundaries();
   GenerateFood();
   UpdateCellsState();
+  // todo it's temporary
+  world_.tiled_field_.Clean();
+  for (auto &tile : world_.tiled_field_.tiles_) {
+    for (const auto& i : tile) {
+      if (i.expired()) {
+        int t = 1;
+      }
+    }
+  }
 }
 
 void Logic::MoveCells() {
   for (auto &[_, cell] : world_.cells_) {
     if (!cell->IsDead()) {
       MoveCell(cell);
+      world_.tiled_field_.EntityMoved(cell);
     }
     CheckCrossedBoundaries(cell);
   }
@@ -138,7 +148,7 @@ bool CanKill(std::shared_ptr<core::Cell> &hunter_cell, std::shared_ptr<core::Cel
 // todo refactor
 collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
   for (auto &[_, cell] : world_.cells_) {
-    if (cell->IsNonHunter())
+    if (cell->IsNonHunter() && !cell->IsDead())
       // todo this method now is only used in one place, so it can be specific
       non_hunter_cell_logic_.ProcessEatFood(
           *cell,

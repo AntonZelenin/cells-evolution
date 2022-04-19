@@ -55,6 +55,10 @@ float Food::GetSize() const {
   return radius_;
 }
 
+EntityType Food::GetEntityType() const {
+  return EntityType::K_FOOD;
+}
+
 float Food::GetNutritionValue() const {
   return nutrition_value_;
 }

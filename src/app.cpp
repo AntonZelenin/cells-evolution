@@ -15,6 +15,13 @@ void App::Run() {
     ProcessInput();
     gui_->ProcessGui(delta_clock, last_frame_time);
     logic_->WorldTick();
+    for (auto &tile : world_->tiled_field_.tiles_) {
+      for (const auto& i : tile) {
+        if (i.expired()) {
+          int t = 1;
+        }
+      }
+    }
     Draw();
 
     auto time_diff = delta_clock.getElapsedTime().asMicroseconds();

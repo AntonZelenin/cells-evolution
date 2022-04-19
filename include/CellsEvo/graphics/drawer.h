@@ -19,6 +19,8 @@ class CellColorProvider {
 };
 
 class CellDrawer {
+  std::unordered_map<uint, sf::CircleShape> cell_shape_cache_;
+
   const float k_thickness_coefficient_ = 3.0;
   CellColorProvider color_provider_{};
 
@@ -42,6 +44,7 @@ class FoodColorProvider {
 
 // todo make interface for drawers
 class FoodDrawer {
+  std::unordered_map<uint, sf::RectangleShape> food_shape_cache_;
   FoodColorProvider color_provider_{};
 
  public:

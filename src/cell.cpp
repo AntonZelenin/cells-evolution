@@ -24,6 +24,10 @@ float Cell::GetSize() const {
   return genes_.at(genetics::GeneType::SIZE).value + GetShellThickness();
 }
 
+EntityType Cell::GetEntityType() const {
+  return EntityType::K_CELL;
+}
+
 float Cell::GetShellThickness() const {
   return GetShell() * k_shell_thickness_coefficient_;
 }

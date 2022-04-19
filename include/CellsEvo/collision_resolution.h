@@ -13,7 +13,8 @@ typedef std::vector<CellPtrPair> CellPtrPairs;
 class CollisionDetector {
  public:
   // todo it should be generic, accept iterator or something similar
-  static CellPtrPairs Detect(core::CellStorage &cells);
+//  static CellPtrPairs Detect(core::CellStorage &cells);
+  static CellPtrPairs Detect(core::Field &field);
 };
 
 class CollisionResolver {

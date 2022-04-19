@@ -30,6 +30,7 @@ class Food : public EdibleEntity {
   [[nodiscard]] inline float GetNutritionValue() const override;
   void SetPosition(Position) override;
   void SetId(uint id);
+  [[nodiscard]]  EntityType GetEntityType() const override;
 };
 
 class FoodGenerator {
