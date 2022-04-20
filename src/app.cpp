@@ -6,15 +6,23 @@
 namespace cells_evo {
 void App::Run() {
   uint last_frame_time = 1;
-  sf::Clock delta_clock, frame_clock;
+  sf::Clock delta_clock, frame_clock, frame_clock_2;
 
   while (window_->isOpen()) {
     frame_clock.restart();
     ProcessEvents();
+    auto events = frame_clock_2.restart().asMicroseconds();
     ProcessInput();
+    auto input = frame_clock_2.restart().asMicroseconds();
     gui_->ProcessGui(delta_clock, last_frame_time);
+    auto gui = frame_clock_2.restart().asMicroseconds();
     logic_->WorldTick();
+    auto tick = frame_clock_2.restart().asMicroseconds();
+    if (tick > 10000) {
+      int t = 1;
+    }
     Draw();
+    auto draw = frame_clock_2.restart().asMicroseconds();
 
     auto time_diff = delta_clock.getElapsedTime().asMicroseconds();
     last_frame_time = frame_clock.getElapsedTime().asMilliseconds();

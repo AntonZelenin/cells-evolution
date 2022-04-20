@@ -7,9 +7,9 @@ struct less_by_x {
   }
 };
 
-static bool CellsCollide(const std::weak_ptr<core::Entity> &entity_1, const std::weak_ptr<core::Entity> &entity_2) {
-  return (entity_1.lock()->GetPosition() - entity_2.lock()->GetPosition()).MagnitudeSquared()
-      < pow((entity_1.lock()->GetSize() + entity_2.lock()->GetSize()), 2);
+static bool CellsCollide(const std::shared_ptr<core::Entity> &entity_1, const std::shared_ptr<core::Entity> &entity_2) {
+  return (entity_1->GetPosition() - entity_2->GetPosition()).MagnitudeSquared()
+      < pow((entity_1->GetSize() + entity_2->GetSize()), 2);
 }
 
 //CellPtrPairs CollisionDetector::Detect(core::CellStorage &cells) {
@@ -41,14 +41,15 @@ CellPtrPairs CollisionDetector::Detect(core::Field &field) {
     std::sort(tile.begin(), tile.end(), less_by_x());
 
     for (auto entity_ptr = tile.begin() + 1; entity_ptr != tile.end(); entity_ptr++) {
-      if (entity_ptr->lock()->GetEntityType() != core::EntityType::K_CELL
-          || (entity_ptr - 1)->lock()->GetEntityType() != core::EntityType::K_CELL)
+      auto entity = entity_ptr->lock(), next_entity = (entity_ptr - 1)->lock();
+      if (entity->GetEntityType() != core::EntityType::K_CELL
+          || next_entity->GetEntityType() != core::EntityType::K_CELL)
         continue;
-      if (CellsCollide(*entity_ptr, *(entity_ptr - 1))) {
+      if (CellsCollide(entity, next_entity)) {
         colliding_cells.push_back(
             {
-                std::static_pointer_cast<core::Cell>(entity_ptr->lock()),
-                std::static_pointer_cast<core::Cell>((entity_ptr - 1)->lock())
+                std::static_pointer_cast<core::Cell>(entity),
+                std::static_pointer_cast<core::Cell>(next_entity)
             }
         );
       }
@@ -61,18 +62,19 @@ CellPtrPairs CollisionDetector::Detect(core::Field &field) {
 void CollisionResolver::ResolveCollisions(CellPtrPairs &colliding_cells) {
 // it assumes there are no pairs of hunter-nonhunter
   for (auto &pair : colliding_cells) {
-    auto &[cell_1, cell_2] = pair;
+    auto &[c_1, c_2] = pair;
     // todo make sure all ptr are not expired
-    if (cell_1.expired() || cell_2.expired()) continue;
-    auto radius_sum = cell_1.lock()->GetSize() + cell_2.lock()->GetSize();
-    auto diff_vector = cell_1.lock()->GetPosition() - cell_2.lock()->GetPosition();
+    if (c_1.expired() || c_2.expired()) continue;
+    auto cell_1 = c_1.lock(), cell_2 = c_2.lock();
+    auto radius_sum = cell_1->GetSize() + cell_2->GetSize();
+    auto diff_vector = cell_1->GetPosition() - cell_2->GetPosition();
     auto distance_to_move =
         radius_sum - diff_vector.Magnitude() + CollisionResolver::k_collision_distance_padding_;
     auto direction = diff_vector;
     direction.Normalize();
 
-    cell_1.lock()->GetPosition() += direction * (distance_to_move * -1.0f * (cell_1.lock()->GetSize() / radius_sum));
-    cell_2.lock()->GetPosition() += direction * (distance_to_move * (cell_2.lock()->GetSize() / radius_sum));
+    cell_1->GetPosition() += direction * (distance_to_move * -1.0f * (cell_1->GetSize() / radius_sum));
+    cell_2->GetPosition() += direction * (distance_to_move * (cell_2->GetSize() / radius_sum));
   }
 }
 }

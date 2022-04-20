@@ -82,18 +82,18 @@ Field::Field(uint width, uint height) {
   }
 }
 
-void Field::EntityMoved(const std::weak_ptr<core::Entity> &entity) {
+void Field::EntityMoved(const std::shared_ptr<core::Entity> &ent) {
   auto
-      x = entity.lock()->GetPosition().x,
-      y = entity.lock()->GetPosition().y,
-      size = entity.lock()->GetSize();
+      x = ent->GetPosition().x,
+      y = ent->GetPosition().y,
+      size = ent->GetSize();
   if (
       (ceil((x + size) / k_tile_size_) != ceil(((x - size) / k_tile_size_))
           && (x - size) > 0 && (x + size) < num_of_tiles_x_ * k_tile_size_)
           || (ceil((y + size) / k_tile_size_) != ceil((y - size) / k_tile_size_)
               && (y - size) > 0 && (y + size) < num_of_tiles_y_ * k_tile_size_)
       ) {
-    auto eid = entity.lock()->GetId();
+    auto eid = ent->GetId();
 
     auto old_tiles = entity_tiles_cache_.find(eid);
     if (old_tiles != entity_tiles_cache_.end()) {
@@ -114,20 +114,21 @@ void Field::EntityMoved(const std::weak_ptr<core::Entity> &entity) {
       entity_tiles_cache_.erase(eid);
     }
 
-    AddEntity(entity);
+    AddEntity(ent);
   }
 }
 
 std::vector<uint> Field::GetTileIndices(const std::weak_ptr<core::Entity> &entity) {
-  auto res = entity_tiles_cache_.find(entity.lock()->GetId());
+  auto ent = entity.lock();
+  auto res = entity_tiles_cache_.find(ent->GetId());
   if (res != entity_tiles_cache_.end()) return res->second;
 
   std::vector<uint> indices;
   // you can cache cell tile until it's changed
   auto
-      x = entity.lock()->GetPosition().x,
-      y = entity.lock()->GetPosition().y,
-      size = entity.lock()->GetSize();
+      x = ent->GetPosition().x,
+      y = ent->GetPosition().y,
+      size = ent->GetSize();
   // for a cell size is radius, is it also half size for food?
   // todo I can make an inline function
   bool left_x_in_different_tile = ceil(x / k_tile_size_) != ceil(((x - size) / k_tile_size_))
@@ -160,7 +161,7 @@ std::vector<uint> Field::GetTileIndices(const std::weak_ptr<core::Entity> &entit
   if (bottom_y_in_different_tile)
     indices.push_back(base + num_of_tiles_x_);
 
-  entity_tiles_cache_.insert({entity.lock()->GetId(), indices});
+  entity_tiles_cache_.insert({ent->GetId(), indices});
 
   return indices;
 }

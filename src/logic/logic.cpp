@@ -2,6 +2,7 @@
 #include <vector>
 #include "CellsEvo/logic/logic.h"
 #include "CellsEvo/collision_resolution.h"
+#include "SFML/System/Clock.hpp"
 
 namespace cells_evo::logic {
 Logic::Logic(core::World &world, float food_production_rate)
@@ -10,17 +11,26 @@ Logic::Logic(core::World &world, float food_production_rate)
 }
 
 void Logic::WorldTick() {
+  sf::Clock frame_clock;
   CountTick();
 
   MoveCells();
+  auto move = frame_clock.restart().asMicroseconds();
   auto colliding_cells = collisions::CollisionDetector::Detect(world_.tiled_field_);
+  auto coll = frame_clock.restart().asMicroseconds();
   colliding_cells = Eat(colliding_cells);
+  auto eat = frame_clock.restart().asMicroseconds();
   collisions::CollisionResolver::ResolveCollisions(colliding_cells);
+  auto res = frame_clock.restart().asMicroseconds();
 //  TeleportCrossedBoundaries();
   GenerateFood();
   UpdateCellsState();
   // todo it's temporary?
   world_.tiled_field_.Clean();
+  auto end = frame_clock.restart().asMicroseconds();
+  if (move > 10000 || coll > 10000 || eat > 10000 || res > 10000 || res > 10000 || end > 10000) {
+    int t = 1;
+  }
 }
 
 void Logic::MoveCells() {
@@ -194,18 +204,18 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
 }
 
 bool Logic::CanEat(collisions::CellPtrPair &cell_pair) {
-  auto first = cell_pair.first, second = cell_pair.second;
+  auto first = cell_pair.first.lock(), second = cell_pair.second.lock();
 
-  bool at_least_one_alive_hunter = (first.lock()->IsHunter() && !first.lock()->IsDead()) || (second.lock()->IsHunter() && !second.lock()->IsDead());
+  bool at_least_one_alive_hunter = (first->IsHunter() && !first->IsDead()) || (second->IsHunter() && !second->IsDead());
 
   if (!at_least_one_alive_hunter)
     return false;
 
-  if (first.lock()->IsDead() || second.lock()->IsDead())
+  if (first->IsDead() || second->IsDead())
     return true;
 
-  return (first.lock()->IsHunter() && second.lock()->IsNonHunter())
-      || (first.lock()->IsNonHunter() && second.lock()->IsHunter());
+  return (first->IsHunter() && second->IsNonHunter())
+      || (first->IsNonHunter() && second->IsHunter());
 }
 
 std::weak_ptr<core::Cell> &Logic::ExtractHunter(collisions::CellPtrPair &cell_pair) {
