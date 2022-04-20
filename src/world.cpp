@@ -12,6 +12,7 @@ World::World(int cells_generation_size, int hunter_generation_size, int food_gen
 void World::AddFood(std::shared_ptr<Food> new_food) {
   uint id = index_driver_.GetNextId();
   new_food->SetId(id);
+  tiled_field_.AddEntity(new_food);
   food_.insert({id, std::move(new_food)});
 }
 
@@ -179,9 +180,9 @@ void Field::AddEntity(const std::weak_ptr<core::Entity> &entity) {
 }
 
 // todo create a method that returns neighbour tiles depending on a provided radius, it will reduce number of tiles
-std::vector<uint> Field::GetNeighbouringTileIndices(std::weak_ptr<core::Entity> &entity) {
+std::vector<uint> Field::GetNeighbouringTileIndices(core::Entity *entity) {
   return GetNeighbouringTileIndices(
-      GetCoordinatesTileIdx(entity.lock()->GetPosition().x, entity.lock()->GetPosition().y)
+      GetCoordinatesTileIdx(entity->GetPosition().x, entity->GetPosition().y)
   );
 }
 

@@ -41,9 +41,9 @@ CellPtrPairs CollisionDetector::Detect(core::Field &field) {
     std::sort(tile.begin(), tile.end(), less_by_x());
 
     for (auto entity_ptr = tile.begin() + 1; entity_ptr != tile.end(); entity_ptr++) {
-//      if (entity_ptr->lock()->GetEntityType() != core::EntityType::K_CELL
-//          || (entity_ptr - 1)->lock()->GetEntityType() != core::EntityType::K_CELL)
-//        continue;
+      if (entity_ptr->lock()->GetEntityType() != core::EntityType::K_CELL
+          || (entity_ptr - 1)->lock()->GetEntityType() != core::EntityType::K_CELL)
+        continue;
       if (CellsCollide(*entity_ptr, *(entity_ptr - 1))) {
         colliding_cells.push_back(
             {

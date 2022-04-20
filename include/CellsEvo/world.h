@@ -34,7 +34,7 @@ class Field {
 
   void AddEntity(const std::weak_ptr<core::Entity> &entity);
   std::vector<uint> GetNeighbouringTileIndices(uint tile_idx);
-  std::vector<uint> GetNeighbouringTileIndices(std::weak_ptr<core::Entity> &entity);
+  std::vector<uint> GetNeighbouringTileIndices(core::Entity *entity);
   void EntityMoved(const std::weak_ptr<core::Entity> &entity);
   void Clean();
 };

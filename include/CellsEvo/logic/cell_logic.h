@@ -11,22 +11,24 @@ class NonHunterCellLogic {
   virtual std::shared_ptr<core::EdibleEntity> FindClosestFood(
       core::Cell &cell,
       // todo cell depends on world, is it ok? Where to put type definitions?
-      core::EdibleEntityStorage &foods
+      core::EdibleEntityStorage &foods,
+      core::Field &tiled_field
   );
 
  public:
-  virtual void MoveCell(core::Cell &cell, core::EdibleEntityStorage &food_entities);
-  void ProcessEatFood(core::Cell &cell, core::EdibleEntityStorage &food_entities);
+  virtual void MoveCell(core::Cell &cell, core::EdibleEntityStorage &food_entities, core::Field &tiled_field);
+  void ProcessEatFood(core::Cell &cell, core::EdibleEntityStorage &food_entities, core::Field &tiled_field);
   static bool CellGotFood(core::Cell &cell, core::Entity &food_entity);
   static bool CouldSensedFood(core::Cell &cell, core::Entity &food_entity);
-  core::Vector2<float> ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities);
+  core::Vector2<float> ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities, core::Field &tiled_field);
   core::Vector2<float> GetRandomDirection(core::Cell &cell);
 };
 
 class HunterCellLogic : public NonHunterCellLogic {
   std::shared_ptr<core::EdibleEntity> FindClosestFood(
       core::Cell &cell,
-      core::EdibleEntityStorage &cells
+      core::EdibleEntityStorage &cells,
+      core::Field &tiled_field
   ) override;
 };
 }

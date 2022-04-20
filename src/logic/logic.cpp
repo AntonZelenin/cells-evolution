@@ -37,12 +37,14 @@ void Logic::MoveCell(std::shared_ptr<core::Cell> &cell) {
   if (cell->IsNonHunter())
     non_hunter_cell_logic_.MoveCell(
         *cell,
-        reinterpret_cast<core::EdibleEntityStorage &>(world_.food_)
+        reinterpret_cast<core::EdibleEntityStorage &>(world_.food_),
+        world_.tiled_field_
     );
   else
     hunter_cell_logic_.MoveCell(
         *cell,
-        reinterpret_cast<core::EdibleEntityStorage &>(world_.cells_)
+        reinterpret_cast<core::EdibleEntityStorage &>(world_.cells_),
+        world_.tiled_field_
     );
 }
 
@@ -145,7 +147,8 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
       // todo this method now is only used in one place, so it can be specific
       non_hunter_cell_logic_.ProcessEatFood(
           *cell,
-          reinterpret_cast<core::EdibleEntityStorage &>(world_.food_)
+          reinterpret_cast<core::EdibleEntityStorage &>(world_.food_),
+          world_.tiled_field_
       );
   }
   std::vector<std::vector<collisions::CellPtrPair>::iterator> not_existing_pairs;
