@@ -32,7 +32,6 @@ void NonHunterCellLogic::ProcessEatFood(
     core::EdibleEntityStorage &food_entities,
     core::Field &tiled_field
 ) {
-  // todo it shouldn't search for food here, it either has food or not
   auto food = FindClosestFood(cell, food_entities, tiled_field);
   if (food != nullptr && cell.IsHungry() && CellGotFood(cell, *food)) {
     cell.AddEnergy(food->GetNutritionValue());

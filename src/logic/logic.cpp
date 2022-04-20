@@ -28,7 +28,7 @@ void Logic::WorldTick() {
   // todo it's temporary?
   world_.tiled_field_.Clean();
   auto end = frame_clock.restart().asMicroseconds();
-  if (move > 10000 || coll > 10000 || eat > 10000 || res > 10000 || res > 10000 || end > 10000) {
+  if (move > 5000 || coll > 5000 || eat > 5000 || res > 5000 || res > 5000 || end > 5000) {
     int t = 1;
   }
 }
@@ -153,6 +153,7 @@ bool CanKill(std::shared_ptr<core::Cell> &hunter_cell, std::shared_ptr<core::Cel
 // todo refactor
 collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
   for (auto &[_, cell] : world_.cells_) {
+    if (!cell->HasTargetFood()) continue;
     if (cell->IsNonHunter() && !cell->IsDead())
       // todo this method now is only used in one place, so it can be specific
       non_hunter_cell_logic_.ProcessEatFood(
