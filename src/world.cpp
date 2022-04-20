@@ -100,12 +100,12 @@ void Field::EntityMoved(const std::weak_ptr<core::Entity> &entity) {
         auto &tile = tiles_[tile_idx];
         for (auto it = tile.begin(); it != tile.end();) {
           // here something broke, bad access
-          if (it->expired()) tile.erase(it++);
-          else if (it->lock()->GetId() == eid) {
+          if (it->expired()) {
+            it = tile.erase(it);
+          } else if (it->lock()->GetId() == eid) {
             tile.erase(it);
             break;
-          }
-          else {
+          } else {
             it++;
           }
         }
@@ -140,22 +140,24 @@ std::vector<uint> Field::GetTileIndices(const std::weak_ptr<core::Entity> &entit
 
   auto base = GetCoordinatesTileIdx(x, y);
   indices.push_back(base);
-  if (left_x_in_different_tile)
+  if (left_x_in_different_tile) {
     indices.push_back(base - 1);
-  if (right_x_in_different_tile)
+    if (top_y_in_different_tile)
+      indices.push_back(base - num_of_tiles_x_ - 1);
+    if (bottom_y_in_different_tile)
+      indices.push_back(base + num_of_tiles_x_ - 1);
+  }
+  if (right_x_in_different_tile) {
     indices.push_back(base + 1);
+    if (top_y_in_different_tile)
+      indices.push_back(base - num_of_tiles_x_ + 1);
+    if (bottom_y_in_different_tile)
+      indices.push_back(base + num_of_tiles_x_ + 1);
+  }
   if (top_y_in_different_tile)
     indices.push_back(base - num_of_tiles_x_);
-  if (top_y_in_different_tile && left_x_in_different_tile)
-    indices.push_back(base - num_of_tiles_x_ - 1);
-  if (top_y_in_different_tile && right_x_in_different_tile)
-    indices.push_back(base - num_of_tiles_x_ + 1);
   if (bottom_y_in_different_tile)
     indices.push_back(base + num_of_tiles_x_);
-  if (bottom_y_in_different_tile && left_x_in_different_tile)
-    indices.push_back(base + num_of_tiles_x_ - 1);
-  if (bottom_y_in_different_tile && right_x_in_different_tile)
-    indices.push_back(base + num_of_tiles_x_ + 1);
 
   entity_tiles_cache_.insert({entity.lock()->GetId(), indices});
 
@@ -172,14 +174,11 @@ void Field::AddEntity(const std::weak_ptr<core::Entity> &entity) {
   auto new_tiles = GetTileIndices(entity);
   entity_tiles_cache_.insert({entity.lock()->GetId(), new_tiles});
   for (auto idx : new_tiles) {
-    if (idx > 69 || idx < 0) {
-      int t = 1;
-    }
-    // next line failed once
     tiles_[idx].push_back(entity);
   }
 }
 
+// todo create a method that returns neighbour tiles depending on a provided radius, it will reduce number of tiles
 std::vector<uint> Field::GetNeighbouringTileIndices(std::weak_ptr<core::Entity> &entity) {
   return GetNeighbouringTileIndices(
       GetCoordinatesTileIdx(entity.lock()->GetPosition().x, entity.lock()->GetPosition().y)
@@ -224,13 +223,13 @@ std::vector<uint> Field::GetNeighbouringTileIndices(uint tile_idx) {
   return ids;
 }
 
-// todo this is a hack, improve
+// todo this is a hack?
 void Field::Clean() {
   for (auto &tile : tiles_) {
-    for (auto it = tile.begin(); it != tile.end(); ) {
+    for (auto it = tile.begin(); it != tile.end();) {
       if (it->expired()) {
         // this thing fails sometimes
-        tile.erase(it++);
+        it = tile.erase(it);
       } else {
         it++;
       }

@@ -19,15 +19,8 @@ void Logic::WorldTick() {
 //  TeleportCrossedBoundaries();
   GenerateFood();
   UpdateCellsState();
-  // todo it's temporary
+  // todo it's temporary?
   world_.tiled_field_.Clean();
-  for (auto &tile : world_.tiled_field_.tiles_) {
-    for (const auto& i : tile) {
-      if (i.expired()) {
-        int t = 1;
-      }
-    }
-  }
 }
 
 void Logic::MoveCells() {
@@ -117,7 +110,7 @@ void Logic::UpdateCellsState() {
               cell->GetBaseNutritionValue()
           ))
       );
-      world_.cells_.erase(pair++);
+      pair = world_.cells_.erase(pair);
     } else {
       pair++;
     }
@@ -141,8 +134,8 @@ std::shared_ptr<core::Cell> Logic::DivideCell(core::Cell &cell) {
   return new_cell;
 }
 
-bool CanKill(std::weak_ptr<core::Cell> &hunter_cell, std::weak_ptr<core::Cell> &prey_cell) {
-  return prey_cell.lock()->GetSize() < hunter_cell.lock()->GetSize() * 1.5;
+bool CanKill(std::shared_ptr<core::Cell> &hunter_cell, std::shared_ptr<core::Cell> &prey_cell) {
+  return prey_cell->GetSize() < hunter_cell->GetSize() * 1.5;
 }
 
 // todo refactor
@@ -155,33 +148,29 @@ collisions::CellPtrPairs Logic::Eat(collisions::CellPtrPairs &colliding_cells) {
           reinterpret_cast<core::EdibleEntityStorage &>(world_.food_)
       );
   }
-//  std::vector<uint> eaten_cell_ids;
   std::vector<std::vector<collisions::CellPtrPair>::iterator> not_existing_pairs;
   for (
       auto colliding_cell_pair = colliding_cells.begin();
       colliding_cell_pair != colliding_cells.end();
       colliding_cell_pair++
       ) {
-    // if multiple hunters eat same cell - exception
     // todo is it temporary?
+    // todo small hunter collides with a large cell, it can't eat it, then large hunter eats it
+    // todo and then we try to resolve collisions between small hunter and non-existing cell
     if (colliding_cell_pair->first.expired() || colliding_cell_pair->second.expired()) {
       not_existing_pairs.push_back(colliding_cell_pair);
     } else if (CanEat(*colliding_cell_pair)) {
-      auto prey_cell = ExtractPrey(*colliding_cell_pair);
-      auto hunter_cell = ExtractHunter(*colliding_cell_pair);
-//      if (std::find(eaten_cell_ids.begin(), eaten_cell_ids.end(), prey_cell.lock()->GetId()) != eaten_cell_ids.end())
-//        continue;
-      if (!hunter_cell.lock()->IsHungry() || (!CanKill(hunter_cell, prey_cell) && !prey_cell.lock()->IsDead())) continue;
-      // todo it's duplicate
-      if (prey_cell.lock()->HasShell()) {
-        prey_cell.lock()->DamageShell(hunter_cell.lock()->GetPunchStrength());
-        hunter_cell.lock()->ConsumePunchEnergy();
+      auto prey_cell = ExtractPrey(*colliding_cell_pair).lock();
+      auto hunter_cell = ExtractHunter(*colliding_cell_pair).lock();
+      if (!hunter_cell->IsHungry() || (!CanKill(hunter_cell, prey_cell) && !prey_cell->IsDead())) continue;
+      if (prey_cell->HasShell()) {
+        prey_cell->DamageShell(hunter_cell->GetPunchStrength());
+        hunter_cell->ConsumePunchEnergy();
       } else {
-        hunter_cell.lock()->AddEnergy(prey_cell.lock()->GetNutritionValue());
-        hunter_cell.lock()->ClearFoodTarget();
-//        eaten_cell_ids.push_back(prey_cell.lock()->GetId());
+        hunter_cell->AddEnergy(prey_cell->GetNutritionValue());
+        hunter_cell->ClearFoodTarget();
         not_existing_pairs.push_back(colliding_cell_pair);
-        world_.cells_.erase(prey_cell.lock()->GetId());
+        world_.cells_.erase(prey_cell->GetId());
       }
     }
   }

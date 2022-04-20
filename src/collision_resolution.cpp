@@ -3,7 +3,6 @@
 namespace cells_evo::collisions {
 struct less_by_x {
   inline bool operator()(const std::weak_ptr<core::Entity> &entity_1, const std::weak_ptr<core::Entity> &entity_2) {
-    // todo it failed
     return entity_1.lock()->GetPosition().x < entity_2.lock()->GetPosition().x;
   }
 };
@@ -62,8 +61,9 @@ CellPtrPairs CollisionDetector::Detect(core::Field &field) {
 void CollisionResolver::ResolveCollisions(CellPtrPairs &colliding_cells) {
 // it assumes there are no pairs of hunter-nonhunter
   for (auto &pair : colliding_cells) {
-    // todo does & make difference?
     auto &[cell_1, cell_2] = pair;
+    // todo make sure all ptr are not expired
+    if (cell_1.expired() || cell_2.expired()) continue;
     auto radius_sum = cell_1.lock()->GetSize() + cell_2.lock()->GetSize();
     auto diff_vector = cell_1.lock()->GetPosition() - cell_2.lock()->GetPosition();
     auto distance_to_move =

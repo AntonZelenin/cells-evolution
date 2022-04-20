@@ -15,12 +15,6 @@ float CellDrawer::GetSize(const std::shared_ptr<core::Cell> &cell) const {
 
 sf::CircleShape CellDrawer::Get(const std::shared_ptr<core::Cell> &cell) {
   auto size = cell->GetSize();
-  // todo clean cache sometimes
-  auto res = cell_shape_cache_.find(cell->GetId());
-  if (res != cell_shape_cache_.end()) {
-    res->second.setPosition(cell->GetPosition().x - size, cell->GetPosition().y - size);
-    return res->second;
-  }
 
   sf::CircleShape shape(GetSize(cell));
   if (cell->IsDead()) {
@@ -31,8 +25,6 @@ sf::CircleShape CellDrawer::Get(const std::shared_ptr<core::Cell> &cell) {
     shape.setFillColor(sf::Color(194, 255, 254));
   }
   shape.setPosition(cell->GetPosition().x - size, cell->GetPosition().y - size);
-
-  cell_shape_cache_.insert({cell->GetId(), shape});
 
   return shape;
 }
@@ -47,19 +39,11 @@ sf::Color FoodColorProvider::Get(const core::FoodType &type) {
 }
 
 sf::RectangleShape FoodDrawer::Get(const std::shared_ptr<core::Food> &food) {
-  // todo clean cache sometimes
   auto size = food->GetSize();
-  auto res = food_shape_cache_.find(food->GetId());
-  if (res != food_shape_cache_.end()) {
-    res->second.setPosition(food->GetPosition().x - size / 2, food->GetPosition().y - size / 2);
-    return res->second;
-  }
 
   sf::RectangleShape shape(sf::Vector2f(size, size));
   shape.setFillColor(color_provider_.Get(food->type_));
   shape.setPosition(food->GetPosition().x - size / 2, food->GetPosition().y - size / 2);
-
-  food_shape_cache_.insert({food->GetId(), shape});
 
   return shape;
 }
