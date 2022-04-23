@@ -8,26 +8,26 @@ namespace cells_evo::logic {
 class NonHunterCellLogic {
   core::RandomEngine random_engine_{};
 
-  virtual std::shared_ptr<core::EdibleEntity> FindClosestFood(
+  static std::optional<uint> FindClosestFoodId(
       core::Cell &cell,
       // todo cell depends on world, is it ok? Where to put type definitions?
-      core::EdibleEntityStorage &foods
+      core::FoodStorage &foods
   );
 
  public:
-  virtual void MoveCell(core::Cell &cell, core::EdibleEntityStorage &food_entities);
-  void ProcessEatFood(core::Cell &cell, core::EdibleEntityStorage &food_entities);
-  static bool CellGotFood(core::Cell &cell, core::Entity &food_entity);
   static bool CouldSensedFood(core::Cell &cell, core::Entity &food_entity);
-  core::Vector2<float> ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities);
+  void ChooseDirection(core::Cell &cell, core::FoodStorage &food);
   core::Vector2<float> GetRandomDirection(core::Cell &cell);
 };
 
 class HunterCellLogic : public NonHunterCellLogic {
-  std::shared_ptr<core::EdibleEntity> FindClosestFood(
+  static std::optional<uint> FindClosestCellId(
       core::Cell &cell,
-      core::EdibleEntityStorage &cells
-  ) override;
+      uint cell_idx,
+      core::CellStorage &cells
+  );
+ public:
+  void ChooseDirection(core::Cell &cell, uint cell_idx,  core::CellStorage &cells);
 };
 }
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_LOGIC_CELL_LOGIC_H_

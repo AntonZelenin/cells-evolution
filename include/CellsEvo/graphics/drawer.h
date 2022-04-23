@@ -15,19 +15,19 @@ class CellColorProvider {
   };
 
  public:
-  sf::Color GetOutlineColor(const std::shared_ptr<core::Cell> &cell);
+  sf::Color GetOutlineColor(const core::Cell &cell);
 };
 
 class CellDrawer {
   const float k_thickness_coefficient_ = 3.0;
   CellColorProvider color_provider_{};
 
-  [[nodiscard]] float GetThickness(const std::shared_ptr<core::Cell> &cell) const;
-  [[nodiscard]] float GetSize(const std::shared_ptr<core::Cell> &cell) const;
-  [[nodiscard]] float GetBaseThickness(const std::shared_ptr<core::Cell> &cell) const;
+  [[nodiscard]] float GetThickness(const core::Cell &cell) const;
+  [[nodiscard]] float GetSize(const core::Cell &cell) const;
+  [[nodiscard]] float GetBaseThickness(const core::Cell &cell) const;
 
  public:
-  sf::CircleShape Get(const std::shared_ptr<core::Cell> &cell);
+  sf::CircleShape Get(core::Cell &cell);
 };
 
 class FoodColorProvider {
@@ -45,7 +45,7 @@ class FoodDrawer {
   FoodColorProvider color_provider_{};
 
  public:
-  sf::RectangleShape Get(const std::shared_ptr<core::Food> &food);
+  sf::RectangleShape Get(core::Food &food);
 };
 }
 

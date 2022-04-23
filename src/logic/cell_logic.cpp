@@ -1,10 +1,7 @@
 #include "CellsEvo/logic/cell_logic.h"
+#include "CellsEvo/collision_resolution.h"
 
 namespace cells_evo::logic {
-bool NonHunterCellLogic::CellGotFood(core::Cell &cell, core::Entity &food_entity) {
-  return (cell.GetPosition() - food_entity.GetPosition()).MagnitudeSquared() <= pow((cell.GetSize() + food_entity.GetSize()), 2);
-}
-
 core::Vector2<float> NonHunterCellLogic::GetRandomDirection(core::Cell &cell) {
   auto coords = random_engine_.GetRandomFloats(-1, 1, 2);
   auto direction = core::Vector2<float>(coords[0], coords[1]);
@@ -13,99 +10,117 @@ core::Vector2<float> NonHunterCellLogic::GetRandomDirection(core::Cell &cell) {
   return direction;
 }
 
-void NonHunterCellLogic::MoveCell(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
-  // check for new food every N frames
-  if (!cell.GetDirection() || cell.lifetime_ % 15 == 0) {
-    cell.ClearFoodTarget();
-    cell.SetDirection(ChooseDirection(cell, food_entities));
-  } else if (cell.lifetime_ % cell.GetDirectionChangeFactor() == 0) {
-    cell.SetDirection(GetRandomDirection(cell));
-  }
-  cell.Move(cell.GetDirection().value());
-}
-
-void NonHunterCellLogic::ProcessEatFood(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
-  auto food = FindClosestFood(cell, food_entities);
-  if (food != nullptr && cell.IsHungry() && CellGotFood(cell, *food)) {
-    cell.AddEnergy(food->GetNutritionValue());
-    cell.ClearFoodTarget();
-    food_entities.erase(food->GetId());
-  }
-}
-
 bool NonHunterCellLogic::CouldSensedFood(core::Cell &cell, core::Entity &food_entity) {
-  return (cell.GetPosition() - food_entity.GetPosition()).MagnitudeSquared() <= pow(cell.GetMaxFoodDetectionDistance(), 2);
+  return (cell.GetPosition() - food_entity.GetPosition()).MagnitudeSquared()
+      <= pow(cell.GetMaxFoodDetectionDistance(), 2);
 }
 
-core::Vector2<float> NonHunterCellLogic::ChooseDirection(core::Cell &cell, core::EdibleEntityStorage &food_entities) {
-  std::optional<core::Vector2<float>> direction = cell.GetDirection();
-  auto closest_food = FindClosestFood(cell, food_entities);
-  if (!closest_food && !direction) {
+// todo duplicate
+void NonHunterCellLogic::ChooseDirection(core::Cell &cell, core::FoodStorage &food) {
+  core::Vector2<float> direction;
+  auto closest_food_id = FindClosestFoodId(cell, food);
+  if (!closest_food_id.has_value()) {
     direction = GetRandomDirection(cell);
-  } else if (closest_food) {
-    direction = core::GetDirectionVector(cell.GetPosition(), closest_food->GetPosition());
+    cell.ClearFoodTarget();
+  } else {
+    direction = core::GetDirectionVector(cell.GetPosition(), food.at(closest_food_id.value()).GetPosition());
+    cell.SetHasFoodTarget();
   }
-  return direction.value();
+  cell.SetDirection(direction);
 }
 
-std::shared_ptr<core::EdibleEntity> NonHunterCellLogic::FindClosestFood(
+void HunterCellLogic::ChooseDirection(core::Cell &cell, uint cell_idx, core::CellStorage &cells) {
+  core::Vector2<float> direction;
+  auto closest_prey_id = FindClosestCellId(cell, cell_idx, cells);
+  if (!closest_prey_id.has_value()) {
+    direction = GetRandomDirection(cell);
+    cell.ClearFoodTarget();
+  } else {
+    direction = core::GetDirectionVector(cell.GetPosition(), cells[closest_prey_id.value()].GetPosition());
+    cell.SetHasFoodTarget();
+  }
+  cell.SetDirection(direction);
+}
+
+std::optional<uint> NonHunterCellLogic::FindClosestFoodId(
     core::Cell &cell,
-    core::EdibleEntityStorage &foods
+    core::FoodStorage &foods
 ) {
   if (foods.empty())
-    return nullptr;
-  auto cached_closest_food_id = cell.GetFoodTargetId();
-  if (cached_closest_food_id) {
-    auto food = foods.find(cached_closest_food_id.value());
-    if (food != foods.end())
-      return food->second;
-  }
-
-  uint closest_food_idx;
-  float min_distance_sqared = std::numeric_limits<float>::max();
-  for (auto&[idx, food] : foods) {
-    auto dist_squared = (cell.GetPosition() - food->GetPosition()).MagnitudeSquared();
-    if (dist_squared < min_distance_sqared) {
-      min_distance_sqared = dist_squared;
-      closest_food_idx = idx;
-    }
-  }
-  if (!CouldSensedFood(cell, *foods.at(closest_food_idx)))
     return {};
 
-  cell.SetFoodTargetId(closest_food_idx);
-  return foods.at(closest_food_idx);
+  // todo
+  uint closest_food_idx = collisions::CollisionDetector::FindClosestXFoodIdx(cell, foods);
+//  float min_distance_squared = std::numeric_limits<float>::max();
+//  for (auto &food : foods) {
+//    auto dist_squared = (cell.GetPosition() - food.GetPosition()).MagnitudeSquared();
+//    if (dist_squared < min_distance_squared) {
+//      min_distance_squared = dist_squared;
+//      closest_food_idx = food.GetId();
+//    }
+//  }
+  if (!CouldSensedFood(cell, foods.at(closest_food_idx)))
+    return {};
+
+  return closest_food_idx;
 }
 
-std::shared_ptr<core::EdibleEntity> HunterCellLogic::FindClosestFood(
+std::optional<uint> HunterCellLogic::FindClosestCellId(
     core::Cell &cell,
-    core::EdibleEntityStorage &cells
+    uint cell_idx,
+    core::CellStorage &cells
 ) {
-  if (cells.empty())
-    return {};
-  auto cached_closest_food = cell.GetFoodTargetId();
-  if (cached_closest_food) {
-    auto food = cells.find(cached_closest_food.value());
-    if (food != cells.end())
-      return food->second;
-  }
+  if (cells.size() < 2) return {};
+//  uint closest_food_idx = collisions::CollisionDetector::FindClosestXCellIdx(cell, cells);
+  std::optional<uint> closest_food_idx = {};
 
-  uint closest_food_idx = 0;
+  // todo when multiple hunters eat one cell program crashes
+  // todo hunters sometimes choose not the closest cell
+  // todo hunters don't choose dead cells
   float min_distance_squared = std::numeric_limits<float>::max();
-  for (auto&[idx, prey_cell] : reinterpret_cast<core::CellStorage &>(cells)) {
-    if (prey_cell->IsHunter() && !prey_cell->IsDead()) continue;
-    auto dist_squared = (cell.GetPosition() - prey_cell->GetPosition()).MagnitudeSquared();
-    if (dist_squared < min_distance_squared) {
-      min_distance_squared = dist_squared;
-      closest_food_idx = idx;
+  if (cell_idx > 0) {
+    auto closest_x_prey_idx_left = cell_idx - 1;
+    while (closest_x_prey_idx_left >= 0) {
+      auto &prey = cells.at(closest_x_prey_idx_left);
+
+      if (!prey.IsHunter()) {
+        if (pow(prey.GetPosition().x, 2) > min_distance_squared) break;
+        auto dist_squared = (cell.GetPosition() - prey.GetPosition()).MagnitudeSquared();
+        if (dist_squared < min_distance_squared) {
+          min_distance_squared = dist_squared;
+          closest_food_idx = closest_x_prey_idx_left;
+        }
+      }
+
+      // so that there's no overflow of uint
+      if (closest_x_prey_idx_left == 0) break;
+      --closest_x_prey_idx_left;
     }
   }
-  if (closest_food_idx == 0) return {};
 
-  if (!CouldSensedFood(cell, *cells.at(closest_food_idx)))
+  if (cell_idx < cells.size() - 1) {
+    auto closest_x_prey_idx_right = cell_idx + 1;
+    while (closest_x_prey_idx_right < cells.size()) {
+      auto &prey = cells.at(closest_x_prey_idx_right);
+
+      if (!prey.IsHunter()) {
+        if (pow(prey.GetPosition().x, 2) > min_distance_squared) break;
+        auto dist_squared = (cell.GetPosition() - prey.GetPosition()).MagnitudeSquared();
+        if (dist_squared < min_distance_squared) {
+          min_distance_squared = dist_squared;
+          closest_food_idx = closest_x_prey_idx_right;
+        }
+      }
+
+      // so that there's no overflow of uint
+      if (closest_x_prey_idx_right == cells.size() - 1) break;
+      ++closest_x_prey_idx_right;
+    }
+  }
+
+  if (!closest_food_idx.has_value() || !CouldSensedFood(cell, cells.at(closest_food_idx.value())))
     return {};
 
-  cell.SetFoodTargetId(closest_food_idx);
-  return cells.at(closest_food_idx);
+  return closest_food_idx;
 }
 }

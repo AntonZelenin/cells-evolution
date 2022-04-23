@@ -11,7 +11,7 @@ class CellGenerator {
   genetics::Engineer genetic_engineer_{};
 
  public:
-  [[nodiscard]] std::vector<std::shared_ptr<core::Cell>> Generate(
+  [[nodiscard]] std::vector<core::Cell> Generate(
       int field_width,
       int field_height,
       int generation_size,

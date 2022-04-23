@@ -9,6 +9,9 @@
 
 namespace cells_evo::logic {
 class Logic {
+  const uint k_deleted_clear_threshold_ = 200;
+  uint deleted_cells_num_ = 0;
+  uint deleted_food_num_ = 0;
   cells_evo::core::World &world_;
   HunterCellLogic hunter_cell_logic_{};
   NonHunterCellLogic non_hunter_cell_logic_{};
@@ -17,19 +20,26 @@ class Logic {
   core::RandomEngine random_generator_{};
   float food_production_rate_;
 
-  void CountTick();
+  void Tick();
   void GenerateFood();
   void UpdateCellsState();
-  [[maybe_unused]] void TeleportCrossedBoundaries(std::shared_ptr<core::Cell> &cell) const;
-  void CheckCrossedBoundaries(std::shared_ptr<core::Cell> &cell) const;
+  [[maybe_unused]] void TeleportCrossedBoundaries(core::Cell &cell) const;
+  void CheckCrossedBoundaries(core::Cell &cell) const;
   void MoveCells();
-  void MoveCell(std::shared_ptr<core::Cell> &cell);
+  void ChooseDirections();
   bool ShouldGenerateFood();
-  static bool CanEat(collisions::CellPtrPair &cell_pair);
-  collisions::CellPtrPairs Eat(collisions::CellPtrPairs &colliding_cells);
-  std::shared_ptr<core::Cell> DivideCell(core::Cell &cell);
-  static std::shared_ptr<core::Cell> &ExtractHunter(collisions::CellPtrPair &cell_pair);
-  static std::shared_ptr<core::Cell> &ExtractPrey(collisions::CellPtrPair &cell_pair);
+  bool CanEat(collisions::IdxPair &cell_id_pair);
+  void HunterEat(collisions::IdXPairs &colliding_cell_ids);
+  void NonHunterEat(collisions::FoodCellCollisions &colliding_food_cell_ids);
+  core::Cell DivideCell(core::Cell &cell);
+  core::Cell &ExtractHunter(collisions::IdxPair &cell_id_pair);
+  core::Cell &ExtractPrey(collisions::IdxPair &cell_id_pair);
+  void ResolveCellCollisions(collisions::IdXPairs &colliding_cells_ids) const;
+  [[nodiscard]] bool ShouldCleanCells() const;
+  [[nodiscard]] bool ShouldCleanFood() const;
+  void CleanFood();
+  void CleanCells();
+  static bool ShouldChangeDirection(core::Cell &cell);
 
  public:
   explicit Logic(core::World &world, float food_production_rate);

@@ -15,6 +15,7 @@ class Food : public EdibleEntity {
   uint id_{};
   float radius_;
   float nutrition_value_;
+  bool is_deleted_ = false;
 
   static float CalculateRadius(float nutrition_value);
 
@@ -27,8 +28,9 @@ class Food : public EdibleEntity {
   Position &GetPosition() override;
   [[nodiscard]] float GetSize() const override;
   [[nodiscard]] uint GetId() const override;
-  [[nodiscard]] inline float GetNutritionValue() const override;
-  void SetPosition(Position) override;
+  [[nodiscard]] float GetNutritionValue() const override;
+  [[nodiscard]] bool IsDeleted() const;
+  void Delete();
   void SetId(uint id);
 };
 
@@ -36,7 +38,7 @@ class FoodGenerator {
   const int k_min_distance_between_items_ = 1;
 
  public:
-  [[nodiscard]] std::vector<std::shared_ptr<Food>> CreateFloralGeneration(
+  [[nodiscard]] std::vector<Food> CreateFloralGeneration(
       int field_width,
       int field_height,
       int size

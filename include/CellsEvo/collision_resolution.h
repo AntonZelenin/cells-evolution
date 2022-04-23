@@ -6,20 +6,30 @@
 #include "world.h"
 
 namespace cells_evo::collisions {
-typedef std::pair<std::shared_ptr<core::Cell>, std::shared_ptr<core::Cell>> CellPtrPair;
-typedef std::vector<CellPtrPair> CellPtrPairs;
+typedef std::pair<uint, uint> IdxPair;
+typedef std::vector<IdxPair> IdXPairs;
+
+struct FoodCellCollision {
+  uint food_idx;
+  uint cell_idx;
+};
+
+typedef std::vector<FoodCellCollision> FoodCellCollisions;
 
 // todo implement more advanced collision resolver in future
 class CollisionDetector {
  public:
   // todo it should be generic, accept iterator or something similar
-  static CellPtrPairs Detect(core::CellStorage &cells);
+  static IdXPairs DetectCellCollisions(core::CellStorage &cells);
+  static FoodCellCollisions DetectCellFoodCollisions(core::CellStorage &cells, core::FoodStorage &foods);
+  static uint FindClosestXFoodIdx(core::Cell &cell, core::FoodStorage &foods);
+  static uint FindClosestXCellIdx(core::Cell &cell, core::CellStorage &cells);
 };
 
 class CollisionResolver {
   constexpr static const float k_collision_distance_padding_ = 0.1;
  public:
-  static void ResolveCollisions(CellPtrPairs &colliding_cells);
+  static void ResolveCollisions(core::Cell &cell_1, core::Cell &cell_2);
 };
 }
 

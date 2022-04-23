@@ -8,14 +8,13 @@ namespace cells_evo::core {
 class Entity {
  public:
   virtual Position &GetPosition() = 0;
-  virtual void SetPosition(Position) = 0;
   [[nodiscard]] virtual uint GetId() const = 0;
   [[nodiscard]] virtual float GetSize() const = 0;
 };
 
 class EdibleEntity : public Entity {
  public:
-  [[nodiscard]] inline virtual float GetNutritionValue() const = 0;
+  [[nodiscard]] virtual float GetNutritionValue() const = 0;
 };
 }
 

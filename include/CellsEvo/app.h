@@ -23,6 +23,10 @@ class App {
 
   int k_frame_micro_sec_;
   int fps_;
+
+  bool ShouldDrawFood(core::Food &food);
+  bool ShouldDrawCell(core::Cell &cell);
+
  public:
   App(
       int cells_generation_size,

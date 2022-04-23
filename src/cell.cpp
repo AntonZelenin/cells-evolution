@@ -63,14 +63,6 @@ float Cell::GetMaxFoodDetectionDistance() const {
 //    return k_max_distance_food_detection_ * 1.2;
 }
 
-std::optional<uint> Cell::GetFoodTargetId() const {
-  return food_target_id_;
-}
-
-void Cell::SetFoodTargetId(uint food_id) {
-  food_target_id_ = food_id;
-}
-
 [[nodiscard]] std::optional<core::Vector2<float>> Cell::GetDirection() const {
   return direction_;
 }
@@ -95,12 +87,8 @@ void Cell::MoveX(float val) {
   position_.x += val;
 }
 
-// todo maybe update? do I need it?
-void Cell::SetPosition(Position pos) {
-  position_ = pos;
-}
-
 void Cell::Move(core::Vector2<float> const &direction) {
+  // todo they don't move after division
   auto speed = GetSpeed();
   GetPosition() += direction * speed;
   ConsumeMovementEnergy(speed);
@@ -119,6 +107,10 @@ void Cell::ConsumeDivisionEnergy() {
 
 bool Cell::IsDead() const {
   return energy_ <= 0;
+}
+
+bool Cell::IsAlive() const {
+  return !IsDeleted() && !IsDead();
 }
 
 void Cell::AddEnergy(float energy) {
@@ -176,8 +168,12 @@ bool Cell::HasShell() const {
   return GetShell() > 0.0;
 }
 
+void Cell::SetHasFoodTarget() {
+  has_target_food_ = true;
+}
+
 bool Cell::HasTargetFood() const {
-  return static_cast<bool>(food_target_id_);
+  return has_target_food_;
 }
 
 void Cell::DamageShell(float value) {
@@ -207,5 +203,17 @@ void Cell::Tick() {
   } else {
     if (time_to_decay_ > 0) time_to_decay_ -= 1;
   }
+}
+
+void Cell::ClearFoodTarget() {
+  has_target_food_ = false;
+}
+
+bool Cell::IsDeleted() const {
+  return is_deleted_;
+}
+
+void Cell::Delete() {
+  is_deleted_ = true;
 }
 }

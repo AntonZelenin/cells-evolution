@@ -14,16 +14,17 @@ enum CellType {
 };
 
 class Cell : public EdibleEntity {
-  const float k_energy_consumption_coefficient_ = 0.001;
-  const float k_division_energy_size_coefficient_ = 1.0;
-  const float k_hunger_coefficient_ = 0.7;
-  const float k_punch_coefficient_ = 0.0012;
-  const float k_speed_size_coefficient_ = 0.027;
-  const float k_vital_functions_energy_consumption_ = 0.00015;
-  const float k_max_distance_food_detection_ = 200;
-  const float k_shell_thickness_coefficient_ = 0.1;
+  constexpr static const float k_energy_consumption_coefficient_ = 0.001;
+  constexpr static const float k_division_energy_size_coefficient_ = 1.0;
+  constexpr static const float k_hunger_coefficient_ = 0.7;
+  constexpr static const float k_punch_coefficient_ = 0.0012;
+  constexpr static const float k_speed_size_coefficient_ = 0.027;
+  constexpr static const float k_vital_functions_energy_consumption_ = 0.00015;
+  constexpr static const float k_max_distance_food_detection_ = 200;
+  constexpr static const float k_shell_thickness_coefficient_ = 0.1;
 
-  std::optional<uint> food_target_id_{};
+  bool is_deleted_ = false;
+  bool has_target_food_ = false;
   std::optional<core::Vector2<float>> direction_{};
   float shell_{};
   // 60 seconds until dead cell turns into food * 60 fps
@@ -50,31 +51,32 @@ class Cell : public EdibleEntity {
 
   void AddEnergy(float energy);
   void ClearDirection();
-  void ClearFoodTarget() { food_target_id_ = {}; }
+  void ClearFoodTarget();
   void ConsumeDivisionEnergy();
   void DamageShell(float value);
   void SetDirection(core::Vector2<float> food_id);
-  void SetFoodTargetId(uint food_id);
+  void SetHasFoodTarget();
   void SetId(uint id);
-  void SetPosition(Position pos) override;
   void MoveX(float val);
   void StartDivisionCooldown();
   void Tick();
   void ConsumePunchEnergy();
   void Move(Vector2<float> const &direction);
+  void Delete();
 
   Position &GetPosition() override;
   [[nodiscard]] uint GetId() const override;
   [[nodiscard]] float GetSize() const override;
   [[nodiscard]] float GetMaxFoodDetectionDistance() const;
   [[nodiscard]] float GetSpeed() const;
-  [[nodiscard]] std::optional<uint> GetFoodTargetId() const;
   [[nodiscard]] int GetDirectionChangeFactor() const;
   [[nodiscard]] float GetMaxEnergy() const;
   [[nodiscard]] float GetShell() const;
   [[nodiscard]] float GetNutritionValue() const override;
   [[nodiscard]] float GetBaseNutritionValue() const;
   [[nodiscard]] bool IsDead() const;
+  [[nodiscard]] bool IsAlive() const;
+  [[nodiscard]] bool IsDeleted() const;
   [[nodiscard]] bool HasEnergyToDivide() const;
   [[nodiscard]] bool DivisionCooldownPassed() const;
   [[nodiscard]] std::optional<core::Vector2<float>> GetDirection() const;
@@ -84,8 +86,8 @@ class Cell : public EdibleEntity {
   [[nodiscard]] bool IsNonHunter() const;
   [[nodiscard]] bool HasShell() const;
   [[nodiscard]] float GetPunchStrength() const;
-  [[nodiscard]] bool HasTargetFood() const;
   [[nodiscard]] bool HasDecayed() const;
+  [[nodiscard]] bool HasTargetFood() const;
   [[nodiscard]] float GetShellThickness() const;
   [[nodiscard]] float GetHuntingSpeed() const;
   [[nodiscard]] float GetIdleSpeed() const;

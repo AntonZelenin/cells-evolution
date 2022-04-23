@@ -2,18 +2,18 @@
 #include "CellsEvo/food.h"
 
 namespace cells_evo::core {
-std::vector<std::shared_ptr<Food>> FoodGenerator::CreateFloralGeneration(
+std::vector<Food> FoodGenerator::CreateFloralGeneration(
     int field_width,
     int field_height,
     int size
 ) const {
-  std::vector<std::shared_ptr<Food>> foods;
+  std::vector<Food> foods;
   foods.reserve(size);
   auto positions = GenerateRandomPositions(
       field_width, field_height, size, k_min_distance_between_items_
   );
   for (auto &position : positions) {
-    auto food = std::make_shared<Food>(FoodType::K_FLORAL, position);
+    Food food(FoodType::K_FLORAL, position);
     foods.push_back(food);
   }
   return foods;
@@ -47,15 +47,19 @@ void Food::SetId(uint id) {
   id_ = id;
 }
 
-void Food::SetPosition(Position pos) {
-  position_ = pos;
-}
-
 float Food::GetSize() const {
   return radius_;
 }
 
 float Food::GetNutritionValue() const {
   return nutrition_value_;
+}
+
+bool Food::IsDeleted() const {
+  return is_deleted_;
+}
+
+void Food::Delete() {
+  is_deleted_ = true;
 }
 }

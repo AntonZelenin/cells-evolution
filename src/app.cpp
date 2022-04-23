@@ -25,14 +25,39 @@ void App::Run() {
   }
 }
 
+bool App::ShouldDrawFood(core::Food &food) {
+  // todo take into account food size
+  // todo improve
+  auto pos = food.GetPosition();
+  auto center = window_->getView().getCenter();
+  auto size = window_->getView().getSize();
+  return !food.IsDeleted()
+      && pos.x > center.x - (size.x / 2) && pos.x < center.x + (size.x / 2)
+      && pos.y > center.y - (size.y / 2) && pos.y < center.y + (size.y / 2);
+}
+
+bool App::ShouldDrawCell(core::Cell &cell) {
+  // todo take into account cell size
+  // todo improve
+  auto pos = cell.GetPosition();
+  auto center = window_->getView().getCenter();
+  auto size = window_->getView().getSize();
+  return !cell.IsDeleted()
+      && pos.x > center.x - (size.x / 2) && pos.x < center.x + (size.x / 2)
+      && pos.y > center.y - (size.y / 2) && pos.y < center.y + (size.y / 2);
+}
+
 void App::Draw() {
   window_->clear(background_color_);
-  // todo should I filter items out of the view or sfml does it for me?
-  for (auto &[_, food] : world_->food_) {
-    window_->draw(food_drawer_.Get(food));
+  for (auto &food : world_->food_) {
+    if (ShouldDrawFood(food)) {
+      window_->draw(food_drawer_.Get(food));
+    }
   }
-  for (auto &[_, cell] : world_->cells_) {
-    window_->draw(cell_drawer_.Get(cell));
+  for (auto &cell : world_->cells_) {
+    if (ShouldDrawCell(cell)) {
+      window_->draw(cell_drawer_.Get(cell));
+    }
   }
   gui_->Draw();
   window_->display();
