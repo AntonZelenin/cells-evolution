@@ -28,6 +28,7 @@ class HunterCellLogic : public NonHunterCellLogic {
   );
  public:
   void ChooseDirection(core::Cell &cell, uint cell_idx,  core::CellStorage &cells);
+  static bool IsEatable(const core::Cell &prey);
 };
 }
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_LOGIC_CELL_LOGIC_H_

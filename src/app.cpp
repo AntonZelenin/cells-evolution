@@ -7,15 +7,26 @@ namespace cells_evo {
 // todo you can use sf::Vector2f and delta_clock -_-
 void App::Run() {
   uint last_frame_time = 1;
-  sf::Clock delta_clock, frame_clock;
-
+  sf::Clock delta_clock, frame_clock, fc;
+  int c = 1000;
   while (window_->isOpen()) {
+    --c;
     frame_clock.restart();
+    fc.restart();
     ProcessEvents();
+    auto events = fc.restart().asMicroseconds();
     ProcessInput();
+    auto input = fc.restart().asMicroseconds();
     gui_->ProcessGui(delta_clock, last_frame_time);
+    auto gui = fc.restart().asMicroseconds();
     logic_->WorldTick();
+    auto world_tick = fc.restart().asMicroseconds();
     Draw();
+    auto draw = fc.restart().asMicroseconds();
+
+    if (c == 0) {
+      int t = 1;
+    }
 
     auto time_diff = delta_clock.getElapsedTime().asMicroseconds();
     last_frame_time = frame_clock.getElapsedTime().asMilliseconds();
@@ -25,39 +36,34 @@ void App::Run() {
   }
 }
 
-bool App::ShouldDrawFood(core::Food &food) {
+bool App::ShouldDrawFood(core::Food &food, sf::Vector2f &view_center, sf::Vector2f &view_size) {
   // todo take into account food size
-  // todo improve
-  auto pos = food.GetPosition();
-  auto center = window_->getView().getCenter();
-  auto size = window_->getView().getSize();
+  auto &pos = food.GetPosition();
   return !food.IsDeleted()
-      && pos.x > center.x - (size.x / 2) && pos.x < center.x + (size.x / 2)
-      && pos.y > center.y - (size.y / 2) && pos.y < center.y + (size.y / 2);
+      && pos.x > view_center.x - (view_size.x / 2) && pos.x < view_center.x + (view_size.x / 2)
+      && pos.y > view_center.y - (view_size.y / 2) && pos.y < view_center.y + (view_size.y / 2);
 }
 
-bool App::ShouldDrawCell(core::Cell &cell) {
+bool App::ShouldDrawCell(core::Cell &cell, sf::Vector2f &view_center, sf::Vector2f &view_size) {
   // todo take into account cell size
-  // todo improve
-  auto pos = cell.GetPosition();
-  auto center = window_->getView().getCenter();
-  auto size = window_->getView().getSize();
+  auto &pos = cell.GetPosition();
   return !cell.IsDeleted()
-      && pos.x > center.x - (size.x / 2) && pos.x < center.x + (size.x / 2)
-      && pos.y > center.y - (size.y / 2) && pos.y < center.y + (size.y / 2);
+      && pos.x > view_center.x - (view_size.x / 2) && pos.x < view_center.x + (view_size.x / 2)
+      && pos.y > view_center.y - (view_size.y / 2) && pos.y < view_center.y + (view_size.y / 2);
 }
 
 void App::Draw() {
   window_->clear(background_color_);
+  auto view = window_->getView();
+  auto center = view.getCenter();
+  auto size = view.getSize();
   for (auto &food : world_->food_) {
-    if (ShouldDrawFood(food)) {
+    if (ShouldDrawFood(food, center, size))
       window_->draw(food_drawer_.Get(food));
-    }
   }
   for (auto &cell : world_->cells_) {
-    if (ShouldDrawCell(cell)) {
+    if (ShouldDrawCell(cell, center, size))
       window_->draw(cell_drawer_.Get(cell));
-    }
   }
   gui_->Draw();
   window_->display();

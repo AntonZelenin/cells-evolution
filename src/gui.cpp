@@ -82,6 +82,7 @@ void Gui::ProcessGui(sf::Clock &delta_clock, uint frame_time_ms) {
   );
   ImGui::Text("Alive cells: %u", cells_gui_state_.num_alive_cells);
   ImGui::Text("Dead cells: %u", cells_gui_state_.num_dead_cells);
+  ImGui::Text("Food: %u", cells_gui_state_.num_food);
   ImGui::Text("");
   ImGui::Text("Avg hunter speed: %.2f", cells_gui_state_.avg_hunter_speed);
   ImGui::Text("Avg non-hunter speed: %.2f", cells_gui_state_.avg_nonhunter_speed);
@@ -115,6 +116,7 @@ void Gui::UpdateCellsGuiState() {
       }
     }
   }
+  cells_gui_state_.num_food = world_->food_.size();
   cells_gui_state_.avg_hunter_size =
       std::reduce(hunter_sizes.begin(), hunter_sizes.end()) / static_cast<float>(hunter_sizes.size());
   cells_gui_state_.avg_nonhunter_size =

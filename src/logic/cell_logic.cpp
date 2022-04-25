@@ -50,16 +50,52 @@ std::optional<uint> NonHunterCellLogic::FindClosestFoodId(
     return {};
 
   // todo
-  uint closest_food_idx = collisions::CollisionDetector::FindClosestXFoodIdx(cell, foods);
-//  float min_distance_squared = std::numeric_limits<float>::max();
-//  for (auto &food : foods) {
-//    auto dist_squared = (cell.GetPosition() - food.GetPosition()).MagnitudeSquared();
-//    if (dist_squared < min_distance_squared) {
-//      min_distance_squared = dist_squared;
-//      closest_food_idx = food.GetId();
-//    }
-//  }
-  if (!CouldSensedFood(cell, foods.at(closest_food_idx)))
+  auto closest_food_idx = collisions::CollisionDetector::FindClosestXFoodIdx(cell, foods);
+
+  if (!closest_food_idx.has_value()) return {};
+
+  float min_distance_squared = std::numeric_limits<float>::max();
+  if (closest_food_idx >= 0) {
+    auto closest_x_food_idx_left = closest_food_idx.value();
+    while (closest_x_food_idx_left >= 0) {
+      auto &food = foods.at(closest_x_food_idx_left);
+
+      if (!food.IsDeleted()) {
+        if (pow(cell.GetPosition().x - food.GetPosition().x, 2) > min_distance_squared) break;
+        auto dist_squared = (cell.GetPosition() - food.GetPosition()).MagnitudeSquared();
+        if (dist_squared < min_distance_squared) {
+          min_distance_squared = dist_squared;
+          closest_food_idx = closest_x_food_idx_left;
+        }
+      }
+
+      // so that there's no overflow of uint
+      if (closest_x_food_idx_left == 0) break;
+      --closest_x_food_idx_left;
+    }
+  }
+
+  if (closest_food_idx < foods.size() - 1) {
+    auto closest_x_food_idx_right = closest_food_idx.value() + 1;
+    while (closest_x_food_idx_right < foods.size()) {
+      auto &food = foods.at(closest_x_food_idx_right);
+
+      if (!food.IsDeleted()) {
+        if (pow(cell.GetPosition().x - food.GetPosition().x, 2) > min_distance_squared) break;
+        auto dist_squared = (cell.GetPosition() - food.GetPosition()).MagnitudeSquared();
+        if (dist_squared < min_distance_squared) {
+          min_distance_squared = dist_squared;
+          closest_food_idx = closest_x_food_idx_right;
+        }
+      }
+
+      // so that there's no overflow of uint
+      if (closest_x_food_idx_right == foods.size() - 1) break;
+      ++closest_x_food_idx_right;
+    }
+  }
+
+  if (!CouldSensedFood(cell, foods.at(closest_food_idx.value())))
     return {};
 
   return closest_food_idx;
@@ -71,20 +107,18 @@ std::optional<uint> HunterCellLogic::FindClosestCellId(
     core::CellStorage &cells
 ) {
   if (cells.size() < 2) return {};
-//  uint closest_food_idx = collisions::CollisionDetector::FindClosestXCellIdx(cell, cells);
   std::optional<uint> closest_food_idx = {};
 
   // todo when multiple hunters eat one cell program crashes
   // todo hunters sometimes choose not the closest cell
-  // todo hunters don't choose dead cells
   float min_distance_squared = std::numeric_limits<float>::max();
   if (cell_idx > 0) {
     auto closest_x_prey_idx_left = cell_idx - 1;
     while (closest_x_prey_idx_left >= 0) {
       auto &prey = cells.at(closest_x_prey_idx_left);
 
-      if (!prey.IsHunter()) {
-        if (pow(prey.GetPosition().x, 2) > min_distance_squared) break;
+      if (IsEatable(prey)) {
+        if (pow(cell.GetPosition().x - prey.GetPosition().x, 2) > min_distance_squared) break;
         auto dist_squared = (cell.GetPosition() - prey.GetPosition()).MagnitudeSquared();
         if (dist_squared < min_distance_squared) {
           min_distance_squared = dist_squared;
@@ -103,8 +137,8 @@ std::optional<uint> HunterCellLogic::FindClosestCellId(
     while (closest_x_prey_idx_right < cells.size()) {
       auto &prey = cells.at(closest_x_prey_idx_right);
 
-      if (!prey.IsHunter()) {
-        if (pow(prey.GetPosition().x, 2) > min_distance_squared) break;
+      if (IsEatable(prey)) {
+        if (pow(cell.GetPosition().x - prey.GetPosition().x, 2) > min_distance_squared) break;
         auto dist_squared = (cell.GetPosition() - prey.GetPosition()).MagnitudeSquared();
         if (dist_squared < min_distance_squared) {
           min_distance_squared = dist_squared;
@@ -122,5 +156,9 @@ std::optional<uint> HunterCellLogic::FindClosestCellId(
     return {};
 
   return closest_food_idx;
+}
+
+bool HunterCellLogic::IsEatable(const core::Cell &prey) {
+  return !prey.IsDeleted() && (!prey.IsHunter() || prey.IsDead());
 }
 }

@@ -11,6 +11,7 @@ struct CellsGuiState {
   uint num_hunter_cells;
   uint num_nonhunter_cells;
   uint num_dead_cells;
+  uint num_food;
   float avg_frame_time_ms;
   float avg_hunter_size;
   float avg_nonhunter_size;

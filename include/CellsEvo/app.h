@@ -24,8 +24,8 @@ class App {
   int k_frame_micro_sec_;
   int fps_;
 
-  bool ShouldDrawFood(core::Food &food);
-  bool ShouldDrawCell(core::Cell &cell);
+  static bool ShouldDrawFood(core::Food &food, sf::Vector2f &view_center, sf::Vector2f &view_size);
+  static bool ShouldDrawCell(core::Cell &cell, sf::Vector2f &view_center, sf::Vector2f &view_size);
 
  public:
   App(

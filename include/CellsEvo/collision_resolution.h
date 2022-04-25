@@ -22,8 +22,7 @@ class CollisionDetector {
   // todo it should be generic, accept iterator or something similar
   static IdXPairs DetectCellCollisions(core::CellStorage &cells);
   static FoodCellCollisions DetectCellFoodCollisions(core::CellStorage &cells, core::FoodStorage &foods);
-  static uint FindClosestXFoodIdx(core::Cell &cell, core::FoodStorage &foods);
-  static uint FindClosestXCellIdx(core::Cell &cell, core::CellStorage &cells);
+  static std::optional<uint> FindClosestXFoodIdx(core::Cell &cell, core::FoodStorage &foods);
 };
 
 class CollisionResolver {
