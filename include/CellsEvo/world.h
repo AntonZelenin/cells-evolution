@@ -22,8 +22,8 @@ class World {
  public:
   FoodStorage food_{};
   CellStorage cells_{};
-  int width_;
-  int height_;
+  float width_;
+  float height_;
 
   World(int cells_generation_size, int hunter_generation_size, int food_generation_size, int width, int height);
 

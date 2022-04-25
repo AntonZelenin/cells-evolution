@@ -11,7 +11,7 @@ static Position GenerateRandomPosition(
     const std::vector<Position> &occupied_positions,
     int min_distance_between_cells
 ) {
-  auto min_dist_between_cells = static_cast<float>(min_distance_between_cells);
+//  auto min_dist_between_cells = static_cast<float>(min_distance_between_cells);
   Vector2<float> pos{};
   bool is_ok = false;
 

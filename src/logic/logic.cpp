@@ -2,6 +2,7 @@
 #include "CellsEvo/logic/logic.h"
 #include "CellsEvo/collision_resolution.h"
 #include "SFML/System/Clock.hpp"
+#include <chrono>
 
 // you can try to resolve collisions once in a 2-3 frames
 
@@ -86,7 +87,8 @@ void Logic::ChooseDirections() {
 void Logic::MoveCells() {
   for (auto &cell : world_.cells_) {
     if (cell.IsAlive()) {
-      cell.Move(cell.GetDirection().value());
+//      cell.Move(cell.GetDirection().value());
+      cell.Move2();
     }
     CheckCrossedBoundaries(cell);
   }
@@ -95,34 +97,35 @@ void Logic::MoveCells() {
 [[maybe_unused]] void Logic::TeleportCrossedBoundaries(core::Cell &cell) const {
   auto &pos = cell.GetPosition();
   if (pos.x < 0.0) {
-    pos.x = static_cast<float>(world_.width_);
-  } else if (pos.x > static_cast<float>(world_.width_)) {
+    pos.x = world_.width_;
+  } else if (pos.x > world_.width_) {
     pos.x = 0.0;
   }
   if (pos.y < 0.0) {
-    pos.y = static_cast<float>(world_.height_);
-  } else if (pos.y > static_cast<float>(world_.height_)) {
+    pos.y = world_.height_;
+  } else if (pos.y > world_.height_) {
     pos.y = 0.0;
   }
 }
 
 void Logic::CheckCrossedBoundaries(core::Cell &cell) const {
   auto &pos = cell.GetPosition();
+  auto size = cell.GetSize();
   bool hit_the_wall = false;
 
-  if (pos.x < 0.0 + cell.GetSize()) {
-    pos.x = cell.GetSize();
+  if (pos.x < 0.0 + size) {
+    pos.x = size;
     hit_the_wall = true;
-  } else if (pos.x > static_cast<float>(world_.width_) - cell.GetSize()) {
-    pos.x = static_cast<float>(world_.width_) - cell.GetSize();
+  } else if (pos.x > world_.width_ - size) {
+    pos.x = world_.width_ - size;
     hit_the_wall = true;
   }
 
-  if (pos.y < 0.0 + cell.GetSize()) {
-    pos.y = cell.GetSize();
+  if (pos.y < 0.0 + size) {
+    pos.y = size;
     hit_the_wall = true;
-  } else if (pos.y > static_cast<float>(world_.height_) - cell.GetSize()) {
-    pos.y = static_cast<float>(world_.height_) - cell.GetSize();
+  } else if (pos.y > world_.height_ - size) {
+    pos.y = world_.height_ - size;
     hit_the_wall = true;
   }
 
@@ -225,7 +228,7 @@ void Logic::NonHunterEat(collisions::FoodCellCollisions &colliding_food_cell_ids
 }
 
 bool Logic::CanEat(collisions::IdxPair &cell_id_pair) {
-  auto first = world_.cells_[cell_id_pair.first], second = world_.cells_[cell_id_pair.second];
+  auto &first = world_.cells_[cell_id_pair.first], &second = world_.cells_[cell_id_pair.second];
   bool at_least_one_alive_hunter = (first.IsHunter() && !first.IsDead()) || (second.IsHunter() && !second.IsDead());
 
   if (!at_least_one_alive_hunter)

@@ -30,12 +30,17 @@ class Cell : public EdibleEntity {
   // 60 seconds until dead cell turns into food * 60 fps
   uint time_to_decay_ = 60 * 60;
   Position position_;
+  float size_;
+  float hunting_speed_;
+  float idle_speed_;
+  int direction_change_factor_;
+  uint division_cooldown_ = 0;
+  uint base_division_cooldown_ = 0;
 
   void ConsumeMovementEnergy(float speed);
 
  public:
   uint lifetime_ = 0;
-  uint division_cooldown_ = 0;
 
   // todo everything is public =*(
   float energy_{};
@@ -62,6 +67,7 @@ class Cell : public EdibleEntity {
   void Tick();
   void ConsumePunchEnergy();
   void Move(Vector2<float> const &direction);
+  void Move2();
   void Delete();
 
   Position &GetPosition() override;
@@ -91,6 +97,7 @@ class Cell : public EdibleEntity {
   [[nodiscard]] float GetShellThickness() const;
   [[nodiscard]] float GetHuntingSpeed() const;
   [[nodiscard]] float GetIdleSpeed() const;
+  float GetRawSize() const;
 };
 }
 

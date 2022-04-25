@@ -15,8 +15,8 @@ struct food_less_by_x {
 };
 
 World::World(int cells_generation_size, int hunter_generation_size, int food_generation_size, int width, int height) {
-  width_ = width;
-  height_ = height;
+  width_ = static_cast<float>(width);
+  height_ = static_cast<float>(height);
   GenerateCells(cells_generation_size);
   GenerateHunterCells(hunter_generation_size);
   GenerateFood(food_generation_size);

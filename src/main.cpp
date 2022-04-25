@@ -1,7 +1,6 @@
 #include "CellsEvo/app.h"
 
-// try to use unique ptr where possible and pass it to functions as a reference
-// optimizations for collision and food detection, keep cell arrays sorted between calls
+// use Fast Inverse Square Root instead of square root
 // large cells should eat only large, it's not profitable to eat small, maybe gene?
 // and probably they should prefer without shell, and prefer alive over dead
 // implement the rest of genes

@@ -13,6 +13,13 @@ Cell::Cell(
     genes_.insert({gene.type, gene});
     if (gene.type == genetics::GeneType::HARD_SHELL) shell_ = gene.value;
   }
+  size_ = genes_.at(genetics::GeneType::SIZE).value;
+  hunting_speed_ = genes_.at(genetics::GeneType::HUNTING_SPEED).value * k_speed_size_coefficient_ * GetRawSize();
+  idle_speed_ = genes_.at(genetics::GeneType::IDLE_SPEED).value * k_speed_size_coefficient_ * GetRawSize();
+  direction_change_factor_ = static_cast<int>(genes_.at(genetics::GeneType::DIRECTION_CHANGE_FACTOR).value);
+  base_division_cooldown_ = static_cast<uint>(
+      genes_.at(genetics::GeneType::DIVISION_COOLDOWN).value + 50.f * GetShell()
+  );
   energy_ = 0;
 }
 
@@ -21,7 +28,11 @@ Position &Cell::GetPosition() {
 }
 
 float Cell::GetSize() const {
-  return genes_.at(genetics::GeneType::SIZE).value + GetShellThickness();
+  return size_ + GetShellThickness();
+}
+
+float Cell::GetRawSize() const {
+  return size_;
 }
 
 float Cell::GetShellThickness() const {
@@ -40,11 +51,11 @@ float Cell::GetSpeed() const {
 }
 
 float Cell::GetHuntingSpeed() const {
-  return genes_.at(genetics::GeneType::HUNTING_SPEED).value * k_speed_size_coefficient_ * GetSize();
+  return hunting_speed_;
 }
 
 float Cell::GetIdleSpeed() const {
-  return genes_.at(genetics::GeneType::IDLE_SPEED).value * k_speed_size_coefficient_ * GetSize();
+  return idle_speed_;
 }
 
 bool Cell::IsHunter() const {
@@ -91,6 +102,13 @@ void Cell::Move(core::Vector2<float> const &direction) {
   // todo they don't move after division
   auto speed = GetSpeed();
   GetPosition() += direction * speed;
+  ConsumeMovementEnergy(speed);
+}
+
+void Cell::Move2() {
+  // todo they don't end_speed after division
+  auto speed = GetSpeed();
+  GetPosition() += direction_.value() * speed;
   ConsumeMovementEnergy(speed);
 }
 
@@ -155,13 +173,11 @@ bool Cell::DivisionCooldownPassed() const {
 }
 
 void Cell::StartDivisionCooldown() {
-  division_cooldown_ = static_cast<uint>(
-      genes_.at(genetics::GeneType::DIVISION_COOLDOWN).value + 50.f * GetShell()
-  );
+  division_cooldown_ = base_division_cooldown_;
 }
 
 int Cell::GetDirectionChangeFactor() const {
-  return static_cast<int>(genes_.at(genetics::GeneType::DIRECTION_CHANGE_FACTOR).value);
+  return direction_change_factor_;
 }
 
 bool Cell::HasShell() const {
