@@ -208,17 +208,15 @@ bool Cell::HasDecayed() const {
 void Cell::Tick() {
   // todo maybe cells might die after movement, not here, and shell will not divide
   if (!IsDead()) {
-    if (lifetime_ == std::numeric_limits<uint>::max())
-      lifetime_ = 0;
-    else
-      ++lifetime_;
+    ++lifetime_;
     if (division_cooldown_ > 0)
       --division_cooldown_;
     energy_ -= k_vital_functions_energy_consumption_ * GetSize();
     if (energy_ <= 0)
       shell_ /= 2.0;
   } else {
-    if (time_to_decay_ > 0) time_to_decay_ -= 1;
+    if (time_to_decay_ > 0)
+      time_to_decay_ -= 1;
   }
 }
 

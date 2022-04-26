@@ -116,7 +116,8 @@ void Gui::UpdateCellsGuiState() {
       }
     }
   }
-  cells_gui_state_.num_food = world_->food_.size();
+  cells_gui_state_.num_food =
+      std::count_if(world_->food_.begin(), world_->food_.end(), [](core::Food &food) { return !food.IsDeleted(); });
   cells_gui_state_.avg_hunter_size =
       std::reduce(hunter_sizes.begin(), hunter_sizes.end()) / static_cast<float>(hunter_sizes.size());
   cells_gui_state_.avg_nonhunter_size =

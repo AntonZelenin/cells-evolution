@@ -24,6 +24,7 @@ class World {
   CellStorage cells_{};
   float width_;
   float height_;
+  uint ticks_ = 0;
 
   World(int cells_generation_size, int hunter_generation_size, int food_generation_size, int width, int height);
 
@@ -35,6 +36,7 @@ class World {
   void AddCell(Cell &cell);
   void SortCells();
   void SortFood();
+  void Tick();
 };
 }
 

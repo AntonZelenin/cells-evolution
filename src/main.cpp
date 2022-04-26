@@ -1,5 +1,6 @@
 #include "CellsEvo/app.h"
 
+// cache shapes in drawer?
 // use Fast Inverse Square Root instead of square root
 // large cells should eat only large, it's not profitable to eat small, maybe gene?
 // and probably they should prefer without shell, and prefer alive over dead
@@ -22,9 +23,9 @@
 
 int main() {
   cells_evo::App(
-      160,
-      120,
-      500,
+      30,
+      8,
+      80,
       3000,
       2500,
       60,

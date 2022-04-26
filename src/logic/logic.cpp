@@ -2,9 +2,6 @@
 #include "CellsEvo/logic/logic.h"
 #include "CellsEvo/collision_resolution.h"
 #include "SFML/System/Clock.hpp"
-#include <chrono>
-
-// you can try to resolve collisions once in a 2-3 frames
 
 namespace cells_evo::logic {
 Logic::Logic(core::World &world, float food_production_rate)
@@ -13,6 +10,7 @@ Logic::Logic(core::World &world, float food_production_rate)
 }
 
 void Logic::WorldTick() {
+  // todo gui counts deleted cells
   sf::Clock clock;
   Tick();
   ChooseDirections();
@@ -34,17 +32,19 @@ void Logic::WorldTick() {
   auto generate_food = clock.restart().asMicroseconds();
   UpdateCellsState();
   auto upd_state = clock.restart().asMicroseconds();
-  // todo can I clean rarely? Think about binary search with deleted
-//  if (ShouldCleanCells())
+  // todo Think about binary search with deleted
+  if (ShouldCleanCells())
     CleanCells();
   auto clean_cells = clock.restart().asMicroseconds();
-//  if (ShouldCleanFood())
+  if (ShouldCleanFood())
     CleanFood();
-  auto clean_food = clock.restart().asMicroseconds();
-  world_.SortFood();
-  auto sort_food = clock.restart().asMicroseconds();
-  world_.SortCells();
-  auto sort_cells = clock.restart().asMicroseconds();
+  if (world_.ticks_ % 3 == 0) {
+    auto clean_food = clock.restart().asMicroseconds();
+    world_.SortFood();
+    auto sort_food = clock.restart().asMicroseconds();
+    world_.SortCells();
+    auto sort_cells = clock.restart().asMicroseconds();
+  }
   if (world_.cells_[0].lifetime_ == 500) {
     int t = 1;
   }
@@ -58,9 +58,6 @@ void Logic::ResolveCellCollisions(collisions::IdXPairs &colliding_cells_ids) con
 }
 
 bool Logic::ShouldChangeDirection(core::Cell &cell) {
-  auto no_dir = !cell.GetDirection();
-  auto targ = (cell.HasTargetFood() && cell.lifetime_ % 15 == 0);
-  auto change_dir = (!cell.HasTargetFood() && (cell.lifetime_ % cell.GetDirectionChangeFactor() == 0));
   return !cell.GetDirection()
       || (cell.HasTargetFood() && cell.lifetime_ % 15 == 0)
       || (!cell.HasTargetFood() && (cell.lifetime_ % cell.GetDirectionChangeFactor() == 0));
@@ -155,7 +152,9 @@ void Logic::UpdateCellsState() {
           cell.GetBaseNutritionValue()
       ));
       world_.AddFood(food);
+      // todo
       cell.Delete();
+      ++deleted_cells_num_;
     }
   }
   for (auto &cell : new_cells) {
@@ -198,7 +197,9 @@ void Logic::HunterEat(collisions::IdXPairs &colliding_cell_ids) {
         hunter_cell.ClearFoodTarget();
         hunter_cell.ClearDirection();
         eaten_cell_ids.push_back(prey_cell.GetId());
+        // todo
         prey_cell.Delete();
+        ++deleted_cells_num_;
       }
     }
   }
@@ -223,7 +224,9 @@ void Logic::NonHunterEat(collisions::FoodCellCollisions &colliding_food_cell_ids
     cell.ClearFoodTarget();
     cell.ClearDirection();
     eaten_food_ids.push_back(food.GetId());
+    // todo
     food.Delete();
+    ++deleted_food_num_;
   }
 }
 
@@ -261,6 +264,7 @@ void Logic::Tick() {
   for (auto &cell : world_.cells_) {
     cell.Tick();
   }
+  world_.Tick();
 }
 
 bool Logic::ShouldCleanCells() const {
@@ -273,9 +277,11 @@ bool Logic::ShouldCleanFood() const {
 
 void Logic::CleanCells() {
   std::erase_if(world_.cells_, [](core::Cell &cell) { return cell.IsDeleted(); });
+  deleted_cells_num_ = 0;
 }
 
 void Logic::CleanFood() {
   std::erase_if(world_.food_, [](core::Food &food) { return food.IsDeleted(); });
+  deleted_food_num_ = 0;
 }
 }

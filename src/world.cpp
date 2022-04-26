@@ -90,4 +90,8 @@ void World::SortCells() {
 void World::SortFood() {
   std::sort(food_.begin(), food_.end(), food_less_by_x());
 }
+
+void World::Tick() {
+  ++ticks_;
+}
 }

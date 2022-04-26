@@ -36,33 +36,34 @@ void App::Run() {
   }
 }
 
-bool App::ShouldDrawFood(core::Food &food, sf::Vector2f &view_center, sf::Vector2f &view_size) {
+bool App::ShouldDrawFood(core::Food &food, sf::Vector2f const &view_center, sf::Vector2f &half_view_size) {
   // todo take into account food size
   auto &pos = food.GetPosition();
   return !food.IsDeleted()
-      && pos.x > view_center.x - (view_size.x / 2) && pos.x < view_center.x + (view_size.x / 2)
-      && pos.y > view_center.y - (view_size.y / 2) && pos.y < view_center.y + (view_size.y / 2);
+      && pos.x > view_center.x - (half_view_size.x) && pos.x < view_center.x + (half_view_size.x)
+      && pos.y > view_center.y - (half_view_size.y) && pos.y < view_center.y + (half_view_size.y);
 }
 
-bool App::ShouldDrawCell(core::Cell &cell, sf::Vector2f &view_center, sf::Vector2f &view_size) {
+bool App::ShouldDrawCell(core::Cell &cell, sf::Vector2f const &view_center, sf::Vector2f &half_view_size) {
   // todo take into account cell size
   auto &pos = cell.GetPosition();
   return !cell.IsDeleted()
-      && pos.x > view_center.x - (view_size.x / 2) && pos.x < view_center.x + (view_size.x / 2)
-      && pos.y > view_center.y - (view_size.y / 2) && pos.y < view_center.y + (view_size.y / 2);
+      && pos.x > view_center.x - (half_view_size.x) && pos.x < view_center.x + (half_view_size.x)
+      && pos.y > view_center.y - (half_view_size.y) && pos.y < view_center.y + (half_view_size.y);
 }
 
 void App::Draw() {
   window_->clear(background_color_);
-  auto view = window_->getView();
-  auto center = view.getCenter();
-  auto size = view.getSize();
+  auto &center = window_->getView().getCenter();
+  auto half_size = window_->getView().getSize();
+  half_size.x /= 2;
+  half_size.y /= 2;
   for (auto &food : world_->food_) {
-    if (ShouldDrawFood(food, center, size))
+    if (ShouldDrawFood(food, center, half_size))
       window_->draw(food_drawer_.Get(food));
   }
   for (auto &cell : world_->cells_) {
-    if (ShouldDrawCell(cell, center, size))
+    if (ShouldDrawCell(cell, center, half_size))
       window_->draw(cell_drawer_.Get(cell));
   }
   gui_->Draw();

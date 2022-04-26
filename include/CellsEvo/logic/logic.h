@@ -9,7 +9,7 @@
 
 namespace cells_evo::logic {
 class Logic {
-  const uint k_deleted_clear_threshold_ = 200;
+  const uint k_deleted_clear_threshold_ = 100;
   uint deleted_cells_num_ = 0;
   uint deleted_food_num_ = 0;
   cells_evo::core::World &world_;
