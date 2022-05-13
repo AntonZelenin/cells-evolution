@@ -80,7 +80,7 @@ class Dispatcher {
 
 //class Observer {
 // public:
-//  static void Handle(const Event &e) {
+//  static void HandleEvent(const Event &e) {
 //    if (e.Type() == ToggleCellsDrawingEvent::descriptor_) {
 //      const auto &demo_event = dynamic_cast<const ToggleCellsDrawingEvent &>(e);
 //    }

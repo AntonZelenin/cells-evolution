@@ -116,16 +116,17 @@ void Gui::UpdateCellsGuiState() {
   std::vector<float> nonhunter_speeds;
 
   for (auto &cell : world_->cells_) {
+    if (cell.IsDeleted()) continue;
     if (cell.IsDead())
-      cells_gui_state_.num_dead_cells++;
+      ++cells_gui_state_.num_dead_cells;
     else {
-      cells_gui_state_.num_alive_cells++;
+      ++cells_gui_state_.num_alive_cells;
       if (cell.IsHunter()) {
-        cells_gui_state_.num_hunter_cells++;
+        ++cells_gui_state_.num_hunter_cells;
         hunter_sizes.push_back(cell.GetSize());
         hunter_speeds.push_back(cell.GetHuntingSpeed());
       } else {
-        cells_gui_state_.num_nonhunter_cells++;
+        ++cells_gui_state_.num_nonhunter_cells;
         nonhunter_sizes.push_back(cell.GetSize());
         nonhunter_speeds.push_back(cell.GetHuntingSpeed());
       }

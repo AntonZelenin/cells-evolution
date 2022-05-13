@@ -1,19 +1,6 @@
 #include "CellsEvo/collision_resolution.h"
 
 namespace cells_evo::collisions {
-// todo can it be a single struct?
-//struct cell_less_by_x {
-//  inline bool operator()(core::Cell &cell_1, core::Cell &cell_2) {
-//    return cell_1.GetPosition().x < cell_2.GetPosition().x;
-//  }
-//};
-//
-//struct food_less_by_x {
-//  inline bool operator()(core::Food &food_1, core::Food &food_2) {
-//    return food_1.GetPosition().x < food_2.GetPosition().x;
-//  }
-//};
-
 static bool CellsCollide(core::Cell &cell_1, core::Cell &cell_2) {
   return (cell_1.GetPosition() - cell_2.GetPosition()).MagnitudeSquared()
       < pow((cell_1.GetSize() + cell_2.GetSize()), 2);
@@ -25,11 +12,9 @@ static bool CellFoodCollide(core::Cell &cell, core::Food &food) {
 }
 
 IdXPairs CollisionDetector::DetectCellCollisions(core::CellStorage &cells) {
+  // todo it assumes input is sorted
   if (cells.size() < 2)
     return {};
-
-  // todo where is the best place to sort?
-//  std::sort(cells.begin(), cells.end(), cell_less_by_x());
 
   IdXPairs colliding_cell_indices;
   // todo a cell can collide with more than one
@@ -54,8 +39,7 @@ FoodCellCollisions CollisionDetector::DetectCellFoodCollisions(core::CellStorage
   };
   auto max_size_food = std::max_element(foods.begin(), foods.end(), comparison);
 
-  FoodCellCollisions colliding; // food 27 cell 143
-  // todo probably collisions problems are because of dead cells
+  FoodCellCollisions colliding;
   for (uint food_idx = 0, cell_idx = 0; food_idx < foods.size() && cell_idx < cells.size();) {
      auto &cell = cells[cell_idx];
     auto &food = foods[food_idx];
@@ -83,12 +67,9 @@ FoodCellCollisions CollisionDetector::DetectCellFoodCollisions(core::CellStorage
         continue;
       }
     } else {
-      // todo are you sure it's working correctly?
-      if ((cell.GetPosition() - food.GetPosition()).MagnitudeSquared() < pow(cell.GetSize() + food.GetSize(), 2)) {
-//      if (abs(cell.GetPosition().y - food.GetPosition().y) <= cell.GetSize() + food.GetSize()) {
+      if ((cell.GetPosition() - food.GetPosition()).MagnitudeSquared() <= pow(cell.GetSize() + food.GetSize(), 2)) {
         colliding.push_back(FoodCellCollision{food_idx, cell_idx});
         ++cell_idx;
-//      }
       } else {
         if (x_diff > 0) {
           // if it's to the left of the food

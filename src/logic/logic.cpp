@@ -10,7 +10,6 @@ Logic::Logic(core::World &world, float food_production_rate)
 }
 
 void Logic::WorldTick() {
-  // todo gui counts deleted cells
   sf::Clock clock;
   Tick();
   ChooseDirections();
@@ -39,7 +38,6 @@ void Logic::WorldTick() {
   auto generate_food = clock.restart().asMicroseconds();
   UpdateCellsState();
   auto upd_state = clock.restart().asMicroseconds();
-  // todo Think about binary search with deleted
   if (ShouldCleanCells())
     CleanCells();
   auto clean_cells = clock.restart().asMicroseconds();
@@ -155,7 +153,6 @@ void Logic::UpdateCellsState() {
           cell.GetBaseNutritionValue()
       ));
       world_.AddFood(food);
-      // todo
       cell.Delete();
       ++deleted_cells_num_;
     }
@@ -200,7 +197,6 @@ void Logic::HunterEat(collisions::IdXPairs &colliding_cell_ids) {
         hunter_cell.ClearFoodTarget();
         hunter_cell.ClearDirection();
         eaten_cell_ids.push_back(prey_cell.GetId());
-        // todo
         prey_cell.Delete();
         ++deleted_cells_num_;
       }
@@ -227,7 +223,6 @@ void Logic::NonHunterEat(collisions::FoodCellCollisions &colliding_food_cell_ids
     cell.ClearFoodTarget();
     cell.ClearDirection();
     eaten_food_ids.push_back(food.GetId());
-    // todo
     food.Delete();
     ++deleted_food_num_;
   }
@@ -271,19 +266,17 @@ void Logic::Tick() {
 }
 
 bool Logic::ShouldCleanCells() const {
-  return true;
+//  return true;
   return deleted_cells_num_ >= k_deleted_clear_threshold_;
 }
 
 bool Logic::ShouldCleanFood() const {
-  return true;
+//  return true;
   return deleted_food_num_ >= k_deleted_clear_threshold_;
 }
 
 void Logic::CleanCells() {
   std::erase_if(world_.cells_, [](core::Cell &cell) { return cell.IsDeleted(); });
-  // todo it's for debug
-//  std::erase_if(world_.cells_, [](core::Cell &cell) { return cell.IsDead(); });
   deleted_cells_num_ = 0;
 }
 

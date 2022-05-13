@@ -1,19 +1,6 @@
 #include "CellsEvo/world.h"
 
 namespace cells_evo::core {
-// todo duplicate
-struct cell_less_by_x {
-  inline bool operator()(core::Cell &cell_1, core::Cell &cell_2) {
-    return cell_1.GetPosition().x < cell_2.GetPosition().x;
-  }
-};
-
-struct food_less_by_x {
-  inline bool operator()(core::Food &food_1, core::Food &food_2) {
-    return food_1.GetPosition().x < food_2.GetPosition().x;
-  }
-};
-
 World::World(int cells_generation_size, int hunter_generation_size, int food_generation_size, int width, int height) {
   width_ = static_cast<float>(width);
   height_ = static_cast<float>(height);
@@ -35,9 +22,6 @@ void World::AddCell(Cell &cell) {
 }
 
 void World::GenerateFood(int number) {
-//  AddFood(
-//      std::make_shared<Food>(FoodType::K_FLORAL, core::Position(0, 0))
-//  );
   AddFood(food_generator_.CreateFloralGeneration(
       width_,
       height_,
@@ -46,11 +30,6 @@ void World::GenerateFood(int number) {
 }
 
 void World::GenerateCells(int number) {
-//  AddEntity(std::make_shared<Cell>(
-//      core::CellType::K_NONHUNTER,
-//      core::Position(0, 0),
-//      cell_generator_.genetic_engineer_.GenerateBaseGenes(core::CellType::K_NONHUNTER)
-//  ));
   AddCells(cell_generator_.Generate(
       width_,
       height_,
@@ -83,12 +62,20 @@ void World::AddCells(std::vector<Cell> new_cells) {
   SortCells();
 }
 
+bool CellLessByX(core::Cell &cell_1, core::Cell &cell_2) {
+  return cell_1.GetPosition().x < cell_2.GetPosition().x;
+}
+
+bool FoodLessByX(core::Food &food_1, core::Food &food_2) {
+  return food_1.GetPosition().x < food_2.GetPosition().x;
+}
+
 void World::SortCells() {
-  std::sort(cells_.begin(), cells_.end(), cell_less_by_x());
+  std::sort(cells_.begin(), cells_.end(), CellLessByX);
 }
 
 void World::SortFood() {
-  std::sort(food_.begin(), food_.end(), food_less_by_x());
+  std::sort(food_.begin(), food_.end(), FoodLessByX);
 }
 
 void World::Tick() {

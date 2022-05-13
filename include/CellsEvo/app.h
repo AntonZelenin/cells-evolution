@@ -47,22 +47,7 @@ class App {
   void ProcessEvents();
   void ProcessInput();
   void Draw();
-  // todo
-  void Handle(const event::Event &e) {
-    auto event = e.Type();
-    if (event == event::ToggleCellsDrawingEvent::descriptor_) {
-      draw_cells_ = !draw_cells_;
-    } else if (event == event::ToggleSimulation::descriptor_) {
-      run_simulation_ = !run_simulation_;
-    } else if (event == event::ToggleDrawCellIndices::descriptor_) {
-      draw_cell_indices_ = !draw_cell_indices_;
-    } else if (event == event::ToggleDrawFoodIndices::descriptor_) {
-      draw_food_indices_ = !draw_food_indices_;
-    } else if (event == event::GenerateHunterCell::descriptor_) {
-      world_->GenerateHunterCells(1);
-    }
-  }
+  void HandleEvent(const event::Event &e);
 };
 }
-
 #endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_APP_H_

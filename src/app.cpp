@@ -5,7 +5,6 @@
 #include "SFML/Graphics.hpp"
 
 namespace cells_evo {
-// todo you can use sf::Vector2f and delta_clock -_-
 void App::Run() {
   uint last_frame_time = 1;
   sf::Clock delta_clock, frame_clock, fc;
@@ -192,23 +191,38 @@ App::App(
 
   gui_->event_dispatcher_.Subscribe(
       event::ToggleCellsDrawingEvent::descriptor_,
-      [this](auto &&ph_1) { Handle(std::forward<decltype(ph_1)>(ph_1)); }
+      [this](auto &&ph_1) { HandleEvent(std::forward<decltype(ph_1)>(ph_1)); }
   );
   gui_->event_dispatcher_.Subscribe(
       event::ToggleSimulation::descriptor_,
-      [this](auto &&ph_1) { Handle(std::forward<decltype(ph_1)>(ph_1)); }
+      [this](auto &&ph_1) { HandleEvent(std::forward<decltype(ph_1)>(ph_1)); }
   );
   gui_->event_dispatcher_.Subscribe(
       event::ToggleDrawCellIndices::descriptor_,
-      [this](auto &&ph_1) { Handle(std::forward<decltype(ph_1)>(ph_1)); }
+      [this](auto &&ph_1) { HandleEvent(std::forward<decltype(ph_1)>(ph_1)); }
   );
   gui_->event_dispatcher_.Subscribe(
       event::ToggleDrawFoodIndices::descriptor_,
-      [this](auto &&ph_1) { Handle(std::forward<decltype(ph_1)>(ph_1)); }
+      [this](auto &&ph_1) { HandleEvent(std::forward<decltype(ph_1)>(ph_1)); }
   );
   gui_->event_dispatcher_.Subscribe(
       event::GenerateHunterCell::descriptor_,
-      [this](auto &&ph_1) { Handle(std::forward<decltype(ph_1)>(ph_1)); }
+      [this](auto &&ph_1) { HandleEvent(std::forward<decltype(ph_1)>(ph_1)); }
   );
+}
+
+void App::HandleEvent(const event::Event &e) {
+  auto event = e.Type();
+  if (event == event::ToggleCellsDrawingEvent::descriptor_) {
+    draw_cells_ = !draw_cells_;
+  } else if (event == event::ToggleSimulation::descriptor_) {
+    run_simulation_ = !run_simulation_;
+  } else if (event == event::ToggleDrawCellIndices::descriptor_) {
+    draw_cell_indices_ = !draw_cell_indices_;
+  } else if (event == event::ToggleDrawFoodIndices::descriptor_) {
+    draw_food_indices_ = !draw_food_indices_;
+  } else if (event == event::GenerateHunterCell::descriptor_) {
+    world_->GenerateHunterCells(1);
+  }
 }
 }
