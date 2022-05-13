@@ -97,7 +97,7 @@ class Cell : public EdibleEntity {
   [[nodiscard]] float GetShellThickness() const;
   [[nodiscard]] float GetHuntingSpeed() const;
   [[nodiscard]] float GetIdleSpeed() const;
-  float GetRawSize() const;
+  [[nodiscard]] float GetRawSize() const;
 };
 }
 

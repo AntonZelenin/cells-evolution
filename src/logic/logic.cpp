@@ -283,7 +283,7 @@ bool Logic::ShouldCleanFood() const {
 void Logic::CleanCells() {
   std::erase_if(world_.cells_, [](core::Cell &cell) { return cell.IsDeleted(); });
   // todo it's for debug
-  std::erase_if(world_.cells_, [](core::Cell &cell) { return cell.IsDead(); });
+//  std::erase_if(world_.cells_, [](core::Cell &cell) { return cell.IsDead(); });
   deleted_cells_num_ = 0;
 }
 

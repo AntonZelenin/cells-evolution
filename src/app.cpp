@@ -1,4 +1,5 @@
 #include <thread>
+#include <string>
 #include "CellsEvo/app.h"
 #include "CellsEvo/graphics.h"
 #include "SFML/Graphics.hpp"
@@ -59,14 +60,41 @@ void App::Draw() {
   auto half_size = window_->getView().getSize();
   half_size.x /= 2;
   half_size.y /= 2;
-  for (auto &food : world_->food_) {
-    if (ShouldDrawFood(food, center, half_size))
+  // todo
+  sf::Font font;
+  if (!font.loadFromFile("include/imgui/misc/fonts/ProggyClean.ttf")) {
+    throw std::runtime_error("Failed to load font for SFML");
+  }
+  for (int i = 0; auto &food : world_->food_) {
+    if (ShouldDrawFood(food, center, half_size)) {
       window_->draw(food_drawer_.Get(food));
+      if (draw_food_indices_) {
+        sf::Text idx_label;
+        idx_label.setFont(font);
+        idx_label.setString(std::to_string(i));
+        idx_label.setPosition(food.GetPosition().x, food.GetPosition().y);
+        idx_label.setCharacterSize(20);
+        idx_label.setFillColor(sf::Color::White);
+        window_->draw(idx_label);
+      }
+    }
+    ++i;
   }
   if (draw_cells_) {
-    for (auto &cell : world_->cells_) {
-      if (ShouldDrawCell(cell, center, half_size))
+    for (int i = 0; auto &cell : world_->cells_) {
+      if (ShouldDrawCell(cell, center, half_size)) {
         window_->draw(cell_drawer_.Get(cell));
+        if (draw_cell_indices_) {
+          sf::Text idx_label;
+          idx_label.setFont(font);
+          idx_label.setString(std::to_string(i));
+          idx_label.setPosition(cell.GetPosition().x, cell.GetPosition().y);
+          idx_label.setCharacterSize(20);
+          idx_label.setFillColor(sf::Color::White);
+          window_->draw(idx_label);
+        }
+      }
+      ++i;
     }
   }
   gui_->Draw();
@@ -95,12 +123,12 @@ void App::ProcessInput() {
     view.move(5.0, 0.0);
     window_->setView(view);
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
     auto view = window_->getView();
     view.zoom(1 + 0.01f);
     window_->setView(view);
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::V)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
     auto view = window_->getView();
     view.zoom(1 - 0.01f);
     window_->setView(view);
@@ -168,6 +196,18 @@ App::App(
   );
   gui_->event_dispatcher_.Subscribe(
       event::ToggleSimulation::descriptor_,
+      [this](auto &&ph_1) { Handle(std::forward<decltype(ph_1)>(ph_1)); }
+  );
+  gui_->event_dispatcher_.Subscribe(
+      event::ToggleDrawCellIndices::descriptor_,
+      [this](auto &&ph_1) { Handle(std::forward<decltype(ph_1)>(ph_1)); }
+  );
+  gui_->event_dispatcher_.Subscribe(
+      event::ToggleDrawFoodIndices::descriptor_,
+      [this](auto &&ph_1) { Handle(std::forward<decltype(ph_1)>(ph_1)); }
+  );
+  gui_->event_dispatcher_.Subscribe(
+      event::GenerateHunterCell::descriptor_,
       [this](auto &&ph_1) { Handle(std::forward<decltype(ph_1)>(ph_1)); }
   );
 }

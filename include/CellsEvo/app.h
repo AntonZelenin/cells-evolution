@@ -22,6 +22,8 @@ class App {
   sf::Color background_color_ = sf::Color(15, 24, 41);
 
   bool draw_cells_ = true;
+  bool draw_food_indices_ = false;
+  bool draw_cell_indices_ = false;
   bool run_simulation_ = true;
 
   int k_frame_micro_sec_;
@@ -52,6 +54,12 @@ class App {
       draw_cells_ = !draw_cells_;
     } else if (event == event::ToggleSimulation::descriptor_) {
       run_simulation_ = !run_simulation_;
+    } else if (event == event::ToggleDrawCellIndices::descriptor_) {
+      draw_cell_indices_ = !draw_cell_indices_;
+    } else if (event == event::ToggleDrawFoodIndices::descriptor_) {
+      draw_food_indices_ = !draw_food_indices_;
+    } else if (event == event::GenerateHunterCell::descriptor_) {
+      world_->GenerateHunterCells(1);
     }
   }
 };

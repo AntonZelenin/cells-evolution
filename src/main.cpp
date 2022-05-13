@@ -1,5 +1,6 @@
 #include "CellsEvo/app.h"
 
+// add change speed buttons
 // cache shapes in drawer?
 // use Fast Inverse Square Root instead of square root
 // large cells should eat only large, it's not profitable to eat small, maybe gene?
@@ -22,15 +23,14 @@
 // there will be a colony of cells and different species can fight for it
 
 int main() {
-  // todo add getting cell and food idx on click
   cells_evo::App(
-      15,
-      0,
-      20,
-      1000,
-      1000,
+      25,
+      8,
+      50,
+      2000,
+      2000,
       60,
-      1.0
+      0.4
   ).Run();
   return 0;
 }

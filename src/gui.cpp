@@ -1,6 +1,5 @@
 #include <utility>
 #include "CellsEvo/gui.h"
-#include "CellsEvo/app.h"
 #include "imgui/imgui-SFML.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_demo.cpp"
@@ -89,11 +88,20 @@ void Gui::ProcessGui(sf::Clock &delta_clock, uint frame_time_ms) {
   ImGui::Text("Avg non-hunter speed: %.2f", cells_gui_state_.avg_nonhunter_speed);
   ImGui::Text("Avg hunter size: %.2f", cells_gui_state_.avg_hunter_size);
   ImGui::Text("Avg non-hunter size: %.2f", cells_gui_state_.avg_nonhunter_size);
+  if (ImGui::Button("Play/Pause")) {
+    event_dispatcher_.Post(event::ToggleSimulation());
+  }
+  if (ImGui::Button("Generate hunter")) {
+    event_dispatcher_.Post(event::GenerateHunterCell());
+  }
   if (ImGui::Button("Draw cells")) {
     event_dispatcher_.Post(event::ToggleCellsDrawingEvent());
   }
-  if (ImGui::Button("Play/Pause")) {
-    event_dispatcher_.Post(event::ToggleSimulation());
+  if (ImGui::Button("Toggle cell indices")) {
+    event_dispatcher_.Post(event::ToggleDrawCellIndices());
+  }
+  if (ImGui::Button("Toggle food indices")) {
+    event_dispatcher_.Post(event::ToggleDrawFoodIndices());
   }
   ImGui::End();
 }

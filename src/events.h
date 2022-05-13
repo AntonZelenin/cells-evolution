@@ -33,10 +33,34 @@ class ToggleCellsDrawingEvent : public Event {
 
 class ToggleSimulation : public Event {
  public:
-//  ToggleSimulation() = default;
-//  ~ToggleSimulation() override = default;
-
   static constexpr DescriptorType descriptor_ = "ToggleSimulation";
+
+  [[nodiscard]] DescriptorType Type() const override {
+    return descriptor_;
+  }
+};
+
+class ToggleDrawCellIndices : public Event {
+ public:
+  static constexpr DescriptorType descriptor_ = "ToggleDrawCellIndices";
+
+  [[nodiscard]] DescriptorType Type() const override {
+    return descriptor_;
+  }
+};
+
+class ToggleDrawFoodIndices : public Event {
+ public:
+  static constexpr DescriptorType descriptor_ = "ToggleDrawFoodIndices";
+
+  [[nodiscard]] DescriptorType Type() const override {
+    return descriptor_;
+  }
+};
+
+class GenerateHunterCell : public Event {
+ public:
+  static constexpr DescriptorType descriptor_ = "GenerateHunterCell";
 
   [[nodiscard]] DescriptorType Type() const override {
     return descriptor_;

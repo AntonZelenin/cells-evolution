@@ -54,9 +54,10 @@ FoodCellCollisions CollisionDetector::DetectCellFoodCollisions(core::CellStorage
   };
   auto max_size_food = std::max_element(foods.begin(), foods.end(), comparison);
 
-  FoodCellCollisions colliding;
+  FoodCellCollisions colliding; // food 27 cell 143
+  // todo probably collisions problems are because of dead cells
   for (uint food_idx = 0, cell_idx = 0; food_idx < foods.size() && cell_idx < cells.size();) {
-    auto &cell = cells[cell_idx];
+     auto &cell = cells[cell_idx];
     auto &food = foods[food_idx];
 
     if (cell.IsDeleted()) {
@@ -71,23 +72,34 @@ FoodCellCollisions CollisionDetector::DetectCellFoodCollisions(core::CellStorage
     auto x_diff = cell.GetPosition().x - food.GetPosition().x;
     auto abs_x_diff = abs(x_diff);
     if (abs_x_diff > cell.GetSize() + food.GetSize()) {
-      // if it's on the left in vector
 //      if (x_diff > 0 || abs_x_diff < max_size_food->GetSize()) {
       if (x_diff > 0) {
+        // if it's to the left of the food
         ++food_idx;
         continue;
-      }
-      // if it's on the right in vector
-      if (x_diff < 0) {
+      } else {
+        // if it's to the right of the food
         ++cell_idx;
         continue;
       }
     } else {
+      // todo are you sure it's working correctly?
       if ((cell.GetPosition() - food.GetPosition()).MagnitudeSquared() < pow(cell.GetSize() + food.GetSize(), 2)) {
 //      if (abs(cell.GetPosition().y - food.GetPosition().y) <= cell.GetSize() + food.GetSize()) {
         colliding.push_back(FoodCellCollision{food_idx, cell_idx});
+        ++cell_idx;
+//      }
+      } else {
+        if (x_diff > 0) {
+          // if it's to the left of the food
+          ++food_idx;
+          continue;
+        } else {
+          // if it's to the right of the food
+          ++cell_idx;
+          continue;
+        }
       }
-      ++food_idx;
     }
   }
 
