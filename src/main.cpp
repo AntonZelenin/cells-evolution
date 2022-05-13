@@ -22,14 +22,15 @@
 // there will be a colony of cells and different species can fight for it
 
 int main() {
+  // todo add getting cell and food idx on click
   cells_evo::App(
-      30,
-      8,
-      80,
-      3000,
-      2500,
+      15,
+      0,
+      20,
+      1000,
+      1000,
       60,
-      0.2
+      1.0
   ).Run();
   return 0;
 }

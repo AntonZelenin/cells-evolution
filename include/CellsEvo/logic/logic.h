@@ -34,6 +34,7 @@ class Logic {
   core::Cell DivideCell(core::Cell &cell);
   core::Cell &ExtractHunter(collisions::IdxPair &cell_id_pair);
   core::Cell &ExtractPrey(collisions::IdxPair &cell_id_pair);
+  uint ExtractPreyIdx(collisions::IdxPair &cell_id_pair);
   void ResolveCellCollisions(collisions::IdXPairs &colliding_cells_ids) const;
   [[nodiscard]] bool ShouldCleanCells() const;
   [[nodiscard]] bool ShouldCleanFood() const;

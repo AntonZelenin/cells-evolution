@@ -17,16 +17,23 @@ void Logic::WorldTick() {
   auto dir = clock.restart().asMicroseconds();
   MoveCells();
   auto move = clock.restart().asMicroseconds();
-  auto colliding_cell_ids = collisions::CollisionDetector::DetectCellCollisions(world_.cells_);
-  auto coll_cell = clock.restart().asMicroseconds();
-  auto colliding_cell_food_ids = collisions::CollisionDetector::DetectCellFoodCollisions(world_.cells_, world_.food_);
-  auto coll_food = clock.restart().asMicroseconds();
-  HunterEat(colliding_cell_ids);
-  auto hunter_eat = clock.restart().asMicroseconds();
-  NonHunterEat(colliding_cell_food_ids);
-  auto nonhunter_eat = clock.restart().asMicroseconds();
-  ResolveCellCollisions(colliding_cell_ids);
-  auto res_coll = clock.restart().asMicroseconds();
+  if (world_.ticks_ % 2 == 0) {
+    auto clean_food = clock.restart().asMicroseconds();
+    world_.SortFood();
+    auto sort_food = clock.restart().asMicroseconds();
+    world_.SortCells();
+    auto sort_cells = clock.restart().asMicroseconds();
+    auto colliding_cell_ids = collisions::CollisionDetector::DetectCellCollisions(world_.cells_);
+    auto coll_cell = clock.restart().asMicroseconds();
+    auto colliding_cell_food_ids = collisions::CollisionDetector::DetectCellFoodCollisions(world_.cells_, world_.food_);
+    auto coll_food = clock.restart().asMicroseconds();
+    HunterEat(colliding_cell_ids);
+    auto hunter_eat = clock.restart().asMicroseconds();
+    NonHunterEat(colliding_cell_food_ids);
+    auto nonhunter_eat = clock.restart().asMicroseconds();
+    ResolveCellCollisions(colliding_cell_ids);
+    auto res_coll = clock.restart().asMicroseconds();
+  }
 //  TeleportCrossedBoundaries();
   GenerateFood();
   auto generate_food = clock.restart().asMicroseconds();
@@ -38,13 +45,7 @@ void Logic::WorldTick() {
   auto clean_cells = clock.restart().asMicroseconds();
   if (ShouldCleanFood())
     CleanFood();
-  if (world_.ticks_ % 3 == 0) {
-    auto clean_food = clock.restart().asMicroseconds();
-    world_.SortFood();
-    auto sort_food = clock.restart().asMicroseconds();
-    world_.SortCells();
-    auto sort_cells = clock.restart().asMicroseconds();
-  }
+//  CleanFood();
   if (world_.cells_[0].lifetime_ == 500) {
     int t = 1;
   }
@@ -64,14 +65,14 @@ bool Logic::ShouldChangeDirection(core::Cell &cell) {
 }
 
 void Logic::ChooseDirections() {
-  for (uint cell_idx = 0; auto &cell : world_.cells_) {
+  for (uint cell_idx = 0, food_idx = 0; auto &cell : world_.cells_) {
     if (cell.IsAlive()) {
       if (ShouldChangeDirection(cell)) {
         cell.ClearFoodTarget();
         if (cell.IsHunter()) {
           hunter_cell_logic_.ChooseDirection(cell, cell_idx, world_.cells_);
         } else if (cell.IsNonHunter()) {
-          non_hunter_cell_logic_.ChooseDirection(cell, world_.food_);
+          non_hunter_cell_logic_.ChooseDirection(cell, food_idx, world_.food_);
         } else {
           throw std::runtime_error("Invalid cell type");
         }
@@ -140,11 +141,13 @@ bool Logic::ShouldGenerateFood() {
   return random_generator_.GetUniformReal(0, food_production_rate_) <= 1;
 }
 
+// todo probably direction change factor is not working correctly yet
 void Logic::UpdateCellsState() {
   std::vector<core::Cell> new_cells;
   for (auto &cell : world_.cells_) {
     if (cell.HasEnergyToDivide() && cell.DivisionCooldownPassed()) {
       new_cells.push_back(DivideCell(cell));
+//      cell.ConsumeDivisionEnergy();
     } else if (cell.HasDecayed()) {
       core::Food food(core::Food(
           core::FoodType::K_FLORAL,
@@ -268,15 +271,19 @@ void Logic::Tick() {
 }
 
 bool Logic::ShouldCleanCells() const {
+  return true;
   return deleted_cells_num_ >= k_deleted_clear_threshold_;
 }
 
 bool Logic::ShouldCleanFood() const {
+  return true;
   return deleted_food_num_ >= k_deleted_clear_threshold_;
 }
 
 void Logic::CleanCells() {
   std::erase_if(world_.cells_, [](core::Cell &cell) { return cell.IsDeleted(); });
+  // todo it's for debug
+  std::erase_if(world_.cells_, [](core::Cell &cell) { return cell.IsDead(); });
   deleted_cells_num_ = 0;
 }
 

@@ -19,7 +19,8 @@ void App::Run() {
     auto input = fc.restart().asMicroseconds();
     gui_->ProcessGui(delta_clock, last_frame_time);
     auto gui = fc.restart().asMicroseconds();
-    logic_->WorldTick();
+    if (run_simulation_)
+      logic_->WorldTick();
     auto world_tick = fc.restart().asMicroseconds();
     Draw();
     auto draw = fc.restart().asMicroseconds();
@@ -62,9 +63,11 @@ void App::Draw() {
     if (ShouldDrawFood(food, center, half_size))
       window_->draw(food_drawer_.Get(food));
   }
-  for (auto &cell : world_->cells_) {
-    if (ShouldDrawCell(cell, center, half_size))
-      window_->draw(cell_drawer_.Get(cell));
+  if (draw_cells_) {
+    for (auto &cell : world_->cells_) {
+      if (ShouldDrawCell(cell, center, half_size))
+        window_->draw(cell_drawer_.Get(cell));
+    }
   }
   gui_->Draw();
   window_->display();
@@ -157,6 +160,15 @@ App::App(
   logic_ = std::make_shared<logic::Logic>(
       *world_,
       static_cast<float>(fps_) * food_production_rate_secs
+  );
+
+  gui_->event_dispatcher_.Subscribe(
+      event::ToggleCellsDrawingEvent::descriptor_,
+      [this](auto &&ph_1) { Handle(std::forward<decltype(ph_1)>(ph_1)); }
+  );
+  gui_->event_dispatcher_.Subscribe(
+      event::ToggleSimulation::descriptor_,
+      [this](auto &&ph_1) { Handle(std::forward<decltype(ph_1)>(ph_1)); }
   );
 }
 }

@@ -21,6 +21,9 @@ class App {
 
   sf::Color background_color_ = sf::Color(15, 24, 41);
 
+  bool draw_cells_ = true;
+  bool run_simulation_ = true;
+
   int k_frame_micro_sec_;
   int fps_;
 
@@ -29,7 +32,7 @@ class App {
 
  public:
   App(
-      int cells_generation_size,
+      int ph_1,
       int hunter_generation_size,
       int food_generation_size,
       uint world_width,
@@ -42,6 +45,15 @@ class App {
   void ProcessEvents();
   void ProcessInput();
   void Draw();
+  // todo
+  void Handle(const event::Event &e) {
+    auto event = e.Type();
+    if (event == event::ToggleCellsDrawingEvent::descriptor_) {
+      draw_cells_ = !draw_cells_;
+    } else if (event == event::ToggleSimulation::descriptor_) {
+      run_simulation_ = !run_simulation_;
+    }
+  }
 };
 }
 

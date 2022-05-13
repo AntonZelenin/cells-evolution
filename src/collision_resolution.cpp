@@ -2,17 +2,17 @@
 
 namespace cells_evo::collisions {
 // todo can it be a single struct?
-struct cell_less_by_x {
-  inline bool operator()(core::Cell &cell_1, core::Cell &cell_2) {
-    return cell_1.GetPosition().x < cell_2.GetPosition().x;
-  }
-};
-
-struct food_less_by_x {
-  inline bool operator()(core::Food &food_1, core::Food &food_2) {
-    return food_1.GetPosition().x < food_2.GetPosition().x;
-  }
-};
+//struct cell_less_by_x {
+//  inline bool operator()(core::Cell &cell_1, core::Cell &cell_2) {
+//    return cell_1.GetPosition().x < cell_2.GetPosition().x;
+//  }
+//};
+//
+//struct food_less_by_x {
+//  inline bool operator()(core::Food &food_1, core::Food &food_2) {
+//    return food_1.GetPosition().x < food_2.GetPosition().x;
+//  }
+//};
 
 static bool CellsCollide(core::Cell &cell_1, core::Cell &cell_2) {
   return (cell_1.GetPosition() - cell_2.GetPosition()).MagnitudeSquared()
@@ -29,7 +29,7 @@ IdXPairs CollisionDetector::DetectCellCollisions(core::CellStorage &cells) {
     return {};
 
   // todo where is the best place to sort?
-  std::sort(cells.begin(), cells.end(), cell_less_by_x());
+//  std::sort(cells.begin(), cells.end(), cell_less_by_x());
 
   IdXPairs colliding_cell_indices;
   // todo a cell can collide with more than one
@@ -48,11 +48,6 @@ FoodCellCollisions CollisionDetector::DetectCellFoodCollisions(core::CellStorage
   // todo cells change direction when new but far food appears
   if (cells.empty() || foods.empty())
     return {};
-
-  // todo lets collision detection will ignore deleted food and cells as a fast solution
-  // todo where is the best place to sort?
-//  std::sort(cells.begin(), cells.end(), cell_less_by_x());
-  std::sort(foods.begin(), foods.end(), food_less_by_x());
 
   auto comparison = [](const core::Food &a, const core::Food &b) {
     return a.GetSize() < b.GetSize();
@@ -77,7 +72,8 @@ FoodCellCollisions CollisionDetector::DetectCellFoodCollisions(core::CellStorage
     auto abs_x_diff = abs(x_diff);
     if (abs_x_diff > cell.GetSize() + food.GetSize()) {
       // if it's on the left in vector
-      if (x_diff > 0 || abs_x_diff < max_size_food->GetSize()) {
+//      if (x_diff > 0 || abs_x_diff < max_size_food->GetSize()) {
+      if (x_diff > 0) {
         ++food_idx;
         continue;
       }
@@ -98,52 +94,51 @@ FoodCellCollisions CollisionDetector::DetectCellFoodCollisions(core::CellStorage
   return colliding;
 }
 
-// todo duplicate
-uint BinarySearchClosestFoodX(
-    core::FoodStorage &foods,
-    int l,
-    int r,
-    float needle,
-    float min_distance,
-    uint closest_idx
-) {
-  if (r >= l) {
-    int mid = l + (r - l) / 2;
-
-//    if (foods.at(mid).IsDeleted()) {
-    // todo what to do?
+//uint BinarySearchClosestFoodX(
+//    core::FoodStorage &foods,
+//    int l,
+//    int r,
+//    float needle,
+//    float min_distance,
+//    uint closest_idx
+//) {
+//  if (r >= l) {
+//    int mid = l + (r - l) / 2;
+//
+////    if (foods.at(mid).IsDeleted()) {
+//    // todo what to do?
+////    }
+//
+//    auto curr_x = foods.at(mid).GetPosition().x;
+//    auto dist = abs(needle - curr_x);
+//    if (curr_x == needle)
+//      return mid;
+//    if (dist < min_distance) {
+//      min_distance = dist;
+//      closest_idx = mid;
 //    }
-
-    auto curr_x = foods.at(mid).GetPosition().x;
-    auto dist = abs(needle - curr_x);
-    if (curr_x == needle)
-      return mid;
-    if (dist < min_distance) {
-      min_distance = dist;
-      closest_idx = mid;
-    }
-
-    if (curr_x > needle)
-      return BinarySearchClosestFoodX(foods, l, mid - 1, needle, min_distance, closest_idx);
-
-    return BinarySearchClosestFoodX(foods, mid + 1, r, needle, min_distance, closest_idx);
-  }
-
-  return closest_idx;
-}
-
-// todo move
-std::optional<uint> CollisionDetector::FindClosestXFoodIdx(core::Cell &cell, core::FoodStorage &foods) {
-  if (foods.empty()) return {};
-  return BinarySearchClosestFoodX(
-      foods,
-      0,
-      foods.size() - 1,
-      cell.GetPosition().x,
-      std::numeric_limits<float>::max(),
-      0
-  );
-}
+//
+//    if (curr_x > needle)
+//      return BinarySearchClosestFoodX(foods, l, mid - 1, needle, min_distance, closest_idx);
+//
+//    return BinarySearchClosestFoodX(foods, mid + 1, r, needle, min_distance, closest_idx);
+//  }
+//
+//  return closest_idx;
+//}
+//
+//// todo move
+//std::optional<uint> CollisionDetector::FindClosestXFoodIdx(core::Cell &cell, core::FoodStorage &foods) {
+//  if (foods.empty()) return {};
+//  return BinarySearchClosestFoodX(
+//      foods,
+//      0,
+//      foods.size() - 1,
+//      cell.GetPosition().x,
+//      std::numeric_limits<float>::max(),
+//      0
+//  );
+//}
 
 void CollisionResolver::ResolveCollisions(core::Cell &cell_1, core::Cell &cell_2) {
   auto radius_sum = cell_1.GetSize() + cell_2.GetSize();

@@ -4,6 +4,7 @@
 #include "SFML/System/Clock.hpp"
 #include "SFML/Graphics.hpp"
 #include "CellsEvo/world.h"
+#include "../../src/events.h"
 
 namespace cells_evo::core {
 struct CellsGuiState {
@@ -34,6 +35,7 @@ class Gui {
   void UpdateCellsGuiState();
 
  public:
+  event::Dispatcher event_dispatcher_{};
   // todo should I get &world or std::shared_ptr<World>& ?
   explicit Gui(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<core::World> &world);
   ~Gui();

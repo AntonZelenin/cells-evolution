@@ -8,26 +8,27 @@ namespace cells_evo::logic {
 class NonHunterCellLogic {
   core::RandomEngine random_engine_{};
 
-  static std::optional<uint> FindClosestFoodId(
+  static std::optional<uint> FindClosestFoodIdx(
       core::Cell &cell,
-      // todo cell depends on world, is it ok? Where to put type definitions?
+      uint food_idx,
       core::FoodStorage &foods
   );
+  static bool IsEatable(const core::Food &food);
 
  public:
   static bool CouldSensedFood(core::Cell &cell, core::Entity &food_entity);
-  void ChooseDirection(core::Cell &cell, core::FoodStorage &food);
+  void ChooseDirection(core::Cell &cell, uint& food_idx, core::FoodStorage &food);
   core::Vector2<float> GetRandomDirection(core::Cell &cell);
 };
 
 class HunterCellLogic : public NonHunterCellLogic {
-  static std::optional<uint> FindClosestCellId(
+  static std::optional<uint> FindClosestCellIdx(
       core::Cell &cell,
       uint cell_idx,
       core::CellStorage &cells
   );
  public:
-  void ChooseDirection(core::Cell &cell, uint cell_idx,  core::CellStorage &cells);
+  void ChooseDirection(core::Cell &cell, uint cell_idx, core::CellStorage &cells);
   static bool IsEatable(const core::Cell &prey);
 };
 }
