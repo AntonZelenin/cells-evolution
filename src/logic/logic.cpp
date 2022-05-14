@@ -16,23 +16,20 @@ void Logic::WorldTick() {
   auto dir = clock.restart().asMicroseconds();
   MoveCells();
   auto move = clock.restart().asMicroseconds();
-  if (world_.ticks_ % 2 == 0) {
-    auto clean_food = clock.restart().asMicroseconds();
-    world_.SortFood();
-    auto sort_food = clock.restart().asMicroseconds();
-    world_.SortCells();
-    auto sort_cells = clock.restart().asMicroseconds();
-    auto colliding_cell_ids = collisions::CollisionDetector::DetectCellCollisions(world_.cells_);
-    auto coll_cell = clock.restart().asMicroseconds();
-    auto colliding_cell_food_ids = collisions::CollisionDetector::DetectCellFoodCollisions(world_.cells_, world_.food_);
-    auto coll_food = clock.restart().asMicroseconds();
-    HunterEat(colliding_cell_ids);
-    auto hunter_eat = clock.restart().asMicroseconds();
-    NonHunterEat(colliding_cell_food_ids);
-    auto nonhunter_eat = clock.restart().asMicroseconds();
-    ResolveCellCollisions(colliding_cell_ids);
-    auto res_coll = clock.restart().asMicroseconds();
-  }
+  world_.SortFood();
+  auto sort_food = clock.restart().asMicroseconds();
+  world_.SortCells();
+  auto sort_cells = clock.restart().asMicroseconds();
+  auto colliding_cell_ids = collisions::CollisionDetector::DetectCellCollisions(world_.cells_);
+  auto coll_cell = clock.restart().asMicroseconds();
+  auto colliding_cell_food_ids = collisions::CollisionDetector::DetectCellFoodCollisions(world_.cells_, world_.food_);
+  auto coll_food = clock.restart().asMicroseconds();
+  HunterEat(colliding_cell_ids);
+  auto hunter_eat = clock.restart().asMicroseconds();
+  NonHunterEat(colliding_cell_food_ids);
+  auto nonhunter_eat = clock.restart().asMicroseconds();
+  ResolveCellCollisions(colliding_cell_ids);
+  auto res_coll = clock.restart().asMicroseconds();
 //  TeleportCrossedBoundaries();
   GenerateFood();
   auto generate_food = clock.restart().asMicroseconds();
@@ -43,7 +40,7 @@ void Logic::WorldTick() {
   auto clean_cells = clock.restart().asMicroseconds();
   if (ShouldCleanFood())
     CleanFood();
-//  CleanFood();
+  auto clean_food = clock.restart().asMicroseconds();
   if (world_.cells_[0].lifetime_ == 500) {
     int t = 1;
   }
@@ -143,9 +140,10 @@ bool Logic::ShouldGenerateFood() {
 void Logic::UpdateCellsState() {
   std::vector<core::Cell> new_cells;
   for (auto &cell : world_.cells_) {
+    // todo this is bad that I need to remember about deleted cells everywhere
+    if (cell.IsDeleted()) continue;
     if (cell.HasEnergyToDivide() && cell.DivisionCooldownPassed()) {
       new_cells.push_back(DivideCell(cell));
-//      cell.ConsumeDivisionEnergy();
     } else if (cell.HasDecayed()) {
       core::Food food(core::Food(
           core::FoodType::K_FLORAL,
@@ -216,6 +214,7 @@ void Logic::NonHunterEat(collisions::FoodCellCollisions &colliding_food_cell_ids
   for (auto &colliding_food_cell : colliding_food_cell_ids) {
     auto &cell = world_.cells_[colliding_food_cell.cell_idx];
     auto &food = world_.food_[colliding_food_cell.food_idx];
+    if (food.IsDeleted()) continue;
     if (std::find(eaten_food_ids.begin(), eaten_food_ids.end(), food.GetId()) != eaten_food_ids.end())
       continue;
     if (!cell.IsHungry() || !cell.IsAlive() || cell.IsHunter()) continue;
@@ -266,12 +265,10 @@ void Logic::Tick() {
 }
 
 bool Logic::ShouldCleanCells() const {
-//  return true;
   return deleted_cells_num_ >= k_deleted_clear_threshold_;
 }
 
 bool Logic::ShouldCleanFood() const {
-//  return true;
   return deleted_food_num_ >= k_deleted_clear_threshold_;
 }
 
