@@ -22,13 +22,14 @@ class CellDrawer {
   const float k_thickness_coefficient_ = 3.0;
   CellColorProvider color_provider_{};
 
+  void AddOutline(const core::Cell &cell, sf::CircleShape &shape);
+
   [[nodiscard]] float GetThickness(const core::Cell &cell) const;
   [[nodiscard]] float GetSize(const core::Cell &cell) const;
   [[nodiscard]] float GetBaseThickness(const core::Cell &cell) const;
 
  public:
   sf::CircleShape GetAliveShape(core::Cell &cell);
-  void UpdatePosition(sf::CircleShape &shape);
   static void UpdateShapePosition(core::Cell &cell);
   sf::CircleShape GetDeadShape(core::Cell &cell);
 };
