@@ -1,8 +1,8 @@
 #ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_FOOD_H_
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_FOOD_H_
 
-#include <vector>
 #include "base.h"
+#include "SFML/Graphics/RectangleShape.hpp"
 
 namespace cells_evo::core {
 enum FoodType {
@@ -16,13 +16,14 @@ class Food : public EdibleEntity {
   float radius_;
   float nutrition_value_;
   bool is_deleted_ = false;
+  sf::RectangleShape shape_;
 
   static float CalculateRadius(float nutrition_value);
 
  public:
   FoodType type_;
 
-  explicit Food(FoodType type, Position position);
+  Food(FoodType type, Position position);
   Food(FoodType type, Position position, float nutrition_value);
 
   Position &GetPosition() override;
@@ -32,17 +33,8 @@ class Food : public EdibleEntity {
   [[nodiscard]] bool IsDeleted() const;
   void Delete();
   void SetId(uint id);
-};
-
-class FoodGenerator {
-  const int k_min_distance_between_items_ = 1;
-
- public:
-  [[nodiscard]] std::vector<Food> CreateFloralGeneration(
-      int field_width,
-      int field_height,
-      int size
-  ) const;
+  void SetShape(sf::RectangleShape shape);
+  sf::RectangleShape &GetShape();
 };
 }
 

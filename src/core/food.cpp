@@ -1,24 +1,9 @@
+#include <utility>
+
 #include "CellsEvo/tools.h"
 #include "CellsEvo/food.h"
 
 namespace cells_evo::core {
-std::vector<Food> FoodGenerator::CreateFloralGeneration(
-    int field_width,
-    int field_height,
-    int size
-) const {
-  std::vector<Food> foods;
-  foods.reserve(size);
-  auto positions = GenerateRandomPositions(
-      field_width, field_height, size, k_min_distance_between_items_
-  );
-  for (auto &position : positions) {
-    Food food(FoodType::K_FLORAL, position);
-    foods.push_back(food);
-  }
-  return foods;
-}
-
 Food::Food(FoodType type, Position position) : position_(position) {
   type_ = type;
   nutrition_value_ = 5;
@@ -61,5 +46,13 @@ bool Food::IsDeleted() const {
 
 void Food::Delete() {
   is_deleted_ = true;
+}
+
+void Food::SetShape(sf::RectangleShape shape) {
+  shape_ = std::move(shape);
+}
+
+sf::RectangleShape &Food::GetShape() {
+  return shape_;
 }
 }

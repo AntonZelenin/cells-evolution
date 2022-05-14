@@ -27,7 +27,10 @@ class CellDrawer {
   [[nodiscard]] float GetBaseThickness(const core::Cell &cell) const;
 
  public:
-  sf::CircleShape Get(core::Cell &cell);
+  sf::CircleShape GetAliveShape(core::Cell &cell);
+  void UpdatePosition(sf::CircleShape &shape);
+  static void UpdateShapePosition(core::Cell &cell);
+  sf::CircleShape GetDeadShape(core::Cell &cell);
 };
 
 class FoodColorProvider {

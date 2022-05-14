@@ -1,7 +1,6 @@
 #include "CellsEvo/app.h"
 
 // add change speed buttons
-// cache shapes in drawer?
 // use Fast Inverse Square Root instead of square root
 // large cells should eat only large, it's not profitable to eat small, maybe gene?
 // and probably they should prefer without shell, and prefer alive over dead
@@ -24,13 +23,13 @@
 
 int main() {
   cells_evo::App(
-      25,
-      8,
-      50,
-      2000,
-      2000,
+      35,
+      10,
+      100,
+      3000,
+      2500,
       60,
-      0.4
+      0.2
   ).Run();
   return 0;
 }

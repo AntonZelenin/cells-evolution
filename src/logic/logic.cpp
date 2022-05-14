@@ -1,11 +1,17 @@
+#include <utility>
 #include <vector>
 #include "CellsEvo/logic/logic.h"
 #include "CellsEvo/collision_resolution.h"
 #include "SFML/System/Clock.hpp"
 
 namespace cells_evo::logic {
-Logic::Logic(core::World &world, float food_production_rate)
-    : world_(world) {
+Logic::Logic(
+    core::World &world,
+    float food_production_rate,
+    core::CellGenerator cell_generator,
+    core::FoodGenerator food_generator
+)
+    : world_(world), cell_generator_(std::move(cell_generator)), food_generator_(std::move(food_generator)) {
   food_production_rate_ = food_production_rate;
 }
 
@@ -127,7 +133,7 @@ void Logic::CheckCrossedBoundaries(core::Cell &cell) const {
 
 void Logic::GenerateFood() {
   if (ShouldGenerateFood()) {
-    world_.GenerateFood(1);
+    GenerateFood(1);
   }
 }
 
@@ -143,7 +149,7 @@ void Logic::UpdateCellsState() {
     // todo this is bad that I need to remember about deleted cells everywhere
     if (cell.IsDeleted()) continue;
     if (cell.HasEnergyToDivide() && cell.DivisionCooldownPassed()) {
-      new_cells.push_back(DivideCell(cell));
+      new_cells.push_back(cell_generator_.DivideCell(cell));
     } else if (cell.HasDecayed()) {
       core::Food food(core::Food(
           core::FoodType::K_FLORAL,
@@ -158,20 +164,6 @@ void Logic::UpdateCellsState() {
   for (auto &cell : new_cells) {
     world_.AddCell(cell);
   }
-}
-
-core::Cell Logic::DivideCell(core::Cell &cell) {
-  core::Cell new_cell(
-      cell.type_,
-      cell.GetPosition(),
-      genetic_engineer_.CopyGenes(cell.genes_)
-  );
-  new_cell.AddEnergy(cell.energy_ / 2);
-  new_cell.StartDivisionCooldown();
-  new_cell.MoveX(cell.GetSize() * 2);
-  cell.StartDivisionCooldown();
-  cell.ConsumeDivisionEnergy();
-  return new_cell;
 }
 
 bool CanKill(core::Cell &hunter_cell, core::Cell &prey_cell) {
@@ -259,9 +251,23 @@ core::Cell &Logic::ExtractPrey(collisions::IdxPair &cell_id_pair) {
 
 void Logic::Tick() {
   for (auto &cell : world_.cells_) {
-    cell.Tick();
+    if (!cell.IsDeleted()) {
+      CellTick(cell);
+    }
   }
   world_.Tick();
+}
+
+void Logic::CellTick(core::Cell &cell) {
+  // todo maybe cells might die after movement, not here, and shell will not divide
+  if (!cell.IsDead()) {
+    ++cell.lifetime_;
+    if (cell.division_cooldown_ > 0)
+      --cell.division_cooldown_;
+    cell.ConsumeVitalFunctionsEnergy();
+  } else if (cell.time_to_decay_ > 0) {
+    cell.time_to_decay_ -= 1;
+  }
 }
 
 bool Logic::ShouldCleanCells() const {
@@ -280,5 +286,29 @@ void Logic::CleanCells() {
 void Logic::CleanFood() {
   std::erase_if(world_.food_, [](core::Food &food) { return food.IsDeleted(); });
   deleted_food_num_ = 0;
+}
+
+void Logic::GenerateNonhunterCells(int number) {
+  world_.AddCells(std::move(
+      cell_generator_.Generate(
+          number,
+          core::CellType::K_NONHUNTER
+      )
+  ));
+}
+
+void Logic::GenerateHunterCells(int number) {
+  world_.AddCells(std::move(
+      cell_generator_.Generate(
+          number,
+          core::CellType::K_HUNTER
+      ))
+  );
+}
+
+void Logic::GenerateFood(int number) {
+  world_.AddFood(std::move(
+      food_generator_.CreateFloralGeneration(number)
+  ));
 }
 }

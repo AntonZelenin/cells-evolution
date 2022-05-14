@@ -41,7 +41,7 @@ add_executable(
         include/imgui/imgui-SFML.cpp
         include/imgui/imgui_tables.cpp
         include/imgui/imgui_widgets.cpp
-        src/app/gui.cpp include/CellsEvo/gui.h include/CellsEvo/types.h src/core/events.cpp include/CellsEvo/events.h)
+        src/app/gui.cpp include/CellsEvo/gui.h include/CellsEvo/types.h src/core/events.cpp include/CellsEvo/events.h src/core/food_generator.cpp include/CellsEvo/food_generator.h)
 include_directories(include)
 link_directories(lib)
 

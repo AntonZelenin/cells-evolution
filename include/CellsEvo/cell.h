@@ -6,6 +6,7 @@
 #include "geometry.h"
 #include "CellsEvo/genetics/genes.h"
 #include "base.h"
+#include "SFML/Graphics/CircleShape.hpp"
 
 namespace cells_evo::core {
 enum CellType {
@@ -17,7 +18,7 @@ class Cell : public EdibleEntity {
   constexpr static const float k_energy_consumption_coefficient_ = 0.001;
   constexpr static const float k_division_energy_size_coefficient_ = 1.0;
   constexpr static const float k_hunger_coefficient_ = 0.7;
-  constexpr static const float k_punch_coefficient_ = 0.0012;
+  constexpr static const float k_punch_coefficient_ = 0.0015;
   constexpr static const float k_speed_size_coefficient_ = 0.027;
   constexpr static const float k_vital_functions_energy_consumption_ = 0.00015;
   constexpr static const float k_max_distance_food_detection_ = 200;
@@ -26,25 +27,27 @@ class Cell : public EdibleEntity {
   bool is_deleted_ = false;
   bool has_target_food_ = false;
   std::optional<core::Vector2<float>> direction_{};
-  float shell_{};
   // 60 seconds until dead cell turns into food * 60 fps
-  uint time_to_decay_ = 60 * 60;
   Position position_;
   float size_;
   float hunting_speed_;
   float idle_speed_;
   int direction_change_factor_;
-  uint division_cooldown_ = 0;
   uint base_division_cooldown_ = 0;
+  sf::CircleShape shape_;
+  sf::CircleShape dead_shape_;
 
   void ConsumeMovementEnergy(float speed);
 
  public:
+  uint time_to_decay_ = 60 * 60;
+  float shell_ = 0;
   uint lifetime_ = 0;
+  uint division_cooldown_ = 0;
 
   // todo everything is public =*(
-  float energy_{};
-  uint id_{};
+  float energy_ = 0;
+  uint id_ = 0;
   CellType type_;
   std::unordered_map<genetics::GeneType, genetics::Gene> genes_{};
 
@@ -62,9 +65,9 @@ class Cell : public EdibleEntity {
   void SetDirection(core::Vector2<float> food_id);
   void SetHasFoodTarget();
   void SetId(uint id);
+  void SetShapes(sf::CircleShape alive_shape, sf::CircleShape dead_shape);
   void MoveX(float val);
   void StartDivisionCooldown();
-  void Tick();
   void ConsumePunchEnergy();
   void Move(Vector2<float> const &direction);
   void Move2();
@@ -98,6 +101,9 @@ class Cell : public EdibleEntity {
   [[nodiscard]] float GetHuntingSpeed() const;
   [[nodiscard]] float GetIdleSpeed() const;
   [[nodiscard]] float GetRawSize() const;
+  [[nodiscard]] sf::CircleShape &GetShape();
+  void ConsumeVitalFunctionsEnergy();
+  void ConsumeEnergy(float energy);
 };
 }
 

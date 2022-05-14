@@ -66,7 +66,7 @@ void App::Draw() {
   }
   for (int i = 0; auto &food : world_->food_) {
     if (ShouldDrawFood(food, center, half_size)) {
-      window_->draw(food_drawer_.Get(food));
+      window_->draw(food.GetShape());
       if (draw_food_indices_) {
         sf::Text idx_label;
         idx_label.setFont(font);
@@ -82,7 +82,9 @@ void App::Draw() {
   if (draw_cells_) {
     for (int i = 0; auto &cell : world_->cells_) {
       if (ShouldDrawCell(cell, center, half_size)) {
-        window_->draw(cell_drawer_.Get(cell));
+        // todo improve
+        graphics::CellDrawer::UpdateShapePosition(cell);
+        window_->draw(cell.GetShape());
         if (draw_cell_indices_) {
           sf::Text idx_label;
           idx_label.setFont(font);
@@ -154,7 +156,7 @@ void App::ProcessEvents() {
 }
 
 App::App(
-    int cells_generation_size,
+    int nonhunter_generation_size,
     int hunter_generation_size,
     int food_generation_size,
     uint world_width,
@@ -167,15 +169,12 @@ App::App(
   window_ = std::make_shared<sf::RenderWindow>(sf::VideoMode(kDefaultWidth, kDefaultHeight), "Cells");
 //  window_->setVerticalSyncEnabled(true);
 
-  auto center = sf::Vector2f(static_cast<float>(world_width) / 2.f, static_cast<float>(world_height) / 2.f);
+  auto world_center = sf::Vector2f(static_cast<float>(world_width) / 2.f, static_cast<float>(world_height) / 2.f);
   sf::Vector2f default_view_rect = sf::Vector2f(kDefaultWidth, kDefaultHeight);
-  auto top_left = center - (default_view_rect / 2.f);
-  window_->setView(sf::View(sf::FloatRect(top_left, default_view_rect)));
+  auto world_top_left = world_center - (default_view_rect / 2.f);
+  window_->setView(sf::View(sf::FloatRect(world_top_left, default_view_rect)));
 
   world_ = std::make_shared<core::World>(
-      cells_generation_size,
-      hunter_generation_size,
-      food_generation_size,
       world_width,
       world_height
   );
@@ -186,8 +185,13 @@ App::App(
   k_frame_micro_sec_ = 1000000 / fps;
   logic_ = std::make_shared<logic::Logic>(
       *world_,
-      static_cast<float>(fps_) * food_production_rate_secs
+      static_cast<float>(fps_) * food_production_rate_secs,
+      core::CellGenerator(world_width, world_height),
+      core::FoodGenerator(world_width, world_height)
   );
+  logic_->GenerateHunterCells(hunter_generation_size);
+  logic_->GenerateNonhunterCells(nonhunter_generation_size);
+  logic_->GenerateFood(food_generation_size);
 
   gui_->event_dispatcher_.Subscribe(
       event::ToggleCellsDrawingEvent::descriptor_,
@@ -226,9 +230,9 @@ void App::HandleEvent(const event::Event &e) {
   } else if (event == event::ToggleDrawFoodIndices::descriptor_) {
     draw_food_indices_ = !draw_food_indices_;
   } else if (event == event::GenerateHunterCell::descriptor_) {
-    world_->GenerateHunterCells(1);
+    logic_->GenerateHunterCells(1);
   } else if (event == event::GenerateNonHunterCell::descriptor_) {
-    world_->GenerateNonhunterCells(1);
+    logic_->GenerateNonhunterCells(1);
   }
 }
 }

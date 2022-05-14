@@ -13,17 +13,26 @@ float CellDrawer::GetSize(const core::Cell &cell) const {
   return cell.GetSize() - GetThickness(cell);
 }
 
-sf::CircleShape CellDrawer::Get(core::Cell &cell) {
+sf::CircleShape CellDrawer::GetAliveShape(core::Cell &cell) {
+  if (cell.IsDead())
+    throw std::runtime_error("The cell is dead but it supposed to be alive");
   sf::CircleShape shape(GetSize(cell));
-  if (cell.IsDead()) {
-    shape.setFillColor(sf::Color(130, 130, 130));
-  } else {
-    shape.setOutlineThickness(GetThickness(cell));
-    shape.setOutlineColor(color_provider_.GetOutlineColor(cell));
-    shape.setFillColor(sf::Color(194, 255, 254));
-  }
+  shape.setOutlineThickness(GetThickness(cell));
+  shape.setOutlineColor(color_provider_.GetOutlineColor(cell));
+  shape.setFillColor(sf::Color(194, 255, 254));
   shape.setPosition(cell.GetPosition().x - cell.GetSize(), cell.GetPosition().y - cell.GetSize());
   return shape;
+}
+
+sf::CircleShape CellDrawer::GetDeadShape(core::Cell &cell) {
+  sf::CircleShape shape(GetSize(cell));
+  shape.setFillColor(sf::Color(130, 130, 130));
+  shape.setPosition(cell.GetPosition().x - cell.GetSize(), cell.GetPosition().y - cell.GetSize());
+  return shape;
+}
+
+void CellDrawer::UpdateShapePosition(core::Cell &cell) {
+  cell.GetShape().setPosition(cell.GetPosition().x - cell.GetSize(), cell.GetPosition().y - cell.GetSize());
 }
 
 sf::Color CellColorProvider::GetOutlineColor(const core::Cell &cell) {

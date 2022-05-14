@@ -1,12 +1,9 @@
 #include "CellsEvo/world.h"
 
 namespace cells_evo::core {
-World::World(int cells_generation_size, int hunter_generation_size, int food_generation_size, int width, int height) {
+World::World(int width, int height) {
   width_ = static_cast<float>(width);
   height_ = static_cast<float>(height);
-  GenerateNonhunterCells(cells_generation_size);
-  GenerateHunterCells(hunter_generation_size);
-  GenerateFood(food_generation_size);
 }
 
 void World::AddFood(Food &new_food) {
@@ -19,32 +16,6 @@ void World::AddCell(Cell &cell) {
   uint id = index_driver_.GetNextId();
   cell.SetId(id);
   cells_.push_back(cell);
-}
-
-void World::GenerateFood(int number) {
-  AddFood(food_generator_.CreateFloralGeneration(
-      width_,
-      height_,
-      number
-  ));
-}
-
-void World::GenerateNonhunterCells(int number) {
-  AddCells(cell_generator_.Generate(
-      width_,
-      height_,
-      number,
-      core::CellType::K_NONHUNTER
-  ));
-}
-
-void World::GenerateHunterCells(int number) {
-  AddCells(cell_generator_.Generate(
-      width_,
-      height_,
-      number,
-      core::CellType::K_HUNTER
-  ));
 }
 
 void World::AddFood(std::vector<Food> foods) {

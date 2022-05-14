@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "CellsEvo/cell.h"
 
 namespace cells_evo::core {
@@ -7,7 +9,6 @@ Cell::Cell(
     std::vector<genetics::Gene> const &genes
 )
     : position_(position) {
-  id_ = 0;
   type_ = type;
   for (auto gene : genes) {
     genes_.insert({gene.type, gene});
@@ -20,7 +21,6 @@ Cell::Cell(
   base_division_cooldown_ = static_cast<uint>(
       genes_.at(genetics::GeneType::DIVISION_COOLDOWN).value + 50.f * GetShell()
   );
-  energy_ = 0;
 }
 
 Position &Cell::GetPosition() {
@@ -116,11 +116,15 @@ void Cell::ConsumeMovementEnergy(float speed) {
   auto energy = GetSize() * speed * k_energy_consumption_coefficient_;
 //  if (HasShell())
 //    energy += GetShell() * k_energy_consumption_coefficient_;
-  energy_ -= energy;
+  ConsumeEnergy(energy);
 }
 
 void Cell::ConsumeDivisionEnergy() {
   energy_ /= 2;
+}
+
+void Cell::ConsumeVitalFunctionsEnergy() {
+  ConsumeEnergy(k_vital_functions_energy_consumption_ * GetSize());
 }
 
 bool Cell::IsDead() const {
@@ -157,7 +161,7 @@ float Cell::GetPunchStrength() const {
 }
 
 void Cell::ConsumePunchEnergy() {
-  energy_ -= GetSize() * k_energy_consumption_coefficient_;
+  ConsumeEnergy(GetSize() * k_energy_consumption_coefficient_);
 }
 
 float Cell::GetDivisionEnergy() const {
@@ -205,21 +209,6 @@ bool Cell::HasDecayed() const {
   return IsDead() && time_to_decay_ == 0;
 }
 
-void Cell::Tick() {
-  // todo maybe cells might die after movement, not here, and shell will not divide
-  if (!IsDead()) {
-    ++lifetime_;
-    if (division_cooldown_ > 0)
-      --division_cooldown_;
-    energy_ -= k_vital_functions_energy_consumption_ * GetSize();
-    if (energy_ <= 0)
-      shell_ /= 2.0;
-  } else {
-    if (time_to_decay_ > 0)
-      time_to_decay_ -= 1;
-  }
-}
-
 void Cell::ClearFoodTarget() {
   has_target_food_ = false;
 }
@@ -230,5 +219,22 @@ bool Cell::IsDeleted() const {
 
 void Cell::Delete() {
   is_deleted_ = true;
+}
+
+sf::CircleShape &Cell::GetShape() {
+  return shape_;
+}
+
+void Cell::ConsumeEnergy(float energy) {
+  energy_ -= energy;
+  if (energy_ <= 0) {
+    shell_ /= 2.0;
+    shape_ = dead_shape_;
+  }
+}
+
+void Cell::SetShapes(sf::CircleShape alive_shape, sf::CircleShape dead_shape) {
+  shape_ = std::move(alive_shape);
+  dead_shape_ = std::move(dead_shape);
 }
 }

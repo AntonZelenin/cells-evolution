@@ -4,7 +4,6 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "world.h"
 #include "CellsEvo/logic/logic.h"
-#include "CellsEvo/graphics/drawer.h"
 #include "CellsEvo/gui.h"
 
 namespace cells_evo {
@@ -15,9 +14,6 @@ class App {
 
   std::shared_ptr<core::World> world_;
   std::shared_ptr<logic::Logic> logic_;
-
-  graphics::CellDrawer cell_drawer_{};
-  graphics::FoodDrawer food_drawer_{};
 
   sf::Color background_color_ = sf::Color(15, 24, 41);
 
@@ -34,7 +30,7 @@ class App {
 
  public:
   App(
-      int ph_1,
+      int nonhunter_generation_size,
       int hunter_generation_size,
       int food_generation_size,
       uint world_width,

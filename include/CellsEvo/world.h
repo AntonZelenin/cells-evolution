@@ -5,7 +5,6 @@
 #include "cell.h"
 #include "food.h"
 #include "tools.h"
-#include "cell_generator.h"
 
 namespace cells_evo::core {
 typedef std::vector<core::Cell> CellStorage;
@@ -13,11 +12,6 @@ typedef std::vector<core::Food> FoodStorage;
 
 class World {
   IndexDriver index_driver_{};
-  FoodGenerator food_generator_{};
-  core::CellGenerator cell_generator_{};
-
-  void AddFood(std::vector<Food> foods);
-  void AddCells(std::vector<Cell> new_cells);
 
  public:
   FoodStorage food_{};
@@ -26,14 +20,12 @@ class World {
   float height_;
   uint ticks_ = 0;
 
-  World(int cells_generation_size, int hunter_generation_size, int food_generation_size, int width, int height);
-
-  void GenerateFood(int number);
-  void GenerateNonhunterCells(int number);
-  void GenerateHunterCells(int number);
+  World(int width, int height);
 
   void AddFood(Food &food);
+  void AddFood(std::vector<Food> foods);
   void AddCell(Cell &cell);
+  void AddCells(std::vector<Cell> new_cells);
   void SortCells();
   void SortFood();
   void Tick();
