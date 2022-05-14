@@ -67,6 +67,15 @@ class GenerateHunterCell : public Event {
   }
 };
 
+class GenerateNonHunterCell : public Event {
+ public:
+  static constexpr DescriptorType descriptor_ = "GenerateNonHunterCell";
+
+  [[nodiscard]] DescriptorType Type() const override {
+    return descriptor_;
+  }
+};
+
 class Dispatcher {
  public:
   using SlotType = std::function<void(const Event &)>;

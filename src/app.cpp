@@ -209,6 +209,10 @@ App::App(
       event::GenerateHunterCell::descriptor_,
       [this](auto &&ph_1) { HandleEvent(std::forward<decltype(ph_1)>(ph_1)); }
   );
+  gui_->event_dispatcher_.Subscribe(
+      event::GenerateNonHunterCell::descriptor_,
+      [this](auto &&ph_1) { HandleEvent(std::forward<decltype(ph_1)>(ph_1)); }
+  );
 }
 
 void App::HandleEvent(const event::Event &e) {
@@ -223,6 +227,8 @@ void App::HandleEvent(const event::Event &e) {
     draw_food_indices_ = !draw_food_indices_;
   } else if (event == event::GenerateHunterCell::descriptor_) {
     world_->GenerateHunterCells(1);
+  } else if (event == event::GenerateNonHunterCell::descriptor_) {
+    world_->GenerateNonhunterCells(1);
   }
 }
 }

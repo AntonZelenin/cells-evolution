@@ -4,7 +4,7 @@ namespace cells_evo::core {
 World::World(int cells_generation_size, int hunter_generation_size, int food_generation_size, int width, int height) {
   width_ = static_cast<float>(width);
   height_ = static_cast<float>(height);
-  GenerateCells(cells_generation_size);
+  GenerateNonhunterCells(cells_generation_size);
   GenerateHunterCells(hunter_generation_size);
   GenerateFood(food_generation_size);
 }
@@ -29,7 +29,7 @@ void World::GenerateFood(int number) {
   ));
 }
 
-void World::GenerateCells(int number) {
+void World::GenerateNonhunterCells(int number) {
   AddCells(cell_generator_.Generate(
       width_,
       height_,

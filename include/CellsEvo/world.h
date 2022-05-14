@@ -29,7 +29,7 @@ class World {
   World(int cells_generation_size, int hunter_generation_size, int food_generation_size, int width, int height);
 
   void GenerateFood(int number);
-  void GenerateCells(int number);
+  void GenerateNonhunterCells(int number);
   void GenerateHunterCells(int number);
 
   void AddFood(Food &food);

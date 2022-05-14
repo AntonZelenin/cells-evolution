@@ -21,7 +21,9 @@ struct CellsGuiState {
 };
 
 class Gui {
-  const uint k_cells_history_graph_capacity_ = 70;
+  static constexpr uint k_cells_history_graph_capacity_ = 70;
+  float nonhunter_cells_vals_[Gui::k_cells_history_graph_capacity_];
+  float hunter_cells_vals_[Gui::k_cells_history_graph_capacity_];
   std::shared_ptr<sf::RenderWindow> window_;
   std::shared_ptr<core::World> world_;
   uint ticks_ = 0;
@@ -33,6 +35,7 @@ class Gui {
   std::unique_ptr<CircularQueue<uint>> nonhunter_cells_number_history_;
 
   void UpdateCellsGuiState();
+  void UpdateGuiState(const sf::Clock &delta_clock, uint frame_time_ms);
 
  public:
   event::Dispatcher event_dispatcher_{};
