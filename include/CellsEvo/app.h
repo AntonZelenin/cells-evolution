@@ -11,9 +11,9 @@ class App {
   // todo it might be better to use unique ptr, not sure now
   std::shared_ptr<sf::RenderWindow> window_;
   std::shared_ptr<core::Gui> gui_;
-
   std::shared_ptr<core::World> world_;
   std::shared_ptr<logic::Logic> logic_;
+  sf::Font font_;
 
   sf::Color background_color_ = sf::Color(15, 24, 41);
 

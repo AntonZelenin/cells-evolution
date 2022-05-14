@@ -1,5 +1,7 @@
 #include "CellsEvo/app.h"
 
+// todo I still have a problem with food near edges
+// add cell generation setup menu
 // add change speed buttons
 // use Fast Inverse Square Root instead of square root
 // large cells should eat only large, it's not profitable to eat small, maybe gene?

@@ -47,7 +47,7 @@ void Logic::WorldTick() {
   if (ShouldCleanFood())
     CleanFood();
   auto clean_food = clock.restart().asMicroseconds();
-  if (world_.cells_[0].lifetime_ == 500) {
+  if (world_.ticks_ == 400) {
     int t = 1;
   }
 }
@@ -67,16 +67,14 @@ bool Logic::ShouldChangeDirection(core::Cell &cell) {
 
 void Logic::ChooseDirections() {
   for (uint cell_idx = 0, food_idx = 0; auto &cell : world_.cells_) {
-    if (cell.IsAlive()) {
-      if (ShouldChangeDirection(cell)) {
-        cell.ClearFoodTarget();
-        if (cell.IsHunter()) {
-          hunter_cell_logic_.ChooseDirection(cell, cell_idx, world_.cells_);
-        } else if (cell.IsNonHunter()) {
-          non_hunter_cell_logic_.ChooseDirection(cell, food_idx, world_.food_);
-        } else {
-          throw std::runtime_error("Invalid cell type");
-        }
+    if (cell.IsAlive() && ShouldChangeDirection(cell)) {
+      cell.ClearFoodTarget();
+      if (cell.IsHunter()) {
+        hunter_cell_logic_.ChooseDirection(cell, cell_idx, world_.cells_);
+      } else if (cell.IsNonHunter()) {
+        non_hunter_cell_logic_.ChooseDirection(cell, food_idx, world_.food_);
+      } else {
+        throw std::runtime_error("Invalid cell type");
       }
     }
     ++cell_idx;

@@ -67,11 +67,10 @@ bool Cell::IsNonHunter() const {
 }
 
 float Cell::GetMaxFoodDetectionDistance() const {
-  return k_max_distance_food_detection_ + GetSize() * 2;
-//  if (IsNonHunter())
-//    return k_max_distance_food_detection_ * 0.9;
-//  else
-//    return k_max_distance_food_detection_ * 1.2;
+  if (IsNonHunter())
+    return k_max_distance_food_detection_ * 0.9f + GetSize() * 2;
+  else
+    return k_max_distance_food_detection_ * 1.2f + GetSize() * 2;
 }
 
 [[nodiscard]] std::optional<core::Vector2<float>> Cell::GetDirection() const {
@@ -114,8 +113,8 @@ void Cell::Move2() {
 
 void Cell::ConsumeMovementEnergy(float speed) {
   auto energy = GetSize() * speed * k_energy_consumption_coefficient_;
-//  if (HasShell())
-//    energy += GetShell() * k_energy_consumption_coefficient_;
+  if (HasShell())
+    energy += GetShell() * k_energy_consumption_coefficient_;
   ConsumeEnergy(energy);
 }
 
@@ -178,6 +177,10 @@ bool Cell::DivisionCooldownPassed() const {
 
 void Cell::StartDivisionCooldown() {
   division_cooldown_ = base_division_cooldown_;
+}
+
+float Cell::GetEnergy() const {
+  return energy_;
 }
 
 int Cell::GetDirectionChangeFactor() const {

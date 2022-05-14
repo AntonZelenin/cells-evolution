@@ -29,6 +29,7 @@ class Cell : public EdibleEntity {
   std::optional<core::Vector2<float>> direction_{};
   // 60 seconds until dead cell turns into food * 60 fps
   Position position_;
+  float energy_ = 0;
   float size_;
   float hunting_speed_;
   float idle_speed_;
@@ -38,6 +39,10 @@ class Cell : public EdibleEntity {
   sf::CircleShape dead_shape_;
 
   void ConsumeMovementEnergy(float speed);
+  void ConsumeEnergy(float energy);
+
+  [[nodiscard]] float GetRawSize() const;
+  [[nodiscard]] float GetMaxEnergy() const;
 
  public:
   uint time_to_decay_ = 60 * 60;
@@ -46,7 +51,6 @@ class Cell : public EdibleEntity {
   uint division_cooldown_ = 0;
 
   // todo everything is public =*(
-  float energy_ = 0;
   uint id_ = 0;
   CellType type_;
   std::unordered_map<genetics::GeneType, genetics::Gene> genes_{};
@@ -72,6 +76,7 @@ class Cell : public EdibleEntity {
   void Move(Vector2<float> const &direction);
   void Move2();
   void Delete();
+  void ConsumeVitalFunctionsEnergy();
 
   Position &GetPosition() override;
   [[nodiscard]] uint GetId() const override;
@@ -79,7 +84,6 @@ class Cell : public EdibleEntity {
   [[nodiscard]] float GetMaxFoodDetectionDistance() const;
   [[nodiscard]] float GetSpeed() const;
   [[nodiscard]] int GetDirectionChangeFactor() const;
-  [[nodiscard]] float GetMaxEnergy() const;
   [[nodiscard]] float GetShell() const;
   [[nodiscard]] float GetNutritionValue() const override;
   [[nodiscard]] float GetBaseNutritionValue() const;
@@ -100,10 +104,8 @@ class Cell : public EdibleEntity {
   [[nodiscard]] float GetShellThickness() const;
   [[nodiscard]] float GetHuntingSpeed() const;
   [[nodiscard]] float GetIdleSpeed() const;
-  [[nodiscard]] float GetRawSize() const;
   [[nodiscard]] sf::CircleShape &GetShape();
-  void ConsumeVitalFunctionsEnergy();
-  void ConsumeEnergy(float energy);
+  [[nodiscard]] float GetEnergy() const;
 };
 }
 

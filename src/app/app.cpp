@@ -8,7 +8,7 @@ namespace cells_evo {
 void App::Run() {
   uint last_frame_time = 1;
   sf::Clock delta_clock, frame_clock, fc;
-  int c = 1000;
+  int c = 100;
   while (window_->isOpen()) {
     --c;
     frame_clock.restart();
@@ -59,17 +59,12 @@ void App::Draw() {
   auto half_size = window_->getView().getSize();
   half_size.x /= 2;
   half_size.y /= 2;
-  // todo
-  sf::Font font;
-  if (!font.loadFromFile("include/imgui/misc/fonts/ProggyClean.ttf")) {
-    throw std::runtime_error("Failed to load font for SFML");
-  }
   for (int i = 0; auto &food : world_->food_) {
     if (ShouldDrawFood(food, center, half_size)) {
       window_->draw(food.GetShape());
       if (draw_food_indices_) {
         sf::Text idx_label;
-        idx_label.setFont(font);
+        idx_label.setFont(font_);
         idx_label.setString(std::to_string(i));
         idx_label.setPosition(food.GetPosition().x, food.GetPosition().y);
         idx_label.setCharacterSize(20);
@@ -87,7 +82,7 @@ void App::Draw() {
         window_->draw(cell.GetShape());
         if (draw_cell_indices_) {
           sf::Text idx_label;
-          idx_label.setFont(font);
+          idx_label.setFont(font_);
           idx_label.setString(std::to_string(i));
           idx_label.setPosition(cell.GetPosition().x, cell.GetPosition().y);
           idx_label.setCharacterSize(20);
@@ -166,6 +161,9 @@ App::App(
 ) {
   const uint kDefaultWidth = 1920;
   const uint kDefaultHeight = 1440;
+  if (!font_.loadFromFile("include/imgui/misc/fonts/ProggyClean.ttf")) {
+    throw std::runtime_error("Failed to load font for SFML");
+  }
   window_ = std::make_shared<sf::RenderWindow>(sf::VideoMode(kDefaultWidth, kDefaultHeight), "Cells");
 //  window_->setVerticalSyncEnabled(true);
 

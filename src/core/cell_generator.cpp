@@ -34,7 +34,7 @@ Cell CellGenerator::DivideCell(Cell &cell) {
       cell.GetPosition(),
       genetic_engineer_.CopyGenes(cell.genes_)
   );
-  new_cell.AddEnergy(cell.energy_ / 2);
+  new_cell.AddEnergy(cell.GetEnergy() / 2);
   new_cell.StartDivisionCooldown();
   new_cell.MoveX(cell.GetSize() * 2);
   // todo duplicate
