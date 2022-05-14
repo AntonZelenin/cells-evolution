@@ -1,4 +1,4 @@
-#include "events.h"
+#include "CellsEvo/events.h"
 
 namespace cells_evo::event {
 void Dispatcher::Subscribe(const DescriptorType &descriptor, SlotType &&slot) {

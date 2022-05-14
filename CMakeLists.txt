@@ -6,21 +6,21 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(
         cells_evolution
         src/main.cpp
-        src/app.cpp
+        src/app/app.cpp
         include/CellsEvo/app.h
-        src/cell.cpp
+        src/core/cell.cpp
         include/CellsEvo/cell.h
         src/graphics/drawer.cpp
         include/CellsEvo/graphics/drawer.h
         include/CellsEvo/graphics.h
-        src/food.cpp
+        src/core/food.cpp
         include/CellsEvo/food.h
-        src/geometry.cpp
+        src/core/geometry.cpp
         include/CellsEvo/geometry.h
-        src/world.cpp
+        src/core/world.cpp
         include/CellsEvo/world.h
         include/CellsEvo/base.h
-        src/tools.cpp
+        src/core/tools.cpp
         include/CellsEvo/tools.h
         src/logic/logic.cpp
         include/CellsEvo/logic/logic.h
@@ -30,9 +30,9 @@ add_executable(
         include/CellsEvo/logic/cell_logic.h
         src/genetics/engineer.cpp
         include/CellsEvo/genetics/engineer.h
-        src/cell_generator.cpp
+        src/core/cell_generator.cpp
         include/CellsEvo/cell_generator.h
-        src/collision_resolution.cpp
+        src/core/collision_resolution.cpp
         include/CellsEvo/collision_resolution.h
         src/graphics/camera.cpp
         include/CellsEvo/graphics/camera.h
@@ -41,7 +41,7 @@ add_executable(
         include/imgui/imgui-SFML.cpp
         include/imgui/imgui_tables.cpp
         include/imgui/imgui_widgets.cpp
-        src/gui.cpp include/CellsEvo/gui.h include/CellsEvo/types.h src/events.cpp src/events.h)
+        src/app/gui.cpp include/CellsEvo/gui.h include/CellsEvo/types.h src/core/events.cpp include/CellsEvo/events.h)
 include_directories(include)
 link_directories(lib)
 

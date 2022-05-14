@@ -4,7 +4,7 @@
 #include "SFML/System/Clock.hpp"
 #include "SFML/Graphics.hpp"
 #include "CellsEvo/world.h"
-#include "../../src/events.h"
+#include "CellsEvo/events.h"
 
 namespace cells_evo::core {
 struct CellsGuiState {
@@ -22,8 +22,8 @@ struct CellsGuiState {
 
 class Gui {
   static constexpr uint k_cells_history_graph_capacity_ = 70;
-  float nonhunter_cells_vals_[Gui::k_cells_history_graph_capacity_];
-  float hunter_cells_vals_[Gui::k_cells_history_graph_capacity_];
+  float nonhunter_cells_vals_[Gui::k_cells_history_graph_capacity_]{};
+  float hunter_cells_vals_[Gui::k_cells_history_graph_capacity_]{};
   std::shared_ptr<sf::RenderWindow> window_;
   std::shared_ptr<core::World> world_;
   uint ticks_ = 0;
