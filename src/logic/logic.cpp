@@ -72,7 +72,7 @@ void Logic::ChooseDirections() {
       if (cell.IsHunter()) {
         hunter_cell_logic_.ChooseDirection(cell, cell_idx, world_.cells_);
       } else if (cell.IsNonHunter()) {
-        non_hunter_cell_logic_.ChooseDirection(cell, food_idx, world_.food_);
+        non_hunter_cell_logic_.ChooseDirection(cell, food_idx, cell_idx, world_.food_, world_.cells_);
       } else {
         throw std::runtime_error("Invalid cell type");
       }
@@ -154,6 +154,7 @@ void Logic::UpdateCellsState() {
           cell.GetPosition(),
           cell.GetBaseNutritionValue()
       ));
+      food.SetShape(food_drawer_.Get(food));
       world_.AddFood(food);
       cell.Delete();
       ++deleted_cells_num_;

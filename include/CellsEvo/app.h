@@ -20,7 +20,7 @@ class App {
   bool draw_cells_ = true;
   bool draw_food_indices_ = false;
   bool draw_cell_indices_ = false;
-  bool run_simulation_ = true;
+  bool is_running_ = false;
 
   int k_frame_micro_sec_;
   int fps_;

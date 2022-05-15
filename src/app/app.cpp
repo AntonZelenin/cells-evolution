@@ -19,7 +19,7 @@ void App::Run() {
     auto input = fc.restart().asMicroseconds();
     gui_->ProcessGui(delta_clock, last_frame_time);
     auto gui = fc.restart().asMicroseconds();
-    if (run_simulation_)
+    if (is_running_)
       logic_->WorldTick();
     auto world_tick = fc.restart().asMicroseconds();
     Draw();
@@ -222,7 +222,7 @@ void App::HandleEvent(const event::Event &e) {
   if (event == event::ToggleCellsDrawingEvent::descriptor_) {
     draw_cells_ = !draw_cells_;
   } else if (event == event::ToggleSimulation::descriptor_) {
-    run_simulation_ = !run_simulation_;
+    is_running_ = !is_running_;
   } else if (event == event::ToggleDrawCellIndices::descriptor_) {
     draw_cell_indices_ = !draw_cell_indices_;
   } else if (event == event::ToggleDrawFoodIndices::descriptor_) {

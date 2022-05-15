@@ -19,13 +19,17 @@ class Cell : public EdibleEntity {
   constexpr static const float k_division_energy_size_coefficient_ = 1.0;
   constexpr static const float k_hunger_coefficient_ = 0.7;
   constexpr static const float k_punch_coefficient_ = 0.0015;
-  constexpr static const float k_speed_size_coefficient_ = 0.027;
+  constexpr static const float k_speed_size_coefficient_ = 0.07;
   constexpr static const float k_vital_functions_energy_consumption_ = 0.00015;
   constexpr static const float k_max_distance_food_detection_ = 200;
   constexpr static const float k_shell_thickness_coefficient_ = 0.1;
 
   bool is_deleted_ = false;
+  bool is_alive_ = true;
   bool has_target_food_ = false;
+  bool is_running_ = false;
+  bool ignores_hunter_near_food_;
+  bool ignores_food_near_hunter_;
   std::optional<core::Vector2<float>> direction_{};
   // 60 seconds until dead cell turns into food * 60 fps
   Position position_;
@@ -69,6 +73,7 @@ class Cell : public EdibleEntity {
   void SetDirection(core::Vector2<float> food_id);
   void SetHasFoodTarget();
   void SetId(uint id);
+  void SetIsRunning(bool is_running);
   void SetShapes(sf::CircleShape alive_shape, sf::CircleShape dead_shape);
   void MoveX(float val);
   void StartDivisionCooldown();
@@ -77,6 +82,7 @@ class Cell : public EdibleEntity {
   void Move2();
   void Delete();
   void ConsumeVitalFunctionsEnergy();
+  void Kill();
 
   Position &GetPosition() override;
   [[nodiscard]] uint GetId() const override;
@@ -106,6 +112,8 @@ class Cell : public EdibleEntity {
   [[nodiscard]] float GetIdleSpeed() const;
   [[nodiscard]] sf::CircleShape &GetShape();
   [[nodiscard]] float GetEnergy() const;
+  [[nodiscard]] bool IgnoresHunterNearFood() const;
+  [[nodiscard]] bool IgnoresFoodNearHunter() const;
 };
 }
 

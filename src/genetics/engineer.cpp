@@ -47,6 +47,9 @@ std::vector<Gene> Engineer::GenerateBaseGenes(const core::CellType &cell_type) {
           CreateGene(GeneType::HUNTING_SPEED),
           CreateGene(GeneType::IDLE_SPEED),
           CreateGene(GeneType::HARD_SHELL),
+          CreateGene(GeneType::IGNORE_FOOD_NEAR_HUNTER),
+          CreateGene(GeneType::IGNORE_HUNTER_NEAR_FOOD),
+          CreateGene(GeneType::IGNORE_HUNTER_IS_RECESSIVE),
       };
   }
 }

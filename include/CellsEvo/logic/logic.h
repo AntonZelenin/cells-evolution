@@ -24,7 +24,8 @@ class Logic {
   core::FoodGenerator food_generator_;
   float food_production_rate_;
   // todo this class and cell generator both have drawer
-  graphics::CellDrawer drawer_{};
+  graphics::CellDrawer cell_drawer_{};
+  graphics::FoodDrawer food_drawer_{};
 
   void Tick();
   void GenerateFood();

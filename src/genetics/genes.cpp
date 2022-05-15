@@ -20,17 +20,17 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
       };
     case HUNTING_SPEED:
       return {
-          6.0,
-          1.8,
+          2.0,
+          0.5,
           0.1,
-          30
+          5
       };
     case IDLE_SPEED:
       return {
-          3.0,
-          1.8,
+          1.0,
+          0.5,
           0.1,
-          30
+          5
       };
     case ENERGY:
       return {
@@ -60,13 +60,14 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
           180,
           1000
       };
-    case AVOID_HUNTERS:
-    case PREFER_FOOD_OVER_HUNTER:
+    case IGNORE_HUNTER_IS_RECESSIVE:
+    case IGNORE_FOOD_NEAR_HUNTER:
+    case IGNORE_HUNTER_NEAR_FOOD:
     case STICK_TO_FRIEND:
     case AVOID_FRIENDS:
       return {
           0.5,
-          0.1,
+          0.2,
           0,
           1
       };

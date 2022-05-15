@@ -21,6 +21,18 @@ Cell::Cell(
   base_division_cooldown_ = static_cast<uint>(
       genes_.at(genetics::GeneType::DIVISION_COOLDOWN).value + 50.f * GetShell()
   );
+
+  if (!IsHunter()) {
+    ignores_hunter_near_food_ = genes_.at(genetics::GeneType::IGNORE_HUNTER_NEAR_FOOD).value > 0.5;
+    ignores_food_near_hunter_ = genes_.at(genetics::GeneType::IGNORE_FOOD_NEAR_HUNTER).value > 0.5;
+    if (ignores_hunter_near_food_ && ignores_food_near_hunter_) {
+      if (genes_.at(genetics::GeneType::IGNORE_HUNTER_IS_RECESSIVE).value > 0.5) {
+        ignores_hunter_near_food_ = false;
+      } else {
+        ignores_food_near_hunter_ = false;
+      }
+    }
+  }
 }
 
 Position &Cell::GetPosition() {
@@ -41,7 +53,7 @@ float Cell::GetShellThickness() const {
 
 float Cell::GetSpeed() const {
   float speed;
-  if (HasTargetFood())
+  if (HasTargetFood() || is_running_)
     speed = GetHuntingSpeed();
   else
     speed = GetIdleSpeed();
@@ -127,7 +139,7 @@ void Cell::ConsumeVitalFunctionsEnergy() {
 }
 
 bool Cell::IsDead() const {
-  return energy_ <= 0;
+  return !is_alive_;
 }
 
 bool Cell::IsAlive() const {
@@ -231,13 +243,34 @@ sf::CircleShape &Cell::GetShape() {
 void Cell::ConsumeEnergy(float energy) {
   energy_ -= energy;
   if (energy_ <= 0) {
-    shell_ /= 2.0;
-    shape_ = dead_shape_;
+    Kill();
   }
 }
 
 void Cell::SetShapes(sf::CircleShape alive_shape, sf::CircleShape dead_shape) {
-  shape_ = std::move(alive_shape);
-  dead_shape_ = std::move(dead_shape);
+  if (IsAlive()) {
+    shape_ = std::move(alive_shape);
+    dead_shape_ = std::move(dead_shape);
+  } else {
+    shape_ = std::move(dead_shape);
+  }
+}
+
+void Cell::SetIsRunning(bool is_running) {
+  is_running_ = is_running;
+}
+
+bool Cell::IgnoresHunterNearFood() const {
+  return ignores_hunter_near_food_;
+}
+
+bool Cell::IgnoresFoodNearHunter() const {
+  return ignores_food_near_hunter_;
+}
+
+void Cell::Kill() {
+  is_alive_ = false;
+  shell_ /= 2.0;
+  shape_ = dead_shape_;
 }
 }

@@ -14,11 +14,13 @@ class NonHunterCellLogic {
       core::FoodStorage &foods
   );
   static bool IsEatable(const core::Food &food);
+  static bool IsDangerous(const core::Cell &cell);
 
  public:
   static bool CouldSensedFood(core::Cell &cell, core::Entity &food_entity);
-  void ChooseDirection(core::Cell &cell, uint& food_idx, core::FoodStorage &food);
+  void ChooseDirection(core::Cell &cell, uint& food_idx, uint cell_idx, core::FoodStorage &food, core::CellStorage &cells);
   core::Vector2<float> GetRandomDirection(core::Cell &cell);
+  static std::optional<uint> FindClosestCellIdx(core::Cell &cell, uint cell_idx, core::CellStorage &cells);
 };
 
 class HunterCellLogic : public NonHunterCellLogic {

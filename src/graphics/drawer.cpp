@@ -14,8 +14,6 @@ float CellDrawer::GetSize(const core::Cell &cell) const {
 }
 
 sf::CircleShape CellDrawer::GetAliveShape(core::Cell &cell) {
-  if (cell.IsDead())
-    throw std::runtime_error("The cell is dead but it supposed to be alive");
   sf::CircleShape shape(GetSize(cell));
   AddOutline(cell, shape);
   shape.setFillColor(sf::Color(194, 255, 254));
