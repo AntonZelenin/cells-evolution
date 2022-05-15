@@ -13,7 +13,6 @@ enum GeneType {
   SIZE,
   HUNTING_SPEED,
   IDLE_SPEED,
-  ENERGY,
   STICK_TO_FRIEND,
   AVOID_FRIENDS,
 };

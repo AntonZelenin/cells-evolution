@@ -122,22 +122,23 @@ void Logic::CheckFoodCrossedBoundaries() const {
 }
 
 bool Logic::ProcessCrossedWalls(float size, core::Position &pos) const {
+  bool hit_wall = false;
   if (pos.x < 0.0 + size) {
     pos.x = size;
-    return true;
+    hit_wall = true;
   } else if (pos.x > world_.width_ - size) {
     pos.x = world_.width_ - size;
-    return true;
+    hit_wall = true;
   }
 
   if (pos.y < 0.0 + size) {
     pos.y = size;
-    return true;
+    hit_wall = true;
   } else if (pos.y > world_.height_ - size) {
     pos.y = world_.height_ - size;
-    return true;
+    hit_wall = true;
   }
-  return false;
+  return hit_wall;
 }
 
 void Logic::GenerateFood() {

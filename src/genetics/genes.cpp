@@ -32,17 +32,10 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
           0.1,
           5
       };
-    case ENERGY:
-      return {
-          10,
-          1.0,
-          5,
-          50
-      };
     case HARD_SHELL:
       return {
-          0.7,
-          0.8,
+          1.0,
+          1.0,
           0,
           5
       };

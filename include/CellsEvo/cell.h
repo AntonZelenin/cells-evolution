@@ -15,12 +15,12 @@ enum CellType {
 };
 
 class Cell : public EdibleEntity {
-  constexpr static const float k_energy_consumption_coefficient_ = 0.001;
-  constexpr static const float k_division_energy_size_coefficient_ = 1.0;
-  constexpr static const float k_hunger_coefficient_ = 0.7;
-  constexpr static const float k_punch_coefficient_ = 0.0015;
-  constexpr static const float k_speed_size_coefficient_ = 0.07;
+  constexpr static const float k_base_nutrition_value_coeff_ = 0.5;
+  constexpr static const float k_energy_consumption_coefficient_ = 0.0005;
   constexpr static const float k_vital_functions_energy_consumption_ = 0.00015;
+  constexpr static const float k_hunger_coefficient_ = 0.6;
+  constexpr static const float k_punch_coefficient_ = 0.0008;
+  constexpr static const float k_speed_size_coefficient_ = 0.07;
   constexpr static const float k_max_distance_food_detection_ = 200;
   constexpr static const float k_shell_thickness_coefficient_ = 0.1;
 
@@ -38,7 +38,7 @@ class Cell : public EdibleEntity {
   float hunting_speed_;
   float idle_speed_;
   int direction_change_factor_;
-  uint base_division_cooldown_ = 0;
+  uint base_division_cooldown_;
   sf::CircleShape shape_;
   sf::CircleShape dead_shape_;
 

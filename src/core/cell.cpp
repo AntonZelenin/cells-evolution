@@ -21,6 +21,8 @@ Cell::Cell(
   base_division_cooldown_ = static_cast<uint>(
       genes_.at(genetics::GeneType::DIVISION_COOLDOWN).value + 50.f * GetShell()
   );
+  if (IsHunter())
+    base_division_cooldown_ *= 2.f;
 
   if (!IsHunter()) {
     ignores_hunter_near_food_ = genes_.at(genetics::GeneType::IGNORE_HUNTER_NEAR_FOOD).value > 0.5;
@@ -79,10 +81,7 @@ bool Cell::IsNonHunter() const {
 }
 
 float Cell::GetMaxFoodDetectionDistance() const {
-  if (IsNonHunter())
-    return k_max_distance_food_detection_ * 0.9f + GetSize() * 2;
-  else
-    return k_max_distance_food_detection_ * 1.2f + GetSize() * 2;
+    return k_max_distance_food_detection_ + GetSize() * 2;
 }
 
 [[nodiscard]] std::optional<core::Vector2<float>> Cell::GetDirection() const {
@@ -160,7 +159,7 @@ float Cell::GetNutritionValue() const {
 }
 
 float Cell::GetBaseNutritionValue() const {
-  return GetSize() * 0.5f;
+  return GetSize() * k_base_nutrition_value_coeff_;
 }
 
 bool Cell::IsHungry() const {
@@ -176,7 +175,9 @@ void Cell::ConsumePunchEnergy() {
 }
 
 float Cell::GetDivisionEnergy() const {
-  return k_division_energy_size_coefficient_ * GetSize();
+  if (HasShell())
+    return GetSize() * 1.4f;
+  return GetSize() * 0.9f;
 }
 
 bool Cell::HasEnergyToDivide() const {
