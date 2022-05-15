@@ -50,6 +50,9 @@ void Logic::WorldTick() {
   if (world_.ticks_ == 400) {
     int t = 1;
   }
+  CheckCellCrossedBoundaries();
+  if (world_.ticks_ % 30 == 0)
+    CheckFoodCrossedBoundaries();
 }
 
 void Logic::ResolveCellCollisions(collisions::IdXPairs &colliding_cells_ids) const {
@@ -87,7 +90,6 @@ void Logic::MoveCells() {
 //      cell.Move(cell.GetDirection().value());
       cell.Move2();
     }
-    CheckCrossedBoundaries(cell);
   }
 }
 
@@ -105,28 +107,37 @@ void Logic::MoveCells() {
   }
 }
 
-void Logic::CheckCrossedBoundaries(core::Cell &cell) const {
-  auto &pos = cell.GetPosition();
-  auto size = cell.GetSize();
-  bool hit_the_wall = false;
+void Logic::CheckCellCrossedBoundaries() const {
+  for (auto &cell : world_.cells_) {
+    if (!cell.IsDeleted() && ProcessCrossedWalls(cell.GetSize(), cell.GetPosition()))
+      cell.ClearDirection();
+  }
+}
 
+void Logic::CheckFoodCrossedBoundaries() const {
+  for (auto &food : world_.food_) {
+    if (!food.IsDeleted())
+      ProcessCrossedWalls(food.GetSize(), food.GetPosition());
+  }
+}
+
+bool Logic::ProcessCrossedWalls(float size, core::Position &pos) const {
   if (pos.x < 0.0 + size) {
     pos.x = size;
-    hit_the_wall = true;
+    return true;
   } else if (pos.x > world_.width_ - size) {
     pos.x = world_.width_ - size;
-    hit_the_wall = true;
+    return true;
   }
 
   if (pos.y < 0.0 + size) {
     pos.y = size;
-    hit_the_wall = true;
+    return true;
   } else if (pos.y > world_.height_ - size) {
     pos.y = world_.height_ - size;
-    hit_the_wall = true;
+    return true;
   }
-
-  if (hit_the_wall) cell.ClearDirection();
+  return false;
 }
 
 void Logic::GenerateFood() {

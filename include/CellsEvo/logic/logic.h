@@ -31,7 +31,8 @@ class Logic {
   void GenerateFood();
   void UpdateCellsState();
   [[maybe_unused]] void TeleportCrossedBoundaries(core::Cell &cell) const;
-  void CheckCrossedBoundaries(core::Cell &cell) const;
+  void CheckCellCrossedBoundaries() const;
+  void CheckFoodCrossedBoundaries() const;
   void MoveCells();
   void ChooseDirections();
   bool ShouldGenerateFood();
@@ -46,6 +47,7 @@ class Logic {
   void CleanFood();
   void CleanCells();
   static bool ShouldChangeDirection(core::Cell &cell);
+  bool ProcessCrossedWalls(float size, core::Position &pos) const;
 
  public:
   Logic(

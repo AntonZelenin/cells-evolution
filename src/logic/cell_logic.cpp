@@ -120,6 +120,7 @@ std::optional<uint> HunterCellLogic::FindClosestCellIdx(
   return closest_food_idx;
 }
 
+// todo duplicate code
 std::optional<uint> NonHunterCellLogic::FindClosestCellIdx(
     core::Cell &cell,
     uint cell_idx,
