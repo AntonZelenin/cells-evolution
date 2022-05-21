@@ -56,6 +56,14 @@ sf::RectangleShape &Food::GetShape() {
   return shape_;
 }
 
+bool Food::IsFloral() const {
+  return type_ == core::FoodType::K_FLORAL;
+}
+
+bool Food::IsAnimal() const {
+  return type_ == core::FoodType::K_ANIMAL;
+}
+
 FoodDeposit::FoodDeposit(Position center, float radius) {
   center_ = center;
   radius_ = radius;

@@ -36,8 +36,11 @@ class Logic {
   void ChooseDirections();
   bool ShouldGenerateFood();
   bool CanEat(collisions::IdxPair &cell_id_pair);
-  void HunterEat(collisions::IdXPairs &colliding_cell_ids);
-  void NonHunterEat(collisions::FoodCellCollisions &colliding_food_cell_ids);
+  void ResolveHunterCollisions(collisions::IdXPairs &colliding_cell_ids);
+  void Eat(collisions::FoodCellCollisions &colliding_food_cell_ids);
+  void GenerateFloralFood(core::Cell &cell);
+  void GenerateAnimalFood(core::Cell &cell);
+  void GenerateFoodFromCell(core::FoodType food_type, core::Cell &cell);
   core::Cell &ExtractHunter(collisions::IdxPair &cell_id_pair);
   core::Cell &ExtractPrey(collisions::IdxPair &cell_id_pair);
   void ResolveCellCollisions(collisions::IdXPairs &colliding_cells_ids) const;

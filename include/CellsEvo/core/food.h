@@ -31,6 +31,8 @@ class Food : public EdibleEntity {
   [[nodiscard]] uint GetId() const override;
   [[nodiscard]] float GetNutritionValue() const override;
   [[nodiscard]] bool IsDeleted() const;
+  [[nodiscard]] bool IsFloral() const;
+  [[nodiscard]] bool IsAnimal() const;
   void Delete();
   void SetId(uint id);
   void SetShape(sf::RectangleShape shape);

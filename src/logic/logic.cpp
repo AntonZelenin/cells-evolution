@@ -30,9 +30,9 @@ void Logic::WorldTick() {
   auto coll_cell = clock.restart().asMicroseconds();
   auto colliding_cell_food_ids = collisions::CollisionDetector::DetectCellFoodCollisions(world_.cells_, world_.food_);
   auto coll_food = clock.restart().asMicroseconds();
-  HunterEat(colliding_cell_ids);
+  ResolveHunterCollisions(colliding_cell_ids);
   auto hunter_eat = clock.restart().asMicroseconds();
-  NonHunterEat(colliding_cell_food_ids);
+  Eat(colliding_cell_food_ids);
   auto nonhunter_eat = clock.restart().asMicroseconds();
   ResolveCellCollisions(colliding_cell_ids);
   auto res_coll = clock.restart().asMicroseconds();
@@ -73,7 +73,7 @@ void Logic::ChooseDirections() {
     if (cell.IsAlive() && ShouldChangeDirection(cell)) {
       cell.ClearFoodTarget();
       if (cell.IsHunter()) {
-        hunter_cell_logic_.ChooseDirection(cell, cell_idx, world_.cells_);
+        hunter_cell_logic_.ChooseDirection(cell, cell_idx, world_.cells_, food_idx, world_.food_);
       } else if (cell.IsNonHunter()) {
         non_hunter_cell_logic_.ChooseDirection(cell, food_idx, cell_idx, world_.food_, world_.cells_);
       } else {
@@ -176,15 +176,9 @@ void Logic::UpdateCellsState() {
     if (cell.HasEnergyToDivide() && cell.DivisionCooldownPassed()) {
       new_cells.push_back(cell_generator_.DivideCell(cell));
     } else if (cell.HasDecayed()) {
-      core::Food food(core::Food(
-          core::FoodType::K_FLORAL,
-          cell.GetPosition(),
-          cell.GetBaseNutritionValue()
-      ));
-      food.SetShape(food_drawer_.Get(food));
-      world_.AddFood(food);
-      cell.Delete();
-      ++deleted_cells_num_;
+      GenerateFloralFood(cell);
+    } else if (!cell.IsHolistic()) {
+      GenerateAnimalFood(cell);
     }
   }
   for (auto &cell : new_cells) {
@@ -192,11 +186,27 @@ void Logic::UpdateCellsState() {
   }
 }
 
-bool CanKill(core::Cell &hunter_cell, core::Cell &prey_cell) {
-  return prey_cell.GetSize() < hunter_cell.GetSize() * 1.5;
+void Logic::GenerateFloralFood(core::Cell &cell) {
+  GenerateFoodFromCell(core::FoodType::K_FLORAL, cell);
 }
 
-void Logic::HunterEat(collisions::IdXPairs &colliding_cell_ids) {
+void Logic::GenerateAnimalFood(core::Cell &cell) {
+  GenerateFoodFromCell(core::FoodType::K_ANIMAL, cell);
+}
+
+void Logic::GenerateFoodFromCell(core::FoodType food_type, core::Cell &cell) {
+  core::Food food(core::Food(
+      food_type,
+      cell.GetPosition(),
+      cell.GetBaseNutritionValue()
+  ));
+  food.SetShape(food_drawer_.Get(food));
+  world_.AddFood(food);
+  cell.Delete();
+  ++deleted_cells_num_;
+}
+
+void Logic::ResolveHunterCollisions(collisions::IdXPairs &colliding_cell_ids) {
   std::vector<uint> eaten_cell_ids;
   for (auto &colliding_cell_id : colliding_cell_ids) {
     if (CanEat(colliding_cell_id)) {
@@ -204,11 +214,10 @@ void Logic::HunterEat(collisions::IdXPairs &colliding_cell_ids) {
       auto &hunter_cell = ExtractHunter(colliding_cell_id);
       if (std::find(eaten_cell_ids.begin(), eaten_cell_ids.end(), prey_cell.GetId()) != eaten_cell_ids.end())
         continue;
-      if (!hunter_cell.IsHungry() || (!CanKill(hunter_cell, prey_cell) && !prey_cell.IsDead())) continue;
-      if (prey_cell.HasShell()) {
-        prey_cell.DamageShell(hunter_cell.GetPunchStrength());
+      if (prey_cell.IsHolistic()) {
+        prey_cell.InflictDamage(hunter_cell.GetPunchStrength());
         hunter_cell.ConsumePunchEnergy();
-      } else {
+      } else if (hunter_cell.IsHungry()) {
         hunter_cell.AddEnergy(prey_cell.GetNutritionValue());
         hunter_cell.ClearFoodTarget();
         hunter_cell.ClearDirection();
@@ -227,26 +236,32 @@ void Logic::HunterEat(collisions::IdXPairs &colliding_cell_ids) {
   );
 }
 
-void Logic::NonHunterEat(collisions::FoodCellCollisions &colliding_food_cell_ids) {
+void Logic::Eat(collisions::FoodCellCollisions &colliding_food_cell_ids) {
   std::vector<uint> eaten_food_ids;
   for (auto &colliding_food_cell : colliding_food_cell_ids) {
     auto &cell = world_.cells_[colliding_food_cell.cell_idx];
     auto &food = world_.food_[colliding_food_cell.food_idx];
+
     if (food.IsDeleted()) continue;
     if (std::find(eaten_food_ids.begin(), eaten_food_ids.end(), food.GetId()) != eaten_food_ids.end())
       continue;
-    if (!cell.IsHungry() || !cell.IsAlive() || cell.IsHunter()) continue;
-    cell.AddEnergy(food.GetNutritionValue());
-    cell.ClearFoodTarget();
-    cell.ClearDirection();
-    eaten_food_ids.push_back(food.GetId());
-    food.Delete();
-    ++deleted_food_num_;
+    if (!cell.IsHungry() || !cell.IsAlive()) continue;
+
+    if ((cell.IsHunter() && food.IsAnimal()) || (cell.IsNonHunter() && food.IsFloral())) {
+      cell.AddEnergy(food.GetNutritionValue());
+      cell.ClearFoodTarget();
+      cell.ClearDirection();
+      eaten_food_ids.push_back(food.GetId());
+      food.Delete();
+      ++deleted_food_num_;
+    }
   }
 }
 
 bool Logic::CanEat(collisions::IdxPair &cell_id_pair) {
   auto &first = world_.cells_[cell_id_pair.first], &second = world_.cells_[cell_id_pair.second];
+
+  if (first.IsDeleted() || second.IsDeleted()) return false;
   bool at_least_one_alive_hunter = (first.IsHunter() && !first.IsDead()) || (second.IsHunter() && !second.IsDead());
 
   if (!at_least_one_alive_hunter)

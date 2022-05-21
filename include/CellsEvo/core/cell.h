@@ -15,11 +15,11 @@ enum CellType {
 };
 
 class Cell : public EdibleEntity {
-  constexpr static const float k_base_nutrition_value_coeff_ = 0.5;
+  constexpr static const float k_base_nutrition_value_coefficient_ = 0.5;
   constexpr static const float k_energy_consumption_coefficient_ = 0.0005;
   constexpr static const float k_vital_functions_energy_consumption_ = 0.0002;
   constexpr static const float k_hunger_coefficient_ = 0.6;
-  constexpr static const float k_punch_coefficient_ = 0.0008;
+  constexpr static const float k_punch_coefficient_ = 0.02;
   constexpr static const float k_speed_size_coefficient_ = 0.07;
   constexpr static const float k_max_distance_food_detection_ = 200;
   constexpr static const float k_shell_thickness_coefficient_ = 0.1;
@@ -51,6 +51,7 @@ class Cell : public EdibleEntity {
  public:
   uint time_to_decay_ = 60 * 60;
   float shell_ = 0;
+  float integrity_;
   uint lifetime_ = 0;
   uint division_cooldown_ = 0;
 
@@ -69,7 +70,7 @@ class Cell : public EdibleEntity {
   void ClearDirection();
   void ClearFoodTarget();
   void ConsumeDivisionEnergy();
-  void DamageShell(float value);
+  void InflictDamage(float value);
   void SetDirection(core::Vector2<float> food_id);
   void SetHasFoodTarget();
   void SetId(uint id);
@@ -115,6 +116,7 @@ class Cell : public EdibleEntity {
   [[nodiscard]] bool IgnoresHunterNearFood() const;
   [[nodiscard]] bool IgnoresFoodNearHunter() const;
   [[nodiscard]] float GetClanValue() const;
+  [[nodiscard]] bool IsHolistic() const;
 };
 }
 

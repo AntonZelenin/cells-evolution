@@ -9,22 +9,24 @@ Cell::Cell(
     std::vector<genetics::Gene> const &genes
 )
     : position_(position) {
-  type_ = type;
   for (auto gene : genes) {
     genes_.insert({gene.type, gene});
     if (gene.type == genetics::GeneType::HARD_SHELL) shell_ = gene.value;
   }
+
+  type_ = type;
   size_ = genes_.at(genetics::GeneType::SIZE).value;
+  integrity_ = size_;
   hunting_speed_ = genes_.at(genetics::GeneType::HUNTING_SPEED).value * k_speed_size_coefficient_ * GetRawSize();
   idle_speed_ = genes_.at(genetics::GeneType::IDLE_SPEED).value * k_speed_size_coefficient_ * GetRawSize();
   direction_change_factor_ = static_cast<int>(genes_.at(genetics::GeneType::DIRECTION_CHANGE_FACTOR).value);
   base_division_cooldown_ = static_cast<uint>(
       genes_.at(genetics::GeneType::DIVISION_COOLDOWN).value + 50.f * GetShell()
   );
-  if (IsHunter())
-    base_division_cooldown_ *= 2.f;
 
-  if (!IsHunter()) {
+  if (IsHunter()) {
+    base_division_cooldown_ *= 2.f;
+  } else {
     ignores_hunter_near_food_ = genes_.at(genetics::GeneType::IGNORE_HUNTER_NEAR_FOOD).value > 0.5;
     ignores_food_near_hunter_ = genes_.at(genetics::GeneType::IGNORE_FOOD_NEAR_HUNTER).value > 0.5;
     if (ignores_hunter_near_food_ && ignores_food_near_hunter_) {
@@ -60,7 +62,7 @@ float Cell::GetSpeed() const {
   else
     speed = GetIdleSpeed();
   if (HasShell())
-    speed /= GetShell();
+    speed /= GetShell() / 10.f;
   return speed;
 }
 
@@ -81,7 +83,7 @@ bool Cell::IsNonHunter() const {
 }
 
 float Cell::GetMaxFoodDetectionDistance() const {
-    return k_max_distance_food_detection_ + GetSize() * 2;
+  return k_max_distance_food_detection_ + GetSize() * 2;
 }
 
 [[nodiscard]] std::optional<core::Vector2<float>> Cell::GetDirection() const {
@@ -159,7 +161,7 @@ float Cell::GetNutritionValue() const {
 }
 
 float Cell::GetBaseNutritionValue() const {
-  return GetSize() * k_base_nutrition_value_coeff_;
+  return GetSize() * k_base_nutrition_value_coefficient_;
 }
 
 bool Cell::IsHungry() const {
@@ -212,12 +214,21 @@ bool Cell::HasTargetFood() const {
   return has_target_food_;
 }
 
-void Cell::DamageShell(float value) {
-  shell_ -= value;
+void Cell::InflictDamage(float value) {
+  if (HasShell())
+    shell_ -= value;
+  else
+    integrity_ -= value;
+  if (!IsHolistic())
+    Kill();
+}
+
+bool Cell::IsHolistic() const {
+  return integrity_ > 0.f;
 }
 
 float Cell::GetShell() const {
-  if (shell_ < 1.0) return 0.0;
+  if (shell_ < 10.0) return 0.0;
   return shell_;
 }
 
@@ -272,6 +283,7 @@ bool Cell::IgnoresFoodNearHunter() const {
 void Cell::Kill() {
   is_alive_ = false;
   shell_ /= 2.0;
+  integrity_ /= 2.0;
   shape_ = dead_shape_;
 }
 

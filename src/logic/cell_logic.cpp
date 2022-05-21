@@ -54,16 +54,30 @@ void NonHunterCellLogic::ChooseDirection(
   cell.SetDirection(direction);
 }
 
-void HunterCellLogic::ChooseDirection(core::Cell &cell, uint cell_idx, core::CellStorage &cells) {
-  core::Vector2<float> direction;
-  auto closest_prey_idx = FindClosestCellIdx(cell, cell_idx, cells);
-  if (!closest_prey_idx.has_value()) {
-    direction = GetRandomDirection(cell);
-    cell.ClearFoodTarget();
+void HunterCellLogic::ChooseDirection(
+    core::Cell &cell,
+    uint cell_idx,
+    core::CellStorage &cells,
+    uint food_idx,
+    core::FoodStorage &food
+) {
+  auto closest_food_idx = FindClosestFoodIdx(cell, food_idx, food);
+  if (closest_food_idx.has_value()) {
+    HeadTo(cell, food[closest_food_idx.value()].GetPosition());
   } else {
-    direction = core::GetDirectionVector(cell.GetPosition(), cells[closest_prey_idx.value()].GetPosition());
-    cell.SetHasFoodTarget();
+    auto closest_prey_idx = FindClosestCellIdx(cell, cell_idx, cells);
+    if (closest_prey_idx.has_value()) {
+      HeadTo(cell, cells[closest_prey_idx.value()].GetPosition());
+    } else {
+      auto pos = GetRandomDirection(cell);
+      HeadTo(cell, pos);
+    }
   }
+}
+
+void NonHunterCellLogic::HeadTo(core::Cell &cell, core::Position &position) {
+  auto direction = core::GetDirectionVector(cell.GetPosition(), position);
+  cell.SetHasFoodTarget();
   cell.SetDirection(direction);
 }
 
@@ -181,14 +195,11 @@ std::optional<uint> NonHunterCellLogic::FindClosestFoodIdx(
     core::FoodStorage &foods
 ) {
   // todo sometimes cells choose not the closest food
-  // todo sometimes cells can't eat food
   if (foods.empty()) return {};
   std::optional<uint> closest_food_idx = {};
 
-  // todo when multiple hunters eat one cell program crashes
   // todo hunters sometimes choose not the closest cell
   float min_distance_squared = std::numeric_limits<float>::max();
-  // todo if and while can be replaced with for
   auto closest_x_food_idx_left = food_idx;
   while (closest_x_food_idx_left >= 0) {
     auto &food = foods.at(closest_x_food_idx_left);
@@ -235,7 +246,11 @@ bool HunterCellLogic::IsEatable(const core::Cell &prey) {
 }
 
 bool NonHunterCellLogic::IsEatable(const core::Food &food) {
-  return !food.IsDeleted();
+  return !food.IsDeleted() && food.IsFloral();
+}
+
+bool HunterCellLogic::IsEatable(const core::Food &food) {
+  return !food.IsDeleted() && food.IsAnimal();
 }
 
 bool NonHunterCellLogic::IsDangerous(const core::Cell &cell) {

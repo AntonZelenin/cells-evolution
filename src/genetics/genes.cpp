@@ -16,7 +16,7 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
           5,
           0.8,
           3,
-          50
+          20
       };
     case HUNTING_SPEED:
       return {
@@ -34,10 +34,10 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
       };
     case HARD_SHELL:
       return {
-          1.0,
-          1.0,
+          10.0,
+          10.0,
           0,
-          5
+          100
       };
     case ENERGY_TO_DIVIDE:
       return {

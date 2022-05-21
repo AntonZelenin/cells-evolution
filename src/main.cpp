@@ -9,7 +9,6 @@
 // cells from same clans might stick together
 // if cells can fight and keep close to friends, they will be able to build colonies
 // but I'll need to have a way to manage food for large groups
-// add killing and splitting killed cells into food
 // collisions with food, try to find a way to stop near food? you don't need to run if you reached it
 // add hunting gene, without it cells will only eat dead
 // add cell generation setup menu
@@ -30,8 +29,8 @@ int main() {
       30,
       8,
       40,
-      3000,
       2000,
+      1500,
       60,
       2.0
   ).Run();
