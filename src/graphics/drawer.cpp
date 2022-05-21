@@ -16,7 +16,7 @@ float CellDrawer::GetSize(const core::Cell &cell) const {
 sf::CircleShape CellDrawer::GetAliveShape(core::Cell &cell) {
   sf::CircleShape shape(GetSize(cell));
   AddOutline(cell, shape);
-  shape.setFillColor(sf::Color(194, 255, 254));
+  shape.setFillColor(color_provider_.GetFillColor(cell));
   shape.setPosition(cell.GetPosition().x - cell.GetSize(), cell.GetPosition().y - cell.GetSize());
   return shape;
 }
@@ -41,8 +41,14 @@ void CellDrawer::UpdateShapePosition(core::Cell &cell) {
 }
 
 sf::Color CellColorProvider::GetOutlineColor(const core::Cell &cell) {
+  if (cell.IsHunter()) return sf::Color::Red;
   if (cell.HasShell()) return {179, 179, 179};
-  return mapping_[cell.type_];
+  return non_hunter_mapping_[core::GetClan(cell.GetClanValue())];
+}
+
+sf::Color CellColorProvider::GetFillColor(const core::Cell &cell) {
+  if (cell.IsHunter()) return {237, 221, 221};
+  return non_hunter_mapping_[core::GetClan(cell.GetClanValue())];
 }
 
 sf::Color FoodColorProvider::Get(const core::FoodType &type) {

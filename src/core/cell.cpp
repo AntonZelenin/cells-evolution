@@ -274,4 +274,8 @@ void Cell::Kill() {
   shell_ /= 2.0;
   shape_ = dead_shape_;
 }
+
+float Cell::GetClanValue() const {
+  return genes_.at(genetics::GeneType::CLAN).value;
+}
 }

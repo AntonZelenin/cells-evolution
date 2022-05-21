@@ -189,7 +189,7 @@ App::App(
   );
   logic_->GenerateHunterCells(hunter_generation_size);
   logic_->GenerateNonhunterCells(nonhunter_generation_size);
-  logic_->GenerateFood(food_generation_size);
+  logic_->ProduceFirstFoodGeneration(food_generation_size);
 
   gui_->event_dispatcher_.Subscribe(
       event::ToggleCellsDrawingEvent::descriptor_,

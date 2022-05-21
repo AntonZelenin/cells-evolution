@@ -144,7 +144,7 @@ bool Logic::ProcessCrossedWalls(float size, core::Position &pos) const {
 void Logic::GenerateFood(int number) {
   if (ShouldGenerateFood()) {
     world_.AddFood(std::move(
-        food_generator_.CreateFloralGeneration(1)
+        food_generator_.CreateFloralGeneration(number)
     ));
   }
   for (auto &food_deposit : world_.food_deposits_) {
@@ -154,6 +154,12 @@ void Logic::GenerateFood(int number) {
       ));
     }
   }
+}
+
+void Logic::ProduceFirstFoodGeneration(int number) {
+  world_.AddFood(std::move(
+      food_generator_.CreateFloralGeneration(number)
+  ));
 }
 
 bool Logic::ShouldGenerateFood() {

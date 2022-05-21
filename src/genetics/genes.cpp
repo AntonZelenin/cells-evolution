@@ -53,6 +53,13 @@ GeneConfig BuildGeneConfig(GeneType gene_type) {
           180,
           1000
       };
+    case CLAN:
+      return {
+          0.5,
+          0.5,
+          0,
+          1
+      };
     case IGNORE_HUNTER_IS_RECESSIVE:
     case IGNORE_FOOD_NEAR_HUNTER:
     case IGNORE_HUNTER_NEAR_FOOD:

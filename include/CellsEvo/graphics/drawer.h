@@ -5,17 +5,20 @@
 #include <SFML/Graphics.hpp>
 #include "CellsEvo/core/cell.h"
 #include "CellsEvo/core/food.h"
+#include "CellsEvo/core/clan.h"
 
 namespace cells_evo::graphics {
 class CellColorProvider {
-  std::unordered_map<core::CellType, sf::Color> mapping_{
-      {core::CellType::K_HUNTER, sf::Color::Red},
-      {core::CellType::K_NONHUNTER, sf::Color::Green},
-//      {core::CellType::K_NONHUNTER, sf::Color(17, 132, 194)},
+  std::unordered_map<core::Clan, sf::Color> non_hunter_mapping_{
+      {core::Clan::FIRST, sf::Color(207, 217, 93)},
+      {core::Clan::SECOND, sf::Color(143, 217, 93)},
+      {core::Clan::THIRD, sf::Color(93, 217, 105)},
+      {core::Clan::FOURTH, sf::Color(93, 217, 165)}
   };
 
  public:
   sf::Color GetOutlineColor(const core::Cell &cell);
+  sf::Color GetFillColor(const core::Cell &cell);
 };
 
 class CellDrawer {

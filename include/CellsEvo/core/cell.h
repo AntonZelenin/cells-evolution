@@ -114,6 +114,7 @@ class Cell : public EdibleEntity {
   [[nodiscard]] float GetEnergy() const;
   [[nodiscard]] bool IgnoresHunterNearFood() const;
   [[nodiscard]] bool IgnoresFoodNearHunter() const;
+  [[nodiscard]] float GetClanValue() const;
 };
 }
 

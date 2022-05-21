@@ -15,6 +15,7 @@ enum GeneType {
   IDLE_SPEED,
   STICK_TO_FRIEND,
   AVOID_FRIENDS,
+  CLAN,
 };
 
 struct Gene {

@@ -5,9 +5,9 @@
 // add punch to all cells, hunters are stronger, nonhunters are weaker
 // Add decision fight or run. Hunters will decide based on hunger as well
 // add the nearby world state structure
-// and add different clans of cells like green and yellow green
-// like two clans of non hunters and they fight with each other, and they could stick together
-// if cells can fight and stick to friends, they will be able to build colonies
+// cells from different clans are treated as enemies
+// cells from same clans might stick together
+// if cells can fight and keep close to friends, they will be able to build colonies
 // but I'll need to have a way to manage food for large groups
 // add killing and splitting killed cells into food
 // collisions with food, try to find a way to stop near food? you don't need to run if you reached it

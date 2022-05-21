@@ -61,6 +61,7 @@ class Logic {
   void GenerateNonhunterCells(int number);
   void GenerateHunterCells(int number);
   static void CellTick(core::Cell &cell);
+  void ProduceFirstFoodGeneration(int number);
 };
 }
 
