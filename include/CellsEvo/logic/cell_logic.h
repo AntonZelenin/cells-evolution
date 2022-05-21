@@ -1,8 +1,8 @@
 #ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_LOGIC_CELL_LOGIC_H_
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_LOGIC_CELL_LOGIC_H_
 
-#include "CellsEvo/cell.h"
-#include "CellsEvo/world.h"
+#include "CellsEvo/core/cell.h"
+#include "CellsEvo/core/world.h"
 
 namespace cells_evo::logic {
 class NonHunterCellLogic {

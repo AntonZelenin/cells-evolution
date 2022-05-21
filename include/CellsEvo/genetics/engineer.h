@@ -4,8 +4,8 @@
 #include <vector>
 #include <unordered_map>
 #include "genes.h"
-#include "CellsEvo/cell.h"
-#include "CellsEvo/tools.h"
+#include "CellsEvo/core/cell.h"
+#include "CellsEvo/core/tools.h"
 
 namespace cells_evo::genetics {
 class GeneConfigCacher {

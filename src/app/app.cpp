@@ -1,6 +1,6 @@
 #include <thread>
 #include <string>
-#include "CellsEvo/app.h"
+#include "CellsEvo/app/app.h"
 #include "CellsEvo/graphics.h"
 #include "SFML/Graphics.hpp"
 

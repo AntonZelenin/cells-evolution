@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_FOOD_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_FOOD_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_FOOD_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_FOOD_H_
 
 #include "base.h"
 #include "SFML/Graphics/RectangleShape.hpp"
@@ -36,6 +36,14 @@ class Food : public EdibleEntity {
   void SetShape(sf::RectangleShape shape);
   sf::RectangleShape &GetShape();
 };
+
+class FoodDeposit {
+ public:
+  Position center_;
+  float radius_;
+
+  FoodDeposit(Position center, float radius);
+};
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_FOOD_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_FOOD_H_

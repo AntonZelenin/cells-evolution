@@ -3,8 +3,8 @@
 
 #include "SFML/System/Clock.hpp"
 #include "SFML/Graphics.hpp"
-#include "CellsEvo/world.h"
-#include "CellsEvo/events.h"
+#include "CellsEvo/core/world.h"
+#include "CellsEvo/core/events.h"
 
 namespace cells_evo::core {
 struct CellsGuiState {

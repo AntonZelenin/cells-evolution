@@ -1,4 +1,4 @@
-#include "CellsEvo/collision_resolution.h"
+#include "CellsEvo/core/collision_resolution.h"
 
 namespace cells_evo::collisions {
 static bool CellsCollide(core::Cell &cell_1, core::Cell &cell_2) {

@@ -1,7 +1,7 @@
 #include <utility>
 #include <vector>
 #include "CellsEvo/logic/logic.h"
-#include "CellsEvo/collision_resolution.h"
+#include "CellsEvo/core/collision_resolution.h"
 #include "SFML/System/Clock.hpp"
 
 namespace cells_evo::logic {
@@ -141,9 +141,18 @@ bool Logic::ProcessCrossedWalls(float size, core::Position &pos) const {
   return hit_wall;
 }
 
-void Logic::GenerateFood() {
+void Logic::GenerateFood(int number) {
   if (ShouldGenerateFood()) {
-    GenerateFood(1);
+    world_.AddFood(std::move(
+        food_generator_.CreateFloralGeneration(1)
+    ));
+  }
+  for (auto &food_deposit : world_.food_deposits_) {
+    if (ShouldGenerateFood()) {
+      world_.AddFood(std::move(
+          food_generator_.GenerateFromDeposit(food_deposit)
+      ));
+    }
   }
 }
 
@@ -315,11 +324,5 @@ void Logic::GenerateHunterCells(int number) {
           core::CellType::K_HUNTER
       ))
   );
-}
-
-void Logic::GenerateFood(int number) {
-  world_.AddFood(std::move(
-      food_generator_.CreateFloralGeneration(number)
-  ));
 }
 }

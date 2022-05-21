@@ -7,21 +7,21 @@ add_executable(
         cells_evolution
         src/main.cpp
         src/app/app.cpp
-        include/CellsEvo/app.h
+        include/CellsEvo/app/app.h
         src/core/cell.cpp
-        include/CellsEvo/cell.h
+        include/CellsEvo/core/cell.h
         src/graphics/drawer.cpp
         include/CellsEvo/graphics/drawer.h
         include/CellsEvo/graphics.h
         src/core/food.cpp
-        include/CellsEvo/food.h
+        include/CellsEvo/core/food.h
         src/core/geometry.cpp
-        include/CellsEvo/geometry.h
+        include/CellsEvo/core/geometry.h
         src/core/world.cpp
-        include/CellsEvo/world.h
-        include/CellsEvo/base.h
+        include/CellsEvo/core/world.h
+        include/CellsEvo/core/base.h
         src/core/tools.cpp
-        include/CellsEvo/tools.h
+        include/CellsEvo/core/tools.h
         src/logic/logic.cpp
         include/CellsEvo/logic/logic.h
         src/genetics/genes.cpp
@@ -31,9 +31,9 @@ add_executable(
         src/genetics/engineer.cpp
         include/CellsEvo/genetics/engineer.h
         src/core/cell_generator.cpp
-        include/CellsEvo/cell_generator.h
+        include/CellsEvo/core/cell_generator.h
         src/core/collision_resolution.cpp
-        include/CellsEvo/collision_resolution.h
+        include/CellsEvo/core/collision_resolution.h
         src/graphics/camera.cpp
         include/CellsEvo/graphics/camera.h
         include/imgui/imgui.cpp
@@ -41,7 +41,7 @@ add_executable(
         include/imgui/imgui-SFML.cpp
         include/imgui/imgui_tables.cpp
         include/imgui/imgui_widgets.cpp
-        src/app/gui.cpp include/CellsEvo/gui.h include/CellsEvo/types.h src/core/events.cpp include/CellsEvo/events.h src/core/food_generator.cpp include/CellsEvo/food_generator.h)
+        src/app/gui.cpp include/CellsEvo/app/gui.h include/CellsEvo/core/types.h src/core/events.cpp include/CellsEvo/core/events.h src/core/food_generator.cpp include/CellsEvo/core/food_generator.h)
 include_directories(include)
 link_directories(lib)
 

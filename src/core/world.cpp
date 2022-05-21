@@ -1,12 +1,19 @@
-#include "CellsEvo/world.h"
+#include "CellsEvo/core/world.h"
 
 namespace cells_evo::core {
 World::World(int width, int height) {
   width_ = static_cast<float>(width);
   height_ = static_cast<float>(height);
+
+  auto quat_width = width_ / 4;
+  auto quat_height = height_ / 4;
+  food_deposits_.emplace_back(Position(quat_width, quat_height), 200);
+  food_deposits_.emplace_back(Position(3.f * quat_width, quat_height), 200);
+  food_deposits_.emplace_back(Position(quat_width, 3.f * quat_height), 200);
+  food_deposits_.emplace_back(Position(3.f * quat_width, 3.f * quat_height), 200);
 }
 
-void World::AddFood(Food &new_food) {
+void World::AddFood(Food new_food) {
   uint id = index_driver_.GetNextId();
   new_food.SetId(id);
   food_.push_back(new_food);

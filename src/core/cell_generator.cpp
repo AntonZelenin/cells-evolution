@@ -1,4 +1,4 @@
-#include "CellsEvo/cell_generator.h"
+#include "CellsEvo/core/cell_generator.h"
 
 namespace cells_evo::core {
 CellGenerator::CellGenerator(int field_width, int field_height) {
@@ -12,18 +12,11 @@ std::vector<Cell> CellGenerator::Generate(
 ) {
   std::vector<Cell> cells;
   cells.reserve(generation_size);
-  auto positions = GenerateRandomPositions(
+  auto positions = random_positions_generator_.GenerateRandomPositions(
       field_width_, field_height_, generation_size, k_min_distance_between_cells_
   );
   for (auto &position : positions) {
-    Cell cell(
-        cell_type,
-        position,
-        genetic_engineer_.GenerateBaseGenes(cell_type)
-    );
-    cell.AddEnergy(cell.GetDivisionEnergy());
-    cell.SetShapes(drawer_.GetAliveShape(cell), drawer_.GetDeadShape(cell));
-    cells.push_back(cell);
+    cells.push_back(GenerateCell(position, cell_type));
   }
   return cells;
 }
@@ -42,5 +35,20 @@ Cell CellGenerator::DivideCell(Cell &cell) {
   cell.StartDivisionCooldown();
   cell.ConsumeDivisionEnergy();
   return new_cell;
+}
+
+core::Cell CellGenerator::GenerateCell(Position position, core::CellType cell_type) {
+  Cell cell(
+      cell_type,
+      position,
+      genetic_engineer_.GenerateBaseGenes(cell_type)
+  );
+  cell.AddEnergy(cell.GetDivisionEnergy());
+  cell.SetShapes(drawer_.GetAliveShape(cell), drawer_.GetDeadShape(cell));
+  return cell;
+}
+
+std::vector<core::Cell> CircleCellGenerator::Generate(int generation_size, core::CellType cell_type) {
+  return CellGenerator::Generate(generation_size, cell_type);
 }
 }

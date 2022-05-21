@@ -1,7 +1,7 @@
 #include <utility>
 
-#include "CellsEvo/tools.h"
-#include "CellsEvo/food.h"
+#include "CellsEvo/core/tools.h"
+#include "CellsEvo/core/food.h"
 
 namespace cells_evo::core {
 Food::Food(FoodType type, Position position) : position_(position) {
@@ -54,5 +54,10 @@ void Food::SetShape(sf::RectangleShape shape) {
 
 sf::RectangleShape &Food::GetShape() {
   return shape_;
+}
+
+FoodDeposit::FoodDeposit(Position center, float radius) {
+  center_ = center;
+  radius_ = radius;
 }
 }

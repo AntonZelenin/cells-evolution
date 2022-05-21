@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CELL_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CELL_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_H_
 
 #include <vector>
 #include <unordered_map>
@@ -17,7 +17,7 @@ enum CellType {
 class Cell : public EdibleEntity {
   constexpr static const float k_base_nutrition_value_coeff_ = 0.5;
   constexpr static const float k_energy_consumption_coefficient_ = 0.0005;
-  constexpr static const float k_vital_functions_energy_consumption_ = 0.00015;
+  constexpr static const float k_vital_functions_energy_consumption_ = 0.0002;
   constexpr static const float k_hunger_coefficient_ = 0.6;
   constexpr static const float k_punch_coefficient_ = 0.0008;
   constexpr static const float k_speed_size_coefficient_ = 0.07;
@@ -117,4 +117,4 @@ class Cell : public EdibleEntity {
 };
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CELL_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_CELL_H_

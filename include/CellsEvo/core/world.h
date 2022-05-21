@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_WORLD_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_WORLD_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_WORLD_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_WORLD_H_
 
 #include <vector>
 #include "cell.h"
@@ -16,13 +16,15 @@ class World {
  public:
   FoodStorage food_{};
   CellStorage cells_{};
+  std::vector<core::FoodDeposit> food_deposits_;
+
   float width_;
   float height_;
   uint ticks_ = 0;
 
   World(int width, int height);
 
-  void AddFood(Food &food);
+  void AddFood(Food food);
   void AddFood(std::vector<Food> foods);
   void AddCell(Cell &cell);
   void AddCells(std::vector<Cell> new_cells);
@@ -32,4 +34,4 @@ class World {
 };
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_WORLD_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_WORLD_H_

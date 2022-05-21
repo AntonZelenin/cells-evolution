@@ -3,8 +3,8 @@
 
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
-#include "CellsEvo/cell.h"
-#include "CellsEvo/food.h"
+#include "CellsEvo/core/cell.h"
+#include "CellsEvo/core/food.h"
 
 namespace cells_evo::graphics {
 class CellColorProvider {

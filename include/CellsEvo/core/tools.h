@@ -1,5 +1,5 @@
-#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_TOOLS_H_
-#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_TOOLS_H_
+#ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_TOOLS_H_
+#define CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_TOOLS_H_
 
 #include <vector>
 #include <random>
@@ -25,7 +25,7 @@ class RandomEngine {
     return std::uniform_real_distribution<float>(from, to)(generator_);
   }
 
-  std::vector<int> GetRandomInts(int from, int  to, uint number) {
+  std::vector<int> GetRandomInts(int from, int to, uint number) {
     std::vector<int> numbers{};
     std::uniform_int_distribution<int> distribution(from, to);
 
@@ -47,7 +47,7 @@ class RandomEngine {
     return numbers;
   }
 
-  std::vector<float> GetRandomFloats(float from, float  to, uint number) {
+  std::vector<float> GetRandomFloats(float from, float to, uint number) {
     std::vector<float> numbers{};
     std::uniform_real_distribution<float> distribution(from, to);
 
@@ -57,6 +57,34 @@ class RandomEngine {
 
     return numbers;
   }
+};
+
+class RandomPositionsGenerator {
+  core::RandomEngine random_engine_{};
+
+  Position GenerateRandomPosition(
+      int width,
+      int height,
+      const std::vector<Position> &occupied_positions,
+      int min_distance_between_cells
+  );
+  Position GenerateRandomPositionInRadius(Position &center, float radius);
+  bool IsSuitablePosition(Position position, float max_x, float max_y);
+
+ public:
+  std::vector<Position> GenerateRandomPositions(
+      int field_width,
+      int field_height,
+      int number_of_positions,
+      int min_distance_between_positions
+  );
+  std::vector<Position> GenerateRandomPositionsInRadius(
+      Position center,
+      float radius,
+      int field_width,
+      int field_height,
+      int number_of_positions
+  );
 };
 
 template<typename T>
@@ -106,13 +134,6 @@ class CircularQueue {
     return sum / static_cast<float>(size_);
   }
 };
-
-std::vector<Position> GenerateRandomPositions(
-    int field_width,
-    int field_height,
-    int size,
-    int min_distance_between_positions
-);
 }
 
-#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_TOOLS_H_
+#endif //CELLS_EVOLUTION_INCLUDE_CELLSEVO_CORE_TOOLS_H_

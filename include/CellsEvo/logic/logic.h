@@ -1,13 +1,13 @@
 #ifndef CELLS_EVOLUTION_INCLUDE_CELLSEVO_LOGIC_LOGIC_H_
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_LOGIC_LOGIC_H_
 
-#include "CellsEvo/cell.h"
+#include "CellsEvo/core/cell.h"
 #include "CellsEvo/genetics/engineer.h"
 #include "cell_logic.h"
-#include "CellsEvo/world.h"
-#include "CellsEvo/collision_resolution.h"
-#include "CellsEvo/cell_generator.h"
-#include "CellsEvo/food_generator.h"
+#include "CellsEvo/core/world.h"
+#include "CellsEvo/core/collision_resolution.h"
+#include "CellsEvo/core/cell_generator.h"
+#include "CellsEvo/core/food_generator.h"
 
 namespace cells_evo::logic {
 class Logic {
@@ -28,7 +28,6 @@ class Logic {
   graphics::FoodDrawer food_drawer_{};
 
   void Tick();
-  void GenerateFood();
   void UpdateCellsState();
   [[maybe_unused]] void TeleportCrossedBoundaries(core::Cell &cell) const;
   void CheckCellCrossedBoundaries() const;
@@ -58,10 +57,10 @@ class Logic {
   );
 
   void WorldTick();
+  void GenerateFood(int number = 1);
   void GenerateNonhunterCells(int number);
   void GenerateHunterCells(int number);
   static void CellTick(core::Cell &cell);
-  void GenerateFood(int number);
 };
 }
 

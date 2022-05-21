@@ -1,6 +1,6 @@
 #include <utility>
 
-#include "CellsEvo/cell.h"
+#include "CellsEvo/core/cell.h"
 
 namespace cells_evo::core {
 Cell::Cell(

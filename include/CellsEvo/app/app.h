@@ -2,9 +2,9 @@
 #define CELLS_EVOLUTION_INCLUDE_CELLSEVO_APP_H_
 
 #include "SFML/Graphics/RenderWindow.hpp"
-#include "world.h"
+#include "CellsEvo/core/world.h"
 #include "CellsEvo/logic/logic.h"
-#include "CellsEvo/gui.h"
+#include "gui.h"
 
 namespace cells_evo {
 class App {
